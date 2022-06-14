@@ -4,7 +4,12 @@
 This is the ultimate BottomNavigionBar which allow you to focus on the logic of your app than having to worry about writing the boilerplate code to make the user experience better. This widget helps you cover the most common use cases of BottomNavigationBar with minimal code and hassle.
 
 
-![Video demo](https://user-images.githubusercontent.com/31410839/170913498-f1094090-bd80-43e6-ba09-7aa3dea029ba.mp4)
+_Heres a [sample app](example/lib/main.dart) built using this package_
+
+_video demo of sample app_
+
+
+https://user-images.githubusercontent.com/31410839/170913498-f1094090-bd80-43e6-ba09-7aa3dea029ba.mp4
 
 
 - Ability to push routes in the nested or root navigator
@@ -18,4 +23,6 @@ This is the ultimate BottomNavigionBar which allow you to focus on the logic of 
 
 
 
-##### Curious how does this work? Read more in a [medium blog post](https://maheshmnj.medium.com/everything-about-the-bottomnavigationbar-in-flutter-e99e5470dddb)
+### Curious how does the navbar_router work? 
+
+Read more in a [medium blog post](https://maheshmnj.medium.com/everything-about-the-bottomnavigationbar-in-flutter-e99e5470dddb) for detailed explanation.

@@ -26,8 +26,7 @@ class MyApp extends StatelessWidget {
             NavbarItem(Icons.person, 'Me'),
           ],
           onBackButtonPressed: (isExiting) {
-            print(isExiting);
-            return false;
+            return isExiting;
           },
           destinations: [
             [
@@ -133,7 +132,7 @@ class _HomeFeedsState extends State<HomeFeeds> {
               onTap: () {
                 NavbarNotifier.hideBottomNavBar = false;
                 Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (contex) => FeedDetail()));
+                    .push(MaterialPageRoute(builder: (contex) => const FeedDetail()));
               },
               child: FeedTile(index: index));
         },
