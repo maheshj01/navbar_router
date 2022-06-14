@@ -15,22 +15,22 @@ class NavbarBuilder extends StatefulWidget {
   /// The destination to show when the user taps the [NavbarItem]
   final List<List<Destination>> destinations;
 
+  /// Route to show the user when the user tried to navigate to a route that
+  /// does not exist in the [destinations]
+  final WidgetBuilder errorBuilder;
+
   /// navbar Items to show in the navbar
   final List<NavbarItem> items;
+
+  /// Defines whether it is the root Navigator or not
+  /// if the method returns true then the Navigator is at the base of the navigator stack
+  final bool Function(bool)? onBackButtonPressed;
 
   /// whether the navbar should pop all routes except first
   /// when the current navbar is tapped while the route is deeply nested
   /// feature similar to Instagram's navigation bar
   /// defaults to true.
   final bool shouldPopToBaseRoute;
-
-  /// Defines whether it is the root Navigator or not
-  /// if the method returns true then the Navigator is at the base of the navigator stack
-  final bool Function(bool)? onBackButtonPressed;
-
-  /// Route to show the user when the user tried to navigate to a route that
-  /// does not exist in the [destinations]
-  final WidgetBuilder errorBuilder;
 
   const NavbarBuilder(
       {Key? key,
