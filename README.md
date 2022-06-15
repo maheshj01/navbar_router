@@ -20,6 +20,8 @@ _video demo of the sample app_
 https://user-images.githubusercontent.com/31410839/170913498-f1094090-bd80-43e6-ba09-7aa3dea029ba.mp4
 
 
+This package will help you save atleast 50% lines of code in half the time required to implement the above features.
+
 ## **Usage**
 
 Add to pubspec.yaml
