@@ -1,6 +1,7 @@
 # Contributing
 
 ### Contributor
+
 Thanks for taking you time to contribute to this repo. Before you start contributing please go through the following guidelines which we consider are important to maintain this repository and can help new contributers to open source.
 
 - Before you submit a Pull request ensure a issue exist describing the issue / feature request. If it doesn't please file an issue so that we could discuss about the issue before the actual PR is submitted.
@@ -18,7 +19,7 @@ Contributing
 
 1. Fork This repo
 2. Create a new branch
-3. Commit a Fix
+3. Commit a fix
 4. Add appropriate tests(recommended)
 5. Submit a PR referencing the issue
 6. Request a review
