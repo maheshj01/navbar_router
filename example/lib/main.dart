@@ -131,8 +131,10 @@ class _HomeFeedsState extends State<HomeFeeds> {
           return InkWell(
               onTap: () {
                 NavbarNotifier.hideBottomNavBar = false;
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (contex) => const FeedDetail()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (contex) => FeedDetail(
+                          feedId: index.toString(),
+                        )));
               },
               child: FeedTile(index: index));
         },
@@ -297,14 +299,16 @@ class ProductDetail extends StatelessWidget {
   static const String route = '/products/detail';
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    final argsId = args['id'];
     return Scaffold(
       appBar: AppBar(
-        title: Text('Product $id'),
+        title: Text('Product $argsId'),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text('My AWESOME Product $id'),
+          Text('My AWESOME Product $argsId'),
           const Center(
             child: Placeholder(
               fallbackHeight: 200,
@@ -315,7 +319,8 @@ class ProductDetail extends StatelessWidget {
               onPressed: () {
                 NavbarNotifier.hideBottomNavBar = false;
                 navigate(context, ProductComments.route,
-                    isRootNavigator: false, arguments: {'id': id.toString()});
+                    isRootNavigator: false,
+                    arguments: {'id': argsId.toString()});
               },
               child: const Text('show comments'))
         ],
