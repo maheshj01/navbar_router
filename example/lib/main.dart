@@ -4,11 +4,13 @@ import 'package:flutter/rendering.dart';
 import 'package:navbar_router/navbar_router.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
+  List<Color> colors = [mediumPurple, Colors.orange, Colors.teal];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,53 +18,65 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.indigo,
         ),
-        home: NavbarBuilder(
+        home: NavbarRouter(
           errorBuilder: (context) {
             return const Center(child: Text('Error 404'));
           },
-          items: const <NavbarItem>[
-            NavbarItem(Icons.home, 'Home'),
-            NavbarItem(Icons.shopping_basket, 'Products'),
-            NavbarItem(Icons.person, 'Me'),
-          ],
           onBackButtonPressed: (isExiting) {
             return isExiting;
           },
+          destinationAnimationCurve: Curves.fastOutSlowIn,
+          destinationAnimationDuration: 600,
+          decoration:
+              NavbarDecoration(navbarType: BottomNavigationBarType.shifting),
           destinations: [
-            [
-              Destination(
-                '/',
-                const HomeFeeds(),
-              ),
-              Destination(
-                  FeedDetail.route,
-                  const FeedDetail(
-                    feedId: '121',
-                  ))
-            ],
-            [
-              Destination(
-                '/',
-                const ProductList(),
-              ),
-              Destination(
-                  ProductDetail.route,
-                  const ProductDetail(
-                    id: '121',
-                  )),
-              Destination(
-                  ProductComments.route,
-                  const ProductComments(
-                    id: '121',
-                  ))
-            ],
-            [
-              Destination(
-                '/',
-                const UserProfile(),
-              ),
-              Destination(ProfileEdit.route, const ProfileEdit())
-            ]
+            DestinationBuilder(
+              navbarItem:
+                  NavbarItem(Icons.home, 'Home', backgroundColor: colors[0]),
+              destination: [
+                Destination(
+                  route: '/',
+                  widget: const HomeFeeds(),
+                ),
+                Destination(
+                    route: FeedDetail.route,
+                    widget: const FeedDetail(
+                      feedId: '121',
+                    ))
+              ],
+              initialRoute: '/',
+            ),
+            DestinationBuilder(
+              navbarItem: NavbarItem(Icons.shopping_basket, 'Products',
+                  backgroundColor: colors[1]),
+              destination: [
+                Destination(
+                  route: '/',
+                  widget: const ProductList(),
+                ),
+                Destination(
+                    route: ProductDetail.route,
+                    widget: const ProductDetail(
+                      id: '121',
+                    )),
+                Destination(
+                    route: ProductComments.route,
+                    widget: const ProductComments(
+                      id: '121',
+                    ))
+              ],
+            ),
+            DestinationBuilder(
+                navbarItem:
+                    NavbarItem(Icons.person, 'Me', backgroundColor: colors[2]),
+                destination: [
+                  Destination(
+                    route: '/',
+                    widget: const UserProfile(),
+                  ),
+                  Destination(
+                      route: ProfileEdit.route, widget: const ProfileEdit())
+                ])
           ],
         ));
   }
@@ -75,7 +89,6 @@ Future<void> navigate(BuildContext context, String route,
     Navigator.of(context, rootNavigator: isRootNavigator)
         .pushNamed(route, arguments: arguments);
 
-List<Color> colors = [mediumPurple, Colors.orange, Colors.teal];
 const Color mediumPurple = Color.fromRGBO(79, 0, 241, 1.0);
 const String placeHolderText =
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';

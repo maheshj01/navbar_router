@@ -3,24 +3,75 @@ import 'package:flutter/material.dart';
 import 'package:navbar_router/src/navbar_notifier.dart';
 
 class Destination {
-  String path;
+  String route;
 
   /// must have a initial route `/`
   Widget widget;
 
-  Destination(this.path, this.widget);
+  Destination({required this.route, required this.widget});
 }
 
-class NavbarBuilder extends StatefulWidget {
+class DestinationBuilder {
+  final List<Destination> destination;
+
+  /// Route to load when the app is started
+  /// for the current destination, defaults to '/'
+  ///  initial route must be present in List of destinations
+  final String initialRoute;
+
+  final NavbarItem navbarItem;
+
+  DestinationBuilder(
+      {required this.destination,
+      required this.navbarItem,
+      this.initialRoute = '/'});
+}
+
+class NavbarDecoration {
+  final BottomNavigationBarType? navbarType;
+  final Color? backgroundColor;
+  final Color? selectedItemColor;
+  final Color? unselectedItemColor;
+  final double? elevation;
+  final Color? iconColor;
+  final Color? labelColor;
+  final Color? unselectedIconColor;
+  final bool? showUnselectedLabels;
+  final Color? unselectedLabelColor;
+  final Color? selectedIconColor;
+  final Color? selectedLabelColor;
+  final bool? showSelectedLabels;
+
+  /// defaults to 24.0
+  final double? iconSize;
+  final bool? enableFeedback;
+
+  NavbarDecoration({
+    this.navbarType,
+    this.backgroundColor,
+    this.elevation,
+    this.enableFeedback,
+    this.iconColor,
+    this.iconSize,
+    this.labelColor,
+    this.selectedItemColor,
+    this.showSelectedLabels,
+    this.showUnselectedLabels = true,
+    this.unselectedItemColor,
+    this.selectedIconColor,
+    this.selectedLabelColor,
+    this.unselectedIconColor,
+    this.unselectedLabelColor,
+  });
+}
+
+class NavbarRouter extends StatefulWidget {
   /// The destination to show when the user taps the [NavbarItem]
-  final List<List<Destination>> destinations;
+  final List<DestinationBuilder> destinations;
 
   /// Route to show the user when the user tried to navigate to a route that
   /// does not exist in the [destinations]
   final WidgetBuilder errorBuilder;
-
-  /// navbar Items to show in the navbar
-  final List<NavbarItem> items;
 
   /// Defines whether it is the root Navigator or not
   /// if the method returns true then the Navigator is at the base of the navigator stack
@@ -32,24 +83,35 @@ class NavbarBuilder extends StatefulWidget {
   /// defaults to true.
   final bool shouldPopToBaseRoute;
 
-  const NavbarBuilder(
+  /// AnimationDuration in milliseconds
+  final int destinationAnimationDuration;
+
+  /// defaults to Curves.fastOutSlowIn
+  final Curve destinationAnimationCurve;
+
+  final NavbarDecoration? decoration;
+
+  const NavbarRouter(
       {Key? key,
       required this.destinations,
       required this.errorBuilder,
       this.shouldPopToBaseRoute = true,
-      required this.items,
+      this.decoration,
+      this.destinationAnimationCurve = Curves.fastOutSlowIn,
+      this.destinationAnimationDuration = 700,
       this.onBackButtonPressed})
-      : assert(destinations.length == items.length,
-            "Destination and MenuItem list must be of same length"),
+      :
+        // : assert(destinations.length == items.length,
+        //       "Destination and MenuItem list must be of same length"),
         super(key: key);
 
   @override
-  State<NavbarBuilder> createState() => _NavbarBuilderState();
+  State<NavbarRouter> createState() => _NavbarRouterState();
 }
 
-class _NavbarBuilderState extends State<NavbarBuilder>
+class _NavbarRouterState extends State<NavbarRouter>
     with SingleTickerProviderStateMixin {
-  final List<BottomNavigationBarItem> _bottomList = [];
+  final List<NavbarItem> items = [];
   late Animation<double> fadeAnimation;
   late AnimationController _controller;
   List<GlobalKey<NavigatorState>> keys = [];
@@ -57,21 +119,23 @@ class _NavbarBuilderState extends State<NavbarBuilder>
   @override
   void initState() {
     super.initState();
+
+    /// AnimationController for the Destination Animation
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 700),
+      duration: Duration(milliseconds: widget.destinationAnimationDuration),
     );
     fadeAnimation = Tween<double>(begin: 0.4, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn),
+      CurvedAnimation(
+          parent: _controller, curve: widget.destinationAnimationCurve),
     );
-    length = widget.items.length;
+
+    length = widget.destinations.length;
 
     for (int i = 0; i < length; i++) {
+      final navbaritem = widget.destinations[i].navbarItem;
       keys.add(GlobalKey<NavigatorState>());
-      _bottomList.add(BottomNavigationBarItem(
-        icon: Icon(widget.items[i].iconData),
-        label: widget.items[i].text,
-      ));
+      items.add(navbaritem);
     }
 
     NavbarNotifier.setKeys(keys);
@@ -82,6 +146,12 @@ class _NavbarBuilderState extends State<NavbarBuilder>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant NavbarRouter oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -106,16 +176,20 @@ class _NavbarBuilderState extends State<NavbarBuilder>
                             opacity: fadeAnimation,
                             child: Navigator(
                                 key: keys[i],
-                                initialRoute: '/',
+                                initialRoute:
+                                    widget.destinations[i].initialRoute,
                                 onGenerateRoute: (RouteSettings settings) {
                                   WidgetBuilder? builder = widget.errorBuilder;
                                   final nestedLength =
-                                      widget.destinations[i].length;
+                                      widget.destinations[i].destination.length;
                                   for (int j = 0; j < nestedLength; j++) {
-                                    if (widget.destinations[i][j].path ==
+                                    if (widget.destinations[i].destination[j]
+                                            .route ==
                                         settings.name) {
-                                      builder = (BuildContext _) =>
-                                          widget.destinations[i][j].widget;
+                                      builder = (BuildContext _) => widget
+                                          .destinations[i]
+                                          .destination[j]
+                                          .widget;
                                     }
                                   }
                                   return MaterialPageRoute(
@@ -130,6 +204,7 @@ class _NavbarBuilderState extends State<NavbarBuilder>
                       right: 0,
                       child: AnimatedNavBar(
                           model: _navbarNotifier,
+                          decoration: widget.decoration,
                           onItemTapped: (x) {
                             // User pressed  on the same tab twice
                             if (NavbarNotifier.currentIndex == x) {
@@ -144,7 +219,7 @@ class _NavbarBuilderState extends State<NavbarBuilder>
                               _controller.forward();
                             }
                           },
-                          menuItems: widget.items),
+                          menuItems: items),
                     ),
                   ],
                 );
@@ -154,9 +229,10 @@ class _NavbarBuilderState extends State<NavbarBuilder>
 }
 
 class NavbarItem {
-  const NavbarItem(this.iconData, this.text);
+  const NavbarItem(this.iconData, this.text, {this.backgroundColor});
   final IconData iconData;
   final String text;
+  final Color? backgroundColor;
 }
 
 Future<void> navigate(BuildContext context, String route,
@@ -175,6 +251,7 @@ const String placeHolderText =
 class AnimatedNavBar extends StatefulWidget {
   const AnimatedNavBar(
       {Key? key,
+      this.decoration,
       required this.model,
       required this.menuItems,
       required this.onItemTapped})
@@ -182,6 +259,7 @@ class AnimatedNavBar extends StatefulWidget {
   final List<NavbarItem> menuItems;
   final NavbarNotifier model;
   final Function(int) onItemTapped;
+  final NavbarDecoration? decoration;
 
   @override
   _AnimatedNavBarState createState() => _AnimatedNavBarState();
@@ -248,18 +326,22 @@ class _AnimatedNavBarState extends State<AnimatedNavBar>
                 ),
               ]),
               child: BottomNavigationBar(
-                type: BottomNavigationBarType.shifting,
+                type: widget.decoration?.navbarType,
                 currentIndex: NavbarNotifier.currentIndex,
                 onTap: (x) {
                   widget.onItemTapped(x);
                 },
-                elevation: 16.0,
-                showUnselectedLabels: true,
-                unselectedItemColor: Colors.white54,
-                selectedItemColor: Colors.white,
+                backgroundColor: widget.decoration?.backgroundColor,
+                showSelectedLabels: widget.decoration?.showSelectedLabels,
+                enableFeedback: widget.decoration?.enableFeedback,
+                showUnselectedLabels: widget.decoration?.showUnselectedLabels,
+                selectedItemColor: widget.decoration?.selectedItemColor,
+                elevation: widget.decoration?.elevation,
+                iconSize: widget.decoration?.iconSize ?? 24.0,
+                unselectedItemColor: widget.decoration?.unselectedItemColor,
                 items: widget.menuItems
                     .map((NavbarItem menuItem) => BottomNavigationBarItem(
-                          backgroundColor: colors[NavbarNotifier.currentIndex],
+                          backgroundColor: menuItem.backgroundColor,
                           icon: Icon(menuItem.iconData),
                           label: menuItem.text,
                         ))
