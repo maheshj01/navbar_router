@@ -1,4 +1,4 @@
-## **navbar_router 0.1.0**
+## **navbar_router 0.1.1**
 
  <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
@@ -29,7 +29,7 @@ This package will help you save atleast 50% lines of code in half the time requi
 Add to pubspec.yaml
 
 ```yaml
-  navbar_router: ^0.1.0
+  navbar_router: ^0.1.1
 ```
 
 *Example*
