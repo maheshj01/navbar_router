@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:navbar_router/src/navbar_notifier.dart';
 
 class Destination {
+  // Named route associaed with this destination.
   String route;
 
-  /// must have a initial route `/`
+  // must have a initial route `/`
   Widget widget;
 
   Destination({required this.route, required this.widget});
 }
 
 class DestinationRouter {
+  /// The destination to show when the [navbarItem] is selected
   final List<Destination> destinations;
 
   /// Route to load when the app is started
@@ -81,6 +83,7 @@ class NavbarDecoration {
 
 class NavbarRouter extends StatefulWidget {
   /// The destination to show when the user taps the [NavbarItem]
+  /// destination also defines the list of Nested destination sand the navbarItem associated with it
   final List<DestinationRouter> destinations;
 
   /// Route to show the user when the user tried to navigate to a route that
@@ -116,9 +119,8 @@ class NavbarRouter extends StatefulWidget {
       this.destinationAnimationCurve = Curves.fastOutSlowIn,
       this.destinationAnimationDuration = 700,
       this.onBackButtonPressed})
-      :
-        // : assert(destinations.length == items.length,
-        //       "Destination and MenuItem list must be of same length"),
+      : assert(destinations.length >= 2,
+            "Destinations length must be greater than or equal to 2"),
         super(key: key);
 
   @override
@@ -145,9 +147,11 @@ class _NavbarRouterState extends State<NavbarRouter>
       CurvedAnimation(
           parent: _controller, curve: widget.destinationAnimationCurve),
     );
+    initialize();
+  }
 
+  void initialize() {
     length = widget.destinations.length;
-
     for (int i = 0; i < length; i++) {
       final navbaritem = widget.destinations[i].navbarItem;
       keys.add(GlobalKey<NavigatorState>());
@@ -158,8 +162,15 @@ class _NavbarRouterState extends State<NavbarRouter>
     _controller.forward();
   }
 
+  void clearInitialization() {
+    _controller.reset();
+    keys.clear();
+    items.clear();
+  }
+
   @override
   void dispose() {
+    clearInitialization();
     _controller.dispose();
     super.dispose();
   }
@@ -177,6 +188,12 @@ class _NavbarRouterState extends State<NavbarRouter>
         CurvedAnimation(
             parent: _controller, curve: widget.destinationAnimationCurve),
       );
+    }
+
+    if (widget.destinations.length != oldWidget.destinations.length) {
+      length = widget.destinations.length;
+      clearInitialization();
+      initialize();
     }
     super.didUpdateWidget(oldWidget);
   }
