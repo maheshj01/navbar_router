@@ -11,7 +11,7 @@ class Destination {
   Destination({required this.route, required this.widget});
 }
 
-class DestinationBuilder {
+class DestinationRouter {
   final List<Destination> destination;
 
   /// Route to load when the app is started
@@ -21,7 +21,7 @@ class DestinationBuilder {
 
   final NavbarItem navbarItem;
 
-  DestinationBuilder(
+  DestinationRouter(
       {required this.destination,
       required this.navbarItem,
       this.initialRoute = '/'});
@@ -67,7 +67,7 @@ class NavbarDecoration {
 
 class NavbarRouter extends StatefulWidget {
   /// The destination to show when the user taps the [NavbarItem]
-  final List<DestinationBuilder> destinations;
+  final List<DestinationRouter> destinations;
 
   /// Route to show the user when the user tried to navigate to a route that
   /// does not exist in the [destinations]
@@ -89,6 +89,8 @@ class NavbarRouter extends StatefulWidget {
   /// defaults to Curves.fastOutSlowIn
   final Curve destinationAnimationCurve;
 
+  /// The decoraton for Navbar has all the properties you would expect in a [BottomNavigationBar]
+  /// to adjust the style of the Navbar.
   final NavbarDecoration? decoration;
 
   const NavbarRouter(

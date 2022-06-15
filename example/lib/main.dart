@@ -18,67 +18,75 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.indigo,
         ),
-        home: NavbarRouter(
-          errorBuilder: (context) {
-            return const Center(child: Text('Error 404'));
-          },
-          onBackButtonPressed: (isExiting) {
-            return isExiting;
-          },
-          destinationAnimationCurve: Curves.fastOutSlowIn,
-          destinationAnimationDuration: 600,
-          decoration:
-              NavbarDecoration(navbarType: BottomNavigationBarType.shifting),
-          destinations: [
-            DestinationBuilder(
-              navbarItem:
-                  NavbarItem(Icons.home, 'Home', backgroundColor: colors[0]),
-              destination: [
-                Destination(
-                  route: '/',
-                  widget: const HomeFeeds(),
-                ),
-                Destination(
-                    route: FeedDetail.route,
-                    widget: const FeedDetail(
-                      feedId: '121',
-                    ))
-              ],
-              initialRoute: '/',
+        home: const HomePage());
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return NavbarRouter(
+      errorBuilder: (context) {
+        return const Center(child: Text('Error 404'));
+      },
+      onBackButtonPressed: (isExiting) {
+        return isExiting;
+      },
+      destinationAnimationCurve: Curves.fastOutSlowIn,
+      destinationAnimationDuration: 600,
+      decoration:
+          NavbarDecoration(navbarType: BottomNavigationBarType.shifting),
+      destinations: [
+        DestinationRouter(
+          navbarItem:
+              NavbarItem(Icons.home, 'Home', backgroundColor: colors[0]),
+          destination: [
+            Destination(
+              route: '/',
+              widget: const HomeFeeds(),
             ),
-            DestinationBuilder(
-              navbarItem: NavbarItem(Icons.shopping_basket, 'Products',
-                  backgroundColor: colors[1]),
-              destination: [
-                Destination(
-                  route: '/',
-                  widget: const ProductList(),
-                ),
-                Destination(
-                    route: ProductDetail.route,
-                    widget: const ProductDetail(
-                      id: '121',
-                    )),
-                Destination(
-                    route: ProductComments.route,
-                    widget: const ProductComments(
-                      id: '121',
-                    ))
-              ],
-            ),
-            DestinationBuilder(
-                navbarItem:
-                    NavbarItem(Icons.person, 'Me', backgroundColor: colors[2]),
-                destination: [
-                  Destination(
-                    route: '/',
-                    widget: const UserProfile(),
-                  ),
-                  Destination(
-                      route: ProfileEdit.route, widget: const ProfileEdit())
-                ])
+            Destination(
+                route: FeedDetail.route,
+                widget: const FeedDetail(
+                  feedId: '121',
+                ))
           ],
-        ));
+          initialRoute: '/',
+        ),
+        DestinationRouter(
+          navbarItem: NavbarItem(Icons.shopping_basket, 'Products',
+              backgroundColor: colors[1]),
+          destination: [
+            Destination(
+              route: '/',
+              widget: const ProductList(),
+            ),
+            Destination(
+                route: ProductDetail.route,
+                widget: const ProductDetail(
+                  id: '121',
+                )),
+            Destination(
+                route: ProductComments.route,
+                widget: const ProductComments(
+                  id: '121',
+                ))
+          ],
+        ),
+        DestinationRouter(
+            navbarItem:
+                NavbarItem(Icons.person, 'Me', backgroundColor: colors[2]),
+            destination: [
+              Destination(
+                route: '/',
+                widget: const UserProfile(),
+              ),
+              Destination(route: ProfileEdit.route, widget: const ProfileEdit())
+            ])
+      ],
+    );
   }
 }
 

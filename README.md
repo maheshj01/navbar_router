@@ -1,7 +1,6 @@
 ### navbar_router
 
-This is the ultimate BottomNavigionBar which allow you to focus on the logic of your app than having to worry about writing the boilerplate code to make the user experience better. This widget helps you cover the most common use cases of BottomNavigationBar with minimal code and hassle.
-
+This is the ultimate BottomNavigionBar which allow you to focus on the logic of your app than having to worry about writing the boilerplate code to make the user experience better. This widget helps you cover the most common and advanced use cases of BottomNavigationBar with minimal code and hassle.
 
 _Heres a [sample app](example/lib/main.dart) built using this package to see how it works._
 
@@ -19,24 +18,25 @@ https://user-images.githubusercontent.com/31410839/170913498-f1094090-bd80-43e6-
 - Tapping the same navbar button pops to base route of nested navigator (same as instagram)
 - Switch the Navbar destination with animation
 
-
 ### Api docs
 
-  *destinations*: A Nested List of Destinations to show when the user taps the [NavbarItem]
+  *destinations*: A List of `DestinationRouter` to show when the user taps the [NavbarItem].
+  Each DestinationRouter specifies a List of Destinations, initialRoute, and the navbarItem corresponding to that destination.
 
   *errorBuilder*: A WidgetBuilder to show the user when the user tried to navigate to a route that does not exist in the [destinations].
 
-  items: navbar Items to show in the navbar
+  *decoration* : The decoraton for Navbar has all the properties you would expect in a [BottomNavigationBar] to adjust the style of the Navbar.
 
-   *onBackButtonPressed*: A Function which defines whether it is the root Navigator or not
+  *onBackButtonPressed*: A Function which defines whether it is the root Navigator or not
    if the method returns true then the Navigator is at the base of the navigator stack
 
-   *shouldPopToBaseRoute*: A boolean which decides, whether the navbar should pop all routes except first
- when the current navbar is tapped while the route is deeply nested
- feature similar to Instagram's navigation bar
- defaults to true.
+   *destinationAnimationCurve*: Curve for the destination animation when the user taps a navbar item. Defaults to `Curves.fastOutSlowIn`.
+
+   *destinationAnimationDuration*: The duration in milliseconds of the animation of the destination. Defaults to 700ms.
+
+   *shouldPopToBaseRoute*: A boolean which decides, whether the navbar should pop to base route( pop all except first) when the current navbar is tapped while the route is deeply nested. This feature similar to Instagram's navigation bar defaults to true.
 
 
-### Curious how does the navbar_router work? 
+### Curious how does the navbar_router work?
 
 Read more in a [medium blog post](https://maheshmnj.medium.com/everything-about-the-bottomnavigationbar-in-flutter-e99e5470dddb) for detailed explanation.
