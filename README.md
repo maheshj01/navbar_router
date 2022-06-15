@@ -1,4 +1,6 @@
-## **navbar_router**
+## **navbar_router 0.1.0**
+
+ <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
 This is the ultimate BottomNavigionBar, which will allow you to focus on the logic of your app. This widget handles the boilerplate code required to handle the below features with minimal code and hassle. All you need to do is specify the navbar menu items, routes and destinations and the rest will be taken care by the navbar_router.
 
@@ -20,7 +22,7 @@ _video demo of the sample app_
 https://user-images.githubusercontent.com/31410839/170913498-f1094090-bd80-43e6-ba09-7aa3dea029ba.mp4
 
 
-This package will help you save atleast 50% lines of code in half the time required to implement the above features.
+This package will help you save atleast 50% lines of code in half the time required to implement the above features. Heres the same [sample app](https://dartpad.dev/?id=894922ccb67f5fdc4ffb652e41916fa2) without the package which requires around 800 lines of code.
 
 ## **Usage**
 
