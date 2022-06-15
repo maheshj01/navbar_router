@@ -9,7 +9,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
-  List<Color> colors = [mediumPurple, Colors.orange, Colors.teal];
+  final List<Color> colors = [mediumPurple, Colors.orange, Colors.teal];
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
         DestinationRouter(
           navbarItem:
               NavbarItem(Icons.home, 'Home', backgroundColor: colors[0]),
-          destination: [
+          destinations: [
             Destination(
               route: '/',
               widget: const HomeFeeds(),
@@ -58,7 +58,7 @@ class HomePage extends StatelessWidget {
         DestinationRouter(
           navbarItem: NavbarItem(Icons.shopping_basket, 'Products',
               backgroundColor: colors[1]),
-          destination: [
+          destinations: [
             Destination(
               route: '/',
               widget: const ProductList(),
@@ -78,7 +78,7 @@ class HomePage extends StatelessWidget {
         DestinationRouter(
             navbarItem:
                 NavbarItem(Icons.person, 'Me', backgroundColor: colors[2]),
-            destination: [
+            destinations: [
               Destination(
                 route: '/',
                 widget: const UserProfile(),

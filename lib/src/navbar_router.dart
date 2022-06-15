@@ -12,7 +12,7 @@ class Destination {
 }
 
 class DestinationRouter {
-  final List<Destination> destination;
+  final List<Destination> destinations;
 
   /// Route to load when the app is started
   /// for the current destination, defaults to '/'
@@ -22,9 +22,23 @@ class DestinationRouter {
   final NavbarItem navbarItem;
 
   DestinationRouter(
-      {required this.destination,
+      {required this.destinations,
       required this.navbarItem,
-      this.initialRoute = '/'});
+      this.initialRoute = '/'})
+      : assert(_isRoutePresent(initialRoute, destinations),
+            'Initial route must be present in List of Destinations');
+}
+
+/// helper class for assert
+bool _isRoutePresent(String route, List<Destination> destinations) {
+  bool isPresent = false;
+  for (Destination destination in destinations) {
+    if (destination.route == route) {
+      isPresent = true;
+      return isPresent;
+    }
+  }
+  return isPresent;
 }
 
 class NavbarDecoration {
@@ -152,7 +166,18 @@ class _NavbarRouterState extends State<NavbarRouter>
 
   @override
   void didUpdateWidget(covariant NavbarRouter oldWidget) {
-    // TODO: implement didUpdateWidget
+    /// update animation
+    if (widget.destinationAnimationCurve !=
+            oldWidget.destinationAnimationCurve ||
+        widget.destinationAnimationDuration !=
+            oldWidget.destinationAnimationDuration) {
+      _controller.duration =
+          Duration(milliseconds: widget.destinationAnimationDuration);
+      fadeAnimation = Tween<double>(begin: 0.4, end: 1.0).animate(
+        CurvedAnimation(
+            parent: _controller, curve: widget.destinationAnimationCurve),
+      );
+    }
     super.didUpdateWidget(oldWidget);
   }
 
@@ -182,15 +207,15 @@ class _NavbarRouterState extends State<NavbarRouter>
                                     widget.destinations[i].initialRoute,
                                 onGenerateRoute: (RouteSettings settings) {
                                   WidgetBuilder? builder = widget.errorBuilder;
-                                  final nestedLength =
-                                      widget.destinations[i].destination.length;
+                                  final nestedLength = widget
+                                      .destinations[i].destinations.length;
                                   for (int j = 0; j < nestedLength; j++) {
-                                    if (widget.destinations[i].destination[j]
+                                    if (widget.destinations[i].destinations[j]
                                             .route ==
                                         settings.name) {
                                       builder = (BuildContext _) => widget
                                           .destinations[i]
-                                          .destination[j]
+                                          .destinations[j]
                                           .widget;
                                     }
                                   }
