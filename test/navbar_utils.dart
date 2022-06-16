@@ -1,127 +1,7 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:navbar_router/navbar_router.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
-  final List<Color> colors = [mediumPurple, Colors.orange, Colors.teal];
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'BottomNavbar Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.indigo,
-        ),
-        home: const HomePage());
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  List<NavbarItem> items = [
-    NavbarItem(Icons.home, 'Home', backgroundColor: colors[0]),
-    NavbarItem(Icons.shopping_bag, 'Products', backgroundColor: colors[1]),
-    NavbarItem(Icons.person, 'Me', backgroundColor: colors[2]),
-  ];
-
-  final Map<int, Map<String, Widget>> _routes = const {
-    0: {
-      '/': HomeFeeds(),
-      FeedDetail.route: FeedDetail(),
-    },
-    1: {
-      '/': ProductList(),
-      ProductDetail.route: ProductDetail(),
-    },
-    2: {
-      '/': UserProfile(),
-      ProfileEdit.route: ProfileEdit(),
-    },
-  };
-
-  void showSnackBar() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        behavior: SnackBarBehavior.floating,
-        duration: Duration(milliseconds: 600),
-        margin: EdgeInsets.only(
-            bottom: kBottomNavigationBarHeight, right: 2, left: 2),
-        content: Text('Tap back button again to exit'),
-      ),
-    );
-  }
-
-  void hideSnackBar() {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-  }
-
-  DateTime oldTime = DateTime.now();
-  DateTime newTime = DateTime.now();
-
-  @override
-  Widget build(BuildContext context) {
-    return NavbarRouter(
-      errorBuilder: (context) {
-        return const Center(child: Text('Error 404'));
-      },
-      onBackButtonPressed: (isExitingApp) {
-        if (isExitingApp) {
-          newTime = DateTime.now();
-          int difference = newTime.difference(oldTime).inMilliseconds;
-          oldTime = newTime;
-          if (difference < 1000) {
-            hideSnackBar();
-            return isExitingApp;
-          } else {
-            showSnackBar();
-            return false;
-          }
-        } else {
-          return isExitingApp;
-        }
-      },
-      destinationAnimationCurve: Curves.fastOutSlowIn,
-      destinationAnimationDuration: 600,
-      decoration:
-          NavbarDecoration(navbarType: BottomNavigationBarType.shifting),
-      destinations: [
-        for (int i = 0; i < items.length; i++)
-          DestinationRouter(
-            navbarItem: items[i],
-            destinations: [
-              for (int j = 0; j < _routes[i]!.keys.length; j++)
-                Destination(
-                  route: _routes[i]!.keys.elementAt(j),
-                  widget: _routes[i]!.values.elementAt(j),
-                ),
-            ],
-            initialRoute: _routes[i]!.keys.first,
-          ),
-      ],
-    );
-  }
-}
-
-Future<void> navigate(BuildContext context, String route,
-        {bool isDialog = false,
-        bool isRootNavigator = true,
-        Map<String, dynamic>? arguments}) =>
-    Navigator.of(context, rootNavigator: isRootNavigator)
-        .pushNamed(route, arguments: arguments);
-
-const Color mediumPurple = Color.fromRGBO(79, 0, 241, 1.0);
 const String placeHolderText =
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
 
@@ -166,7 +46,6 @@ class _HomeFeedsState extends State<HomeFeeds> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const DemoDrawer(),
       appBar: AppBar(
         title: const Text('Feeds'),
       ),
@@ -184,48 +63,6 @@ class _HomeFeedsState extends State<HomeFeeds> {
               },
               child: FeedTile(index: index));
         },
-      ),
-    );
-  }
-}
-
-class DemoDrawer extends StatefulWidget {
-  const DemoDrawer({Key? key}) : super(key: key);
-
-  @override
-  State<DemoDrawer> createState() => _DemoDrawerState();
-}
-
-class _DemoDrawerState extends State<DemoDrawer> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!NavbarNotifier.isNavbarHidden) {
-        NavbarNotifier.hideBottomNavBar = true;
-      } else {
-        NavbarNotifier.hideBottomNavBar = false;
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      NavbarNotifier.hideBottomNavBar = false;
-    });
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      child: Column(
-        children: const [
-           UserAccountsDrawerHeader(
-              accountName: Text('Flutter Dev'),
-              accountEmail: Text('email@example.com'))
-        ],
       ),
     );
   }

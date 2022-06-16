@@ -36,11 +36,14 @@ Add to pubspec.yaml
 
 
 ```dart
-
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
 
-  List<IconData> icons = [Icons.home, Icons.shopping_basket, Icons.person];
+  List<NavbarItem> items = [
+    NavbarItem(Icons.home, 'Home', backgroundColor: colors[0]),
+    NavbarItem(Icons.shopping_bag, 'Products', backgroundColor: colors[1]),
+    NavbarItem(Icons.person, 'Me', backgroundColor: colors[2]),
+  ];
 
   final Map<int, Map<String, Widget>> _routes = const {
     0: {
@@ -71,10 +74,9 @@ class HomePage extends StatelessWidget {
       decoration:
           NavbarDecoration(navbarType: BottomNavigationBarType.shifting),
       destinations: [
-        for (int i = 0; i < icons.length; i++)
+        for (int i = 0; i < items.length; i++)
           DestinationRouter(
-            navbarItem:
-                NavbarItem(icons[i], 'Home', backgroundColor: colors[i]),
+            navbarItem: items[i],
             destinations: [
               for (int j = 0; j < _routes[i]!.keys.length; j++)
                 Destination(
