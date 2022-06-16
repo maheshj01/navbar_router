@@ -18,12 +18,29 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.indigo,
         ),
-        home: const HomePage());
+        home: HomePage());
   }
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key}) : super(key: key);
+
+  List<IconData> icons = [Icons.home, Icons.shopping_basket, Icons.person];
+
+  final Map<int, Map<String, Widget>> _routes = const {
+    0: {
+      '/': HomeFeeds(),
+      FeedDetail.route: FeedDetail(),
+    },
+    1: {
+      '/': ProductList(),
+      ProductDetail.route: ProductDetail(),
+    },
+    2: {
+      '/': UserProfile(),
+      ProfileEdit.route: ProfileEdit(),
+    },
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -39,52 +56,19 @@ class HomePage extends StatelessWidget {
       decoration:
           NavbarDecoration(navbarType: BottomNavigationBarType.shifting),
       destinations: [
-        DestinationRouter(
-          navbarItem:
-              NavbarItem(Icons.home, 'Home', backgroundColor: colors[0]),
-          destinations: [
-            Destination(
-              route: '/',
-              widget: const HomeFeeds(),
-            ),
-            Destination(
-                route: FeedDetail.route,
-                widget: const FeedDetail(
-                  feedId: '121',
-                ))
-          ],
-          initialRoute: '/',
-        ),
-        DestinationRouter(
-          navbarItem: NavbarItem(Icons.shopping_basket, 'Products',
-              backgroundColor: colors[1]),
-          destinations: [
-            Destination(
-              route: '/',
-              widget: const ProductList(),
-            ),
-            Destination(
-                route: ProductDetail.route,
-                widget: const ProductDetail(
-                  id: '121',
-                )),
-            Destination(
-                route: ProductComments.route,
-                widget: const ProductComments(
-                  id: '121',
-                ))
-          ],
-        ),
-        DestinationRouter(
+        for (int i = 0; i < icons.length; i++)
+          DestinationRouter(
             navbarItem:
-                NavbarItem(Icons.person, 'Me', backgroundColor: colors[2]),
+                NavbarItem(icons[i], 'Home', backgroundColor: colors[i]),
             destinations: [
-              Destination(
-                route: '/',
-                widget: const UserProfile(),
-              ),
-              Destination(route: ProfileEdit.route, widget: const ProfileEdit())
-            ])
+              for (int j = 0; j < _routes[i]!.keys.length; j++)
+                Destination(
+                  route: _routes[i]!.keys.elementAt(j),
+                  widget: _routes[i]!.values.elementAt(j),
+                ),
+            ],
+            initialRoute: _routes[i]!.keys.first,
+          ),
       ],
     );
   }
