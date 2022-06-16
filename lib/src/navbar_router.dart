@@ -13,7 +13,8 @@ class Destination {
 }
 
 class DestinationRouter {
-  /// The destination to show when the [navbarItem] is selected
+
+  /// The Nested destinations to show when the [navbarItem] is selected
   final List<Destination> destinations;
 
   /// Route to load when the app is started
@@ -21,6 +22,7 @@ class DestinationRouter {
   ///  initial route must be present in List of destinations
   final String initialRoute;
 
+  /// The NavbarItem associated with this destination
   final NavbarItem navbarItem;
 
   DestinationRouter(
@@ -44,22 +46,50 @@ bool _isRoutePresent(String route, List<Destination> destinations) {
 }
 
 class NavbarDecoration {
+  /// The type of the Navbar to be displayed
+  /// [BottomNavigationBarType.fixed] or [BottomNavigationBarType.shifting]
   final BottomNavigationBarType? navbarType;
+
+  /// The backgroundColor of the Navbar
   final Color? backgroundColor;
+
+  /// The color of the selected item
   final Color? selectedItemColor;
+
+  /// The color of the unselected item
   final Color? unselectedItemColor;
+
+  /// The elevation shadown on the edges of bottomnavigationbar
   final double? elevation;
+
+  /// The color of the selected item icon
   final Color? iconColor;
+
+  /// The color of the label text
   final Color? labelColor;
+
+  /// The color of the unselected item icon
   final Color? unselectedIconColor;
+
+  /// Whether or not to show the unselected label text
   final bool? showUnselectedLabels;
+
+  /// The color of the unselected label text
   final Color? unselectedLabelColor;
+
+  /// The color of the selected item icon
   final Color? selectedIconColor;
+
+  /// The color of the label text
   final Color? selectedLabelColor;
+
+  /// whether or not to show the selected label text
   final bool? showSelectedLabels;
 
   /// defaults to 24.0
   final double? iconSize;
+
+  /// haptic feedbakc when the item is selected
   final bool? enableFeedback;
 
   NavbarDecoration({
@@ -246,7 +276,7 @@ class _NavbarRouterState extends State<NavbarRouter>
                       bottom: 0,
                       left: 0,
                       right: 0,
-                      child: AnimatedNavBar(
+                      child: _AnimatedNavBar(
                           model: _navbarNotifier,
                           decoration: widget.decoration,
                           onItemTapped: (x) {
@@ -274,8 +304,14 @@ class _NavbarRouterState extends State<NavbarRouter>
 
 class NavbarItem {
   const NavbarItem(this.iconData, this.text, {this.backgroundColor});
+
+  /// IconData for the navbar item
   final IconData iconData;
+
+  /// label for the navbar item
   final String text;
+
+  /// background color for the navbar item whnen type is [NavbarType.shifting]
   final Color? backgroundColor;
 }
 
@@ -290,8 +326,8 @@ final NavbarNotifier _navbarNotifier = NavbarNotifier();
 List<Color> colors = [mediumPurple, Colors.orange, Colors.teal];
 const Color mediumPurple = Color.fromRGBO(79, 0, 241, 1.0);
 
-class AnimatedNavBar extends StatefulWidget {
-  const AnimatedNavBar(
+class _AnimatedNavBar extends StatefulWidget {
+  const _AnimatedNavBar(
       {Key? key,
       this.decoration,
       required this.model,
@@ -307,10 +343,10 @@ class AnimatedNavBar extends StatefulWidget {
   _AnimatedNavBarState createState() => _AnimatedNavBarState();
 }
 
-class _AnimatedNavBarState extends State<AnimatedNavBar>
+class _AnimatedNavBarState extends State<_AnimatedNavBar>
     with SingleTickerProviderStateMixin {
   @override
-  void didUpdateWidget(covariant AnimatedNavBar oldWidget) {
+  void didUpdateWidget(covariant _AnimatedNavBar oldWidget) {
     if (NavbarNotifier.isNavbarHidden != isHidden) {
       if (!isHidden) {
         _showBottomNavBar();

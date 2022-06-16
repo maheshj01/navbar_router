@@ -1,6 +1,7 @@
 name: navbar_router
-description: A flutter package to build advanced bottomnavbar with minimal code
-version: 0.1.1
+description: A flutter package to build advanced bottomnavbar with minimal code and hassle
+
+version: 0.1.2
 homepage: https://github.com/maheshmnj/navbar_router
 
 environment:
