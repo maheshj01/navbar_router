@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:navbar_router/navbar_router.dart';
 import 'package:navbar_router/src/navbar_notifier.dart';
 
 class Destination {
@@ -140,12 +141,16 @@ class NavbarRouter extends StatefulWidget {
   /// to adjust the style of the Navbar.
   final NavbarDecoration? decoration;
 
+  // whether or not navbar should be responsive
+  final bool isDesktop;
+
   const NavbarRouter(
       {Key? key,
       required this.destinations,
       required this.errorBuilder,
       this.shouldPopToBaseRoute = true,
       this.decoration,
+      this.isDesktop = true,
       this.destinationAnimationCurve = Curves.fastOutSlowIn,
       this.destinationAnimationDuration = 700,
       this.onBackButtonPressed})
@@ -242,42 +247,54 @@ class _NavbarRouterState extends State<NavbarRouter>
               builder: (context, snapshot) {
                 return Stack(
                   children: [
-                    IndexedStack(
-                      index: NavbarNotifier.currentIndex,
-                      children: [
-                        for (int i = 0; i < length; i++)
-                          FadeTransition(
-                            opacity: fadeAnimation,
-                            child: Navigator(
-                                key: keys[i],
-                                initialRoute:
-                                    widget.destinations[i].initialRoute,
-                                onGenerateRoute: (RouteSettings settings) {
-                                  WidgetBuilder? builder = widget.errorBuilder;
-                                  final nestedLength = widget
-                                      .destinations[i].destinations.length;
-                                  for (int j = 0; j < nestedLength; j++) {
-                                    if (widget.destinations[i].destinations[j]
-                                            .route ==
-                                        settings.name) {
-                                      builder = (BuildContext _) => widget
-                                          .destinations[i]
-                                          .destinations[j]
-                                          .widget;
+                    AnimatedPadding(
+                      /// same duration as [_AnimatedNavbar]'s animation duration
+                      duration: const Duration(milliseconds: 500),
+                      padding: EdgeInsets.only(
+                          left:
+                              widget.isDesktop && !NavbarNotifier.isNavbarHidden
+                                  ? 72
+                                  : 0),
+                      child: IndexedStack(
+                        index: NavbarNotifier.currentIndex,
+                        children: [
+                          for (int i = 0; i < length; i++)
+                            FadeTransition(
+                              opacity: fadeAnimation,
+                              child: Navigator(
+                                  key: keys[i],
+                                  initialRoute:
+                                      widget.destinations[i].initialRoute,
+                                  onGenerateRoute: (RouteSettings settings) {
+                                    WidgetBuilder? builder =
+                                        widget.errorBuilder;
+                                    final nestedLength = widget
+                                        .destinations[i].destinations.length;
+                                    for (int j = 0; j < nestedLength; j++) {
+                                      if (widget.destinations[i].destinations[j]
+                                              .route ==
+                                          settings.name) {
+                                        builder = (BuildContext _) => widget
+                                            .destinations[i]
+                                            .destinations[j]
+                                            .widget;
+                                      }
                                     }
-                                  }
-                                  return MaterialPageRoute(
-                                      builder: builder!, settings: settings);
-                                }),
-                          )
-                      ],
+                                    return MaterialPageRoute(
+                                        builder: builder!, settings: settings);
+                                  }),
+                            )
+                        ],
+                      ),
                     ),
                     Positioned(
-                      bottom: 0,
                       left: 0,
-                      right: 0,
+                      top: widget.isDesktop ? 0 : null,
+                      bottom: 0,
+                      right: widget.isDesktop ? null : 0,
                       child: _AnimatedNavBar(
                           model: _navbarNotifier,
+                          isDesktop: widget.isDesktop,
                           decoration: widget.decoration,
                           onItemTapped: (x) {
                             // User pressed  on the same tab twice
@@ -331,12 +348,14 @@ class _AnimatedNavBar extends StatefulWidget {
       {Key? key,
       this.decoration,
       required this.model,
+      this.isDesktop = false,
       required this.menuItems,
       required this.onItemTapped})
       : super(key: key);
   final List<NavbarItem> menuItems;
   final NavbarNotifier model;
   final Function(int) onItemTapped;
+  final bool isDesktop;
   final NavbarDecoration? decoration;
 
   @override
@@ -393,39 +412,56 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
         animation: animation,
         builder: (BuildContext context, Widget? child) {
           return Transform.translate(
-            offset: Offset(0, animation.value),
-            child: Container(
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 12,
-                  spreadRadius: 2,
-                  offset: const Offset(2, -2),
-                ),
-              ]),
-              child: BottomNavigationBar(
-                type: widget.decoration?.navbarType,
-                currentIndex: NavbarNotifier.currentIndex,
-                onTap: (x) {
-                  widget.onItemTapped(x);
-                },
-                backgroundColor: widget.decoration?.backgroundColor,
-                showSelectedLabels: widget.decoration?.showSelectedLabels,
-                enableFeedback: widget.decoration?.enableFeedback,
-                showUnselectedLabels: widget.decoration?.showUnselectedLabels,
-                selectedItemColor: widget.decoration?.selectedItemColor,
-                elevation: widget.decoration?.elevation,
-                iconSize: widget.decoration?.iconSize ?? 24.0,
-                unselectedItemColor: widget.decoration?.unselectedItemColor,
-                items: widget.menuItems
-                    .map((NavbarItem menuItem) => BottomNavigationBarItem(
-                          backgroundColor: menuItem.backgroundColor,
-                          icon: Icon(menuItem.iconData),
-                          label: menuItem.text,
-                        ))
-                    .toList(),
-              ),
-            ),
+            offset: widget.isDesktop
+                ? Offset(-animation.value, 0)
+                : Offset(0, animation.value),
+            child: widget.isDesktop
+                ? NavigationRail(
+                    onDestinationSelected: (x) {
+                      widget.onItemTapped(x);
+                    },
+                    backgroundColor: widget.decoration?.backgroundColor,
+                    destinations: widget.menuItems.map((NavbarItem menuItem) {
+                      return NavigationRailDestination(
+                        icon: Icon(menuItem.iconData),
+                        label: Text(menuItem.text),
+                      );
+                    }).toList(),
+                    selectedIndex: NavbarNotifier.currentIndex)
+                : Container(
+                    decoration: BoxDecoration(boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 12,
+                        spreadRadius: 2,
+                        offset: const Offset(2, -2),
+                      ),
+                    ]),
+                    child: BottomNavigationBar(
+                      type: widget.decoration?.navbarType,
+                      currentIndex: NavbarNotifier.currentIndex,
+                      onTap: (x) {
+                        widget.onItemTapped(x);
+                      },
+                      backgroundColor: widget.decoration?.backgroundColor,
+                      showSelectedLabels: widget.decoration?.showSelectedLabels,
+                      enableFeedback: widget.decoration?.enableFeedback,
+                      showUnselectedLabels:
+                          widget.decoration?.showUnselectedLabels,
+                      selectedItemColor: widget.decoration?.selectedItemColor,
+                      elevation: widget.decoration?.elevation,
+                      iconSize: widget.decoration?.iconSize ?? 24.0,
+                      unselectedItemColor:
+                          widget.decoration?.unselectedItemColor,
+                      items: widget.menuItems
+                          .map((NavbarItem menuItem) => BottomNavigationBarItem(
+                                backgroundColor: menuItem.backgroundColor,
+                                icon: Icon(menuItem.iconData),
+                                label: menuItem.text,
+                              ))
+                          .toList(),
+                    ),
+                  ),
           );
         });
   }

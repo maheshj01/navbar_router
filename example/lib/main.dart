@@ -72,44 +72,61 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return NavbarRouter(
-      errorBuilder: (context) {
-        return const Center(child: Text('Error 404'));
-      },
-      onBackButtonPressed: (isExitingApp) {
-        if (isExitingApp) {
-          newTime = DateTime.now();
-          int difference = newTime.difference(oldTime).inMilliseconds;
-          oldTime = newTime;
-          if (difference < 1000) {
-            hideSnackBar();
-            return isExitingApp;
+    final size = MediaQuery.of(context).size;
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+            NavbarNotifier.isNavbarHidden ? Icons.toggle_off : Icons.toggle_on),
+        onPressed: () {
+          // Programmatically toggle the Navbar visibility
+          if (NavbarNotifier.isNavbarHidden) {
+            NavbarNotifier.hideBottomNavBar = false;
           } else {
-            showSnackBar();
-            return false;
+            NavbarNotifier.hideBottomNavBar = true;
           }
-        } else {
-          return isExitingApp;
-        }
-      },
-      destinationAnimationCurve: Curves.fastOutSlowIn,
-      destinationAnimationDuration: 600,
-      decoration:
-          NavbarDecoration(navbarType: BottomNavigationBarType.shifting),
-      destinations: [
-        for (int i = 0; i < items.length; i++)
-          DestinationRouter(
-            navbarItem: items[i],
-            destinations: [
-              for (int j = 0; j < _routes[i]!.keys.length; j++)
-                Destination(
-                  route: _routes[i]!.keys.elementAt(j),
-                  widget: _routes[i]!.values.elementAt(j),
-                ),
-            ],
-            initialRoute: _routes[i]!.keys.first,
-          ),
-      ],
+          setState(() {});
+        },
+      ),
+      body: NavbarRouter(
+        errorBuilder: (context) {
+          return const Center(child: Text('Error 404'));
+        },
+        isDesktop: size.width > 800 ? true : false,
+        onBackButtonPressed: (isExitingApp) {
+          if (isExitingApp) {
+            newTime = DateTime.now();
+            int difference = newTime.difference(oldTime).inMilliseconds;
+            oldTime = newTime;
+            if (difference < 1000) {
+              hideSnackBar();
+              return isExitingApp;
+            } else {
+              showSnackBar();
+              return false;
+            }
+          } else {
+            return isExitingApp;
+          }
+        },
+        destinationAnimationCurve: Curves.fastOutSlowIn,
+        destinationAnimationDuration: 600,
+        decoration:
+            NavbarDecoration(navbarType: BottomNavigationBarType.shifting),
+        destinations: [
+          for (int i = 0; i < items.length; i++)
+            DestinationRouter(
+              navbarItem: items[i],
+              destinations: [
+                for (int j = 0; j < _routes[i]!.keys.length; j++)
+                  Destination(
+                    route: _routes[i]!.keys.elementAt(j),
+                    widget: _routes[i]!.values.elementAt(j),
+                  ),
+              ],
+              initialRoute: _routes[i]!.keys.first,
+            ),
+        ],
+      ),
     );
   }
 }
@@ -166,7 +183,6 @@ class _HomeFeedsState extends State<HomeFeeds> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const DemoDrawer(),
       appBar: AppBar(
         title: const Text('Feeds'),
       ),
@@ -182,50 +198,10 @@ class _HomeFeedsState extends State<HomeFeeds> {
                           feedId: index.toString(),
                         )));
               },
-              child: FeedTile(index: index));
+              child: FeedTile(
+                index: index,
+              ));
         },
-      ),
-    );
-  }
-}
-
-class DemoDrawer extends StatefulWidget {
-  const DemoDrawer({Key? key}) : super(key: key);
-
-  @override
-  State<DemoDrawer> createState() => _DemoDrawerState();
-}
-
-class _DemoDrawerState extends State<DemoDrawer> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!NavbarNotifier.isNavbarHidden) {
-        NavbarNotifier.hideBottomNavBar = true;
-      } else {
-        NavbarNotifier.hideBottomNavBar = false;
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      NavbarNotifier.hideBottomNavBar = false;
-    });
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      child: Column(
-        children: const [
-           UserAccountsDrawerHeader(
-              accountName: Text('Flutter Dev'),
-              accountEmail: Text('email@example.com'))
-        ],
       ),
     );
   }
@@ -251,6 +227,8 @@ class FeedTile extends StatelessWidget {
             child: Container(
               color: Colors.grey,
               height: 180,
+              alignment: Alignment.center,
+              child: Text('Feed $index card'),
             ),
           ),
           Positioned(
