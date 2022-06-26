@@ -27,7 +27,7 @@ Contributing
 
 ### Publishing (Applicable only for the owner of the repository)
 
-When publishing a new release of this package make sure all the below things are done.
+When publishing a new release of this package make sure all the below points are done.
 - Update the version in readme(2), pubspec.yaml, and update the changelog
 - make sure the documentation is updated as per the changes
 - make sure existing and new tests are passing

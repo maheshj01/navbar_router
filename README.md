@@ -1,4 +1,4 @@
-## **navbar_router 0.1.2**
+## **navbar_router 0.2.0**
 
  <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
@@ -13,7 +13,7 @@ This is the ultimate BottomNavigionBar created by considering the advanced use c
 - persist state across bottom navbar tabs
 - Tapping the same navbar button pops to base route of nested navigator (same as instagram)
 - Switch the Navbar destination with animation
-- Adapatable to different device Sizes
+- Adapatable to different device Sizes using `isDesktop` and `NavbarDecoration.isExtended` Property.
 
 
 _Heres a [sample app](example/lib/main.dart) built using this package to see how it works._
@@ -31,7 +31,7 @@ This package will help you save atleast 50% lines of code in half the time requi
 Add to pubspec.yaml
 
 ```yaml
-  navbar_router: ^0.1.2
+  navbar_router: ^0.2.0
 ```
 
 *Example*
