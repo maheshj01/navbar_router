@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
         errorBuilder: (context) {
           return const Center(child: Text('Error 404'));
         },
-        isDesktop: size.width > 800 ? true : false,
+        isDesktop: size.width > 600 ? true : false,
         onBackButtonPressed: (isExitingApp) {
           if (isExitingApp) {
             newTime = DateTime.now();
@@ -110,8 +110,9 @@ class _HomePageState extends State<HomePage> {
         },
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 600,
-        decoration:
-            NavbarDecoration(navbarType: BottomNavigationBarType.shifting),
+        decoration: NavbarDecoration(
+            isExtended: size.width > 800 ? true : false,
+            navbarType: BottomNavigationBarType.shifting),
         destinations: [
           for (int i = 0; i < items.length; i++)
             DestinationRouter(

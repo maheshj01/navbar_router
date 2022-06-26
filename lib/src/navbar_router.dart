@@ -146,7 +146,9 @@ class NavbarRouter extends StatefulWidget {
   /// to adjust the style of the Navbar.
   final NavbarDecoration? decoration;
 
-  // whether or not navbar should be responsive
+  /// if true, navbar will be shown on the left, this property
+  /// can be used along with `NavbarDecoration.isExtended` to make the navbar
+  ///  adaptable for large screen sizes.
   final bool isDesktop;
 
   const NavbarRouter(
@@ -238,6 +240,17 @@ class _NavbarRouterState extends State<NavbarRouter>
     super.didUpdateWidget(oldWidget);
   }
 
+  double getPadding() {
+    if (widget.isDesktop) {
+      if (widget.decoration!.isExtended) {
+        return 256.0;
+      } else {
+        return 72.0;
+      }
+    }
+    return 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -255,11 +268,7 @@ class _NavbarRouterState extends State<NavbarRouter>
                     AnimatedPadding(
                       /// same duration as [_AnimatedNavbar]'s animation duration
                       duration: const Duration(milliseconds: 500),
-                      padding: EdgeInsets.only(
-                          left:
-                              widget.isDesktop && !NavbarNotifier.isNavbarHidden
-                                  ? 72
-                                  : 0),
+                      padding: EdgeInsets.only(left: getPadding()),
                       child: IndexedStack(
                         index: NavbarNotifier.currentIndex,
                         children: [

@@ -13,6 +13,7 @@ This is the ultimate BottomNavigionBar created by considering the advanced use c
 - persist state across bottom navbar tabs
 - Tapping the same navbar button pops to base route of nested navigator (same as instagram)
 - Switch the Navbar destination with animation
+- Adapatable to different device Sizes
 
 
 _Heres a [sample app](example/lib/main.dart) built using this package to see how it works._
@@ -173,6 +174,7 @@ handle app exits (e.g you might want to implement double press back button to ex
 
    ***shouldPopToBaseRoute***: A boolean which decides, whether the navbar should pop to the base route (pop all except first) when the current navbar is tapped while the route is deeply nested. This feature similar to Instagram's navigation bar defaults to true.
 
+   ***isDesktop***: if true, navbar will be shown on the left, this property can be used along with `NavbarDecoration.isExtended` to make the navbar adaptable for large screen sizes.
 
 ### Curious how the navbar_router works?
 
