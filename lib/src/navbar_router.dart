@@ -54,6 +54,10 @@ class NavbarDecoration {
   /// The backgroundColor of the Navbar
   final Color? backgroundColor;
 
+  /// Defines whether the Navbar is extended in Desktop mode
+  /// defaultst to false
+  final bool isExtended;
+
   /// The color of the selected item
   final Color? selectedItemColor;
 
@@ -99,6 +103,7 @@ class NavbarDecoration {
     this.elevation,
     this.enableFeedback,
     this.iconColor,
+    this.isExtended = false,
     this.iconSize,
     this.labelColor,
     this.selectedItemColor,
@@ -417,9 +422,11 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
                 : Offset(0, animation.value),
             child: widget.isDesktop
                 ? NavigationRail(
+                    elevation: widget.decoration!.elevation,
                     onDestinationSelected: (x) {
                       widget.onItemTapped(x);
                     },
+                    extended: widget.decoration!.isExtended,
                     backgroundColor: widget.decoration?.backgroundColor,
                     destinations: widget.menuItems.map((NavbarItem menuItem) {
                       return NavigationRailDestination(
