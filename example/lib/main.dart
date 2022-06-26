@@ -155,26 +155,33 @@ class _HomeFeedsState extends State<HomeFeeds> {
   final _scrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
-    _addScrollListener();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    size = MediaQuery.of(context).size;
+    if (size.width < 600) {
+      _addScrollListener();
+    }
+  }
+
+  void handleScroll() {
+    if (size.width > 600) return;
+    if (_scrollController.position.userScrollDirection ==
+        ScrollDirection.forward) {
+      if (NavbarNotifier.isNavbarHidden) {
+        NavbarNotifier.hideBottomNavBar = false;
+      }
+    } else {
+      if (!NavbarNotifier.isNavbarHidden) {
+        NavbarNotifier.hideBottomNavBar = true;
+      }
+    }
   }
 
   void _addScrollListener() {
-    _scrollController.addListener(() {
-      if (_scrollController.position.userScrollDirection ==
-          ScrollDirection.forward) {
-        if (NavbarNotifier.isNavbarHidden) {
-          NavbarNotifier.hideBottomNavBar = false;
-        }
-      } else {
-        if (!NavbarNotifier.isNavbarHidden) {
-          NavbarNotifier.hideBottomNavBar = true;
-        }
-      }
-    });
+    _scrollController.addListener(handleScroll);
   }
 
+  Size size = Size.zero;
   @override
   void dispose() {
     _scrollController.dispose();
@@ -284,25 +291,33 @@ class _ProductListState extends State<ProductList> {
   final _scrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
-    _addScrollListener();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    size = MediaQuery.of(context).size;
+    if (size.width < 600) {
+      _addScrollListener();
+    }
+  }
+
+  void handleScroll() {
+    if (size.width > 600) return;
+    if (_scrollController.position.userScrollDirection ==
+        ScrollDirection.forward) {
+      if (NavbarNotifier.isNavbarHidden) {
+        NavbarNotifier.hideBottomNavBar = false;
+      }
+    } else {
+      if (!NavbarNotifier.isNavbarHidden) {
+        NavbarNotifier.hideBottomNavBar = true;
+      }
+    }
   }
 
   void _addScrollListener() {
-    _scrollController.addListener(() {
-      if (_scrollController.position.userScrollDirection ==
-          ScrollDirection.forward) {
-        if (NavbarNotifier.isNavbarHidden) {
-          NavbarNotifier.hideBottomNavBar = false;
-        }
-      } else {
-        if (!NavbarNotifier.isNavbarHidden) {
-          NavbarNotifier.hideBottomNavBar = true;
-        }
-      }
-    });
+    _scrollController.addListener(handleScroll);
   }
+
+  Size size = Size.zero;
 
   @override
   void dispose() {
