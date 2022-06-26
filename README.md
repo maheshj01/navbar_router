@@ -161,7 +161,7 @@ handle app exits (e.g you might want to implement double press back button to ex
   ***destinations***: A List of `DestinationRouter` to show when the user taps the [NavbarItem].
   Each DestinationRouter specifies a List of Destinations, initialRoute, and the navbarItem corresponding to that destination.
 
-  *errorBuilder*: A WidgetBuilder to show the user when the user tried to navigate to a route that does not exist in the [destinations].
+  ***errorBuilder***: A WidgetBuilder to show the user when the user tried to navigate to a route that does not exist in the [destinations].
 
   ***decoration*** : The decoraton for Navbar has all the properties you would expect in a [BottomNavigationBar] to adjust the style of the Navbar.
 
