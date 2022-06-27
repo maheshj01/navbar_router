@@ -156,6 +156,25 @@ handle app exits (e.g you might want to implement double press back button to ex
 <br/>
 
 
+## Adapatable to different device Sizes
+
+
+```dart
+ NavbarRouter(
+        errorBuilder: (context) {
+          return const Center(child: Text('Error 404'));
+        },
+        isDesktop: size.width > 600 ? true : false,
+        decoration: NavbarDecoration(
+            isExtended: size.width > 800 ? true : false,
+            navbarType: BottomNavigationBarType.shifting),
+        ...
+        ...
+);
+```
+
+<img src="https://user-images.githubusercontent.com/31410839/175865246-39b783fd-2030-4bc1-ad87-528db50fe3d7.gif">
+
 ## **Docs**
 
   ***destinations***: A List of `DestinationRouter` to show when the user taps the [NavbarItem].
