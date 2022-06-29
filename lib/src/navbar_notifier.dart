@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class NavbarNotifier extends ChangeNotifier {
-
   static final NavbarNotifier _singleton = NavbarNotifier._internal();
 
   factory NavbarNotifier() {
@@ -11,7 +10,6 @@ class NavbarNotifier extends ChangeNotifier {
   }
 
   NavbarNotifier._internal();
-
 
   static int _index = 0;
 
@@ -74,7 +72,7 @@ class NavbarNotifier extends ChangeNotifier {
     }
   }
 
-  void notify(){
+  void notify() {
     notifyListeners();
   }
 }
