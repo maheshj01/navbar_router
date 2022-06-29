@@ -14,7 +14,6 @@ class Destination {
 }
 
 class DestinationRouter {
-
   /// The Nested destinations to show when the [navbarItem] is selected
   final List<Destination> destinations;
 
@@ -273,30 +272,34 @@ class _NavbarRouterState extends State<NavbarRouter>
                         index: NavbarNotifier.currentIndex,
                         children: [
                           for (int i = 0; i < length; i++)
-                            FadeTransition(
-                              opacity: fadeAnimation,
-                              child: Navigator(
-                                  key: keys[i],
-                                  initialRoute:
-                                      widget.destinations[i].initialRoute,
-                                  onGenerateRoute: (RouteSettings settings) {
-                                    WidgetBuilder? builder =
-                                        widget.errorBuilder;
-                                    final nestedLength = widget
-                                        .destinations[i].destinations.length;
-                                    for (int j = 0; j < nestedLength; j++) {
-                                      if (widget.destinations[i].destinations[j]
-                                              .route ==
-                                          settings.name) {
-                                        builder = (BuildContext _) => widget
-                                            .destinations[i]
-                                            .destinations[j]
-                                            .widget;
+                            IgnorePointer(
+                              ignoring: NavbarNotifier.currentIndex != i,
+                              child: FadeTransition(
+                                opacity: fadeAnimation,
+                                child: Navigator(
+                                    key: keys[i],
+                                    initialRoute:
+                                        widget.destinations[i].initialRoute,
+                                    onGenerateRoute: (RouteSettings settings) {
+                                      WidgetBuilder? builder =
+                                          widget.errorBuilder;
+                                      final nestedLength = widget
+                                          .destinations[i].destinations.length;
+                                      for (int j = 0; j < nestedLength; j++) {
+                                        if (widget.destinations[i]
+                                                .destinations[j].route ==
+                                            settings.name) {
+                                          builder = (BuildContext _) => widget
+                                              .destinations[i]
+                                              .destinations[j]
+                                              .widget;
+                                        }
                                       }
-                                    }
-                                    return MaterialPageRoute(
-                                        builder: builder!, settings: settings);
-                                  }),
+                                      return MaterialPageRoute(
+                                          builder: builder!,
+                                          settings: settings);
+                                    }),
+                              ),
                             )
                         ],
                       ),

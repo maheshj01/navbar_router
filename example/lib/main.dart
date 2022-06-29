@@ -74,6 +74,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
         child: Icon(
             NavbarNotifier.isNavbarHidden ? Icons.toggle_off : Icons.toggle_on),
@@ -451,7 +452,7 @@ class UserProfile extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
-                navigate(context, ProfileEdit.route);
+                navigate(context, ProfileEdit.route, isRootNavigator: false);
               },
             )
           ],
