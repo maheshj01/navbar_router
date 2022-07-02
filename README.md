@@ -1,4 +1,4 @@
-## **navbar_router 0.2.0**
+## **navbar_router 0.2.1**
 
  <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
@@ -31,7 +31,7 @@ This package will help you save atleast 50% lines of code in half the time requi
 Add to pubspec.yaml
 
 ```yaml
-  navbar_router: ^0.2.0
+  navbar_router: ^0.2.1
 ```
 
 *Example*
@@ -120,7 +120,7 @@ You can hide or show bottom navigationBar with a single line of code from anywhe
 
 Hide/show navbar on scroll             |  Hide/show navbar on drawer open/close
 :-------------------------:|:-------------------------:
-![](https://miro.medium.com/max/800/1*NaYdY1FfsPFCNBdx3wg_og.gif)  | <img src="https://user-images.githubusercontent.com/31410839/173987446-c8c79bb0-d24c-46c1-bc4a-582508a4e187.gif" width ="200">  
+![](https://miro.medium.com/max/800/1*NaYdY1FfsPFCNBdx3wg_og.gif)  | <img src="https://user-images.githubusercontent.com/31410839/173987446-c8c79bb0-d24c-46c1-bc4a-582508a4e187.gif" width ="200">
 
 
 <br/>
@@ -180,20 +180,22 @@ handle app exits (e.g you might want to implement double press back button to ex
   ***destinations***: A List of `DestinationRouter` to show when the user taps the [NavbarItem].
   Each DestinationRouter specifies a List of Destinations, initialRoute, and the navbarItem corresponding to that destination.
 
-  ***errorBuilder***: A WidgetBuilder to show the user when the user tried to navigate to a route that does not exist in the [destinations].
-
   ***decoration*** : The decoraton for Navbar has all the properties you would expect in a [BottomNavigationBar] to adjust the style of the Navbar.
 
-  *onBackButtonPressed*: A Function which defines whether it is the root Navigator or not
+  ***destinationAnimationCurve***: Curve for the destination animation when the user taps a navbar item. Defaults to `Curves.fastOutSlowIn`.
+
+  ***destinationAnimationDuration***: The duration in milliseconds of the animation of the destination. Defaults to 700ms.
+
+  ***errorBuilder***: A WidgetBuilder to show the user when the user tried to navigate to a route that does not exist in the [destinations].
+
+  ***onBackButtonPressed***: A Function which defines whether it is the root Navigator or not
    if the method returns true then the Navigator is at the base of the navigator stack
 
-   ***destinationAnimationCurve***: Curve for the destination animation when the user taps a navbar item. Defaults to `Curves.fastOutSlowIn`.
+  ***onChanged***: A callback that is called when the currentIndex of the navbarchanges.
 
-   ***destinationAnimationDuration***: The duration in milliseconds of the animation of the destination. Defaults to 700ms.
+  ***shouldPopToBaseRoute***: A boolean which decides, whether the navbar should pop to the base route (pop all except first) when the current navbar is tapped while the route is deeply nested. This feature similar to Instagram's navigation bar defaults to true.
 
-   ***shouldPopToBaseRoute***: A boolean which decides, whether the navbar should pop to the base route (pop all except first) when the current navbar is tapped while the route is deeply nested. This feature similar to Instagram's navigation bar defaults to true.
-
-   ***isDesktop***: if true, navbar will be shown on the left, this property can be used along with `NavbarDecoration.isExtended` to make the navbar adaptable for large screen sizes.
+  ***isDesktop***: if true, navbar will be shown on the left, this property can be used along with `NavbarDecoration.isExtended` to make the navbar adaptable for large screen sizes.
 
 ### Curious how the navbar_router works?
 

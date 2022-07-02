@@ -1,3 +1,8 @@
+## [0.2.1]  Jul 2, 2022
+
+* Add `onChanged` callback to `NavbarRouter`
+* Add decoration properties to `NavbarDecoration`
+
 ## [0.2.0]  Jun 26, 2022
 
 * Add `isDesktop` property to make navbar adaptable
