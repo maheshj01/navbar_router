@@ -112,8 +112,13 @@ class _HomePageState extends State<HomePage> {
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 600,
         decoration: NavbarDecoration(
+            selectedLabelTextStyle: const TextStyle(color: Colors.red),
+            showUnselectedLabels: true,
+            unselectedLabelTextStyle:
+                const TextStyle(color: Colors.black, fontSize: 10),
+            selectedIconTheme: const IconThemeData(color: Colors.red),
             isExtended: size.width > 800 ? true : false,
-            navbarType: BottomNavigationBarType.shifting),
+            navbarType: BottomNavigationBarType.fixed),
         destinations: [
           for (int i = 0; i < items.length; i++)
             DestinationRouter(

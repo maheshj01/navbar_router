@@ -88,6 +88,8 @@ class FeedTile extends StatelessWidget {
             child: Container(
               color: Colors.grey,
               height: 180,
+              alignment: Alignment.center,
+              child: Text('Feed $index card'),
             ),
           ),
           Positioned(
