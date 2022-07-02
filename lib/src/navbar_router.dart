@@ -180,6 +180,11 @@ class _NavbarRouterState extends State<NavbarRouter>
     return 0;
   }
 
+  void _animateDestinations() {
+    _controller.reset();
+    _controller.forward();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -251,10 +256,7 @@ class _NavbarRouterState extends State<NavbarRouter>
                               }
                             } else {
                               NavbarNotifier.index = x;
-
-                              /// Animated navbar Destinations
-                              _controller.reset();
-                              _controller.forward();
+                              _animateDestinations();
                             }
                           },
                           menuItems: items),
