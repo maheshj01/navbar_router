@@ -119,6 +119,9 @@ class _HomePageState extends State<HomePage> {
             selectedIconTheme: const IconThemeData(color: Colors.red),
             isExtended: size.width > 800 ? true : false,
             navbarType: BottomNavigationBarType.fixed),
+        onChanged: (x) {
+          debugPrint('index changed $x');
+        },
         destinations: [
           for (int i = 0; i < items.length; i++)
             DestinationRouter(

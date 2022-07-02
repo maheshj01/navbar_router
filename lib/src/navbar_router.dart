@@ -80,11 +80,15 @@ class NavbarRouter extends StatefulWidget {
   ///  adaptable for large screen sizes.
   final bool isDesktop;
 
+  /// callback when the currentIndex changes
+  final Function(int)? onChanged;
+
   const NavbarRouter(
       {Key? key,
       required this.destinations,
       required this.errorBuilder,
       this.shouldPopToBaseRoute = true,
+      this.onChanged,
       this.decoration,
       this.isDesktop = true,
       this.destinationAnimationCurve = Curves.fastOutSlowIn,
@@ -257,6 +261,9 @@ class _NavbarRouterState extends State<NavbarRouter>
                             } else {
                               NavbarNotifier.index = x;
                               _animateDestinations();
+                              if (widget.onChanged != null) {
+                                widget.onChanged!(x);
+                              }
                             }
                           },
                           menuItems: items),
