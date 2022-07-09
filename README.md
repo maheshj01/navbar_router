@@ -1,4 +1,4 @@
-## **navbar_router 0.2.1**
+## **navbar_router 0.2.2**
 
  <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
@@ -22,16 +22,15 @@ _video demo of the sample app_
 
 <img src="https://miro.medium.com/max/600/1*k_VYc1pqlgZWWm-Ui-gWHA.gif" alt="navbar_route demo"/>
 
-<br/>
 
 This package will help you save atleast 50% lines of code in half the time required to implement the above features. Heres the same [sample app](https://dartpad.dev/?id=894922ccb67f5fdc4ffb652e41916fa2) without the package which requires around 800 lines of code.
 
-## **Usage**
+## **Installation**
 
-Add to pubspec.yaml
+Run from the root of your flutter project.
 
-```yaml
-  navbar_router: ^0.2.1
+```console
+  flutter pub add navbar_router
 ```
 
 *Example*
@@ -108,7 +107,7 @@ defaults to
 
 <img src="https://miro.medium.com/max/600/1*08wCOOPCe1C1l_2uqIYEEg.gif">
 
-<br/>
+
 
 ## Hide or show bottomNavigationBar
 
@@ -122,8 +121,6 @@ Hide/show navbar on scroll             |  Hide/show navbar on drawer open/close
 :-------------------------:|:-------------------------:
 ![](https://miro.medium.com/max/800/1*NaYdY1FfsPFCNBdx3wg_og.gif)  | <img src="https://user-images.githubusercontent.com/31410839/173987446-c8c79bb0-d24c-46c1-bc4a-582508a4e187.gif" width ="200">
 
-
-<br/>
 
 ## Notify onBackButtonPress
 
@@ -153,7 +150,6 @@ handle app exits (e.g you might want to implement double press back button to ex
 
 <img src="https://miro.medium.com/max/600/1*NRszUNzsN-HDlDmeJP1IDQ.gif">
 
-<br/>
 
 
 ## Adapatable to different device Sizes

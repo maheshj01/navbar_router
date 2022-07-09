@@ -1,3 +1,6 @@
+## [0.2.2]  Jul 9, 2022
+
+* Remove unnecessary shadow from BottomNavigationBar.
 ## [0.2.1]  Jul 2, 2022
 
 * Add `onChanged` callback to `NavbarRouter`

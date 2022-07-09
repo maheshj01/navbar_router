@@ -173,49 +173,37 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
                       );
                     }).toList(),
                     selectedIndex: NavbarNotifier.currentIndex)
-                : Container(
-                    decoration: BoxDecoration(boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 12,
-                        spreadRadius: 2,
-                        offset: const Offset(2, -2),
-                      ),
-                    ]),
-                    child: BottomNavigationBar(
-                      type: widget.decoration?.navbarType,
-                      currentIndex: NavbarNotifier.currentIndex,
-                      onTap: (x) {
-                        widget.onItemTapped(x);
-                      },
-                      backgroundColor: widget.decoration?.backgroundColor,
-                      showSelectedLabels: widget.decoration?.showSelectedLabels,
-                      enableFeedback: widget.decoration?.enableFeedback,
-                      showUnselectedLabels:
-                          widget.decoration?.showUnselectedLabels,
-                      elevation: widget.decoration?.elevation,
-                      iconSize: Theme.of(context).iconTheme.size ?? 24.0,
-                      unselectedItemColor:
-                          widget.decoration?.unselectedItemColor,
-                      selectedItemColor:
-                          widget.decoration!.selectedLabelTextStyle?.color,
-                      unselectedLabelStyle:
-                          widget.decoration!.unselectedLabelTextStyle,
-                      selectedLabelStyle:
-                          widget.decoration?.selectedLabelTextStyle,
-                      selectedIconTheme: widget.decoration!.selectedIconTheme,
-                      unselectedIconTheme:
-                          widget.decoration?.unselectedIconTheme,
-                      items: widget.menuItems
-                          .map((NavbarItem menuItem) => BottomNavigationBarItem(
-                                backgroundColor: menuItem.backgroundColor,
-                                icon: Icon(
-                                  menuItem.iconData,
-                                ),
-                                label: menuItem.text,
-                              ))
-                          .toList(),
-                    ),
+                : BottomNavigationBar(
+                    type: widget.decoration?.navbarType,
+                    currentIndex: NavbarNotifier.currentIndex,
+                    onTap: (x) {
+                      widget.onItemTapped(x);
+                    },
+                    backgroundColor: widget.decoration?.backgroundColor,
+                    showSelectedLabels: widget.decoration?.showSelectedLabels,
+                    enableFeedback: widget.decoration?.enableFeedback,
+                    showUnselectedLabels:
+                        widget.decoration?.showUnselectedLabels,
+                    elevation: widget.decoration?.elevation,
+                    iconSize: Theme.of(context).iconTheme.size ?? 24.0,
+                    unselectedItemColor: widget.decoration?.unselectedItemColor,
+                    selectedItemColor:
+                        widget.decoration!.selectedLabelTextStyle?.color,
+                    unselectedLabelStyle:
+                        widget.decoration!.unselectedLabelTextStyle,
+                    selectedLabelStyle:
+                        widget.decoration?.selectedLabelTextStyle,
+                    selectedIconTheme: widget.decoration!.selectedIconTheme,
+                    unselectedIconTheme: widget.decoration?.unselectedIconTheme,
+                    items: widget.menuItems
+                        .map((NavbarItem menuItem) => BottomNavigationBarItem(
+                              backgroundColor: menuItem.backgroundColor,
+                              icon: Icon(
+                                menuItem.iconData,
+                              ),
+                              label: menuItem.text,
+                            ))
+                        .toList(),
                   ),
           );
         });
