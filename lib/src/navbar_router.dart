@@ -92,7 +92,7 @@ class NavbarRouter extends StatefulWidget {
       this.decoration,
       this.isDesktop = true,
       this.destinationAnimationCurve = Curves.fastOutSlowIn,
-      this.destinationAnimationDuration = 700,
+      this.destinationAnimationDuration = 1700,
       this.onBackButtonPressed})
       : assert(destinations.length >= 2,
             "Destinations length must be greater than or equal to 2"),
@@ -103,10 +103,10 @@ class NavbarRouter extends StatefulWidget {
 }
 
 class _NavbarRouterState extends State<NavbarRouter>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   final List<NavbarItem> items = [];
-  late Animation<double> fadeAnimation;
-  late AnimationController _controller;
+  // late Animation<double> fadeAnimation;
+  // late AnimationController _controller;
   List<GlobalKey<NavigatorState>> keys = [];
   late int length;
   @override
@@ -114,15 +114,20 @@ class _NavbarRouterState extends State<NavbarRouter>
     super.initState();
 
     /// AnimationController for the Destination Animation
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: widget.destinationAnimationDuration),
-    );
-    fadeAnimation = Tween<double>(begin: 0.4, end: 1.0).animate(
-      CurvedAnimation(
-          parent: _controller, curve: widget.destinationAnimationCurve),
-    );
+
     initialize();
+    for (int i = 0; i < length; i++) {
+      final _controller = AnimationController(
+          vsync: this,
+          duration: Duration(milliseconds: 400),
+          reverseDuration: Duration(milliseconds: 600));
+      _controller.value = 1.0;
+      _controllers.add(_controller);
+    }
+    // fadeAnimation = Tween<double>(begin: 0.4, end: 1.0).animate(
+    //   CurvedAnimation(
+    //       parent: _controller, curve: widget.destinationAnimationCurve),
+    // );
   }
 
   void initialize() {
@@ -134,11 +139,11 @@ class _NavbarRouterState extends State<NavbarRouter>
     }
 
     NavbarNotifier.setKeys(keys);
-    _controller.forward();
+    // _controller.forward();
   }
 
   void clearInitialization() {
-    _controller.reset();
+    // _controller.reset();
     keys.clear();
     items.clear();
   }
@@ -146,24 +151,24 @@ class _NavbarRouterState extends State<NavbarRouter>
   @override
   void dispose() {
     clearInitialization();
-    _controller.dispose();
+    _controllers.forEach((controller) => controller.dispose());
     super.dispose();
   }
 
   @override
   void didUpdateWidget(covariant NavbarRouter oldWidget) {
     /// update animation
-    if (widget.destinationAnimationCurve !=
-            oldWidget.destinationAnimationCurve ||
-        widget.destinationAnimationDuration !=
-            oldWidget.destinationAnimationDuration) {
-      _controller.duration =
-          Duration(milliseconds: widget.destinationAnimationDuration);
-      fadeAnimation = Tween<double>(begin: 0.4, end: 1.0).animate(
-        CurvedAnimation(
-            parent: _controller, curve: widget.destinationAnimationCurve),
-      );
-    }
+    // if (widget.destinationAnimationCurve !=
+    //         oldWidget.destinationAnimationCurve ||
+    //     widget.destinationAnimationDuration !=
+    //         oldWidget.destinationAnimationDuration) {
+    // _controller.duration =
+    //     Duration(milliseconds: widget.destinationAnimationDuration);
+    // fadeAnimation = Tween<double>(begin: 0.4, end: 1.0).animate(
+    //   CurvedAnimation(
+    //       parent: _controller, curve: widget.destinationAnimationCurve),
+    // );
+    // }
 
     if (widget.destinations.length != oldWidget.destinations.length) {
       length = widget.destinations.length;
@@ -185,12 +190,49 @@ class _NavbarRouterState extends State<NavbarRouter>
   }
 
   void _animateDestinations() {
-    _controller.reset();
-    _controller.forward();
+    // _controller.reset();
+    // _controller.forward();
   }
 
+  List<AnimationController> _controllers = [];
   @override
   Widget build(BuildContext context) {
+    List<Widget> _buildChildren() {
+      final List<Widget> children = [];
+      for (int i = 0; i < length; i++) {
+        if (i == NavbarNotifier.currentIndex) {
+          _controllers[i].forward();
+        } else {
+          _controllers[i].reverse();
+        }
+        children.add(IgnorePointer(
+          ignoring: NavbarNotifier.currentIndex != i,
+          child: FadeTransition(
+            opacity:
+                _controllers[i].drive(CurveTween(curve: Curves.fastOutSlowIn)),
+            child: Navigator(
+                key: keys[i],
+                initialRoute: widget.destinations[i].initialRoute,
+                onGenerateRoute: (RouteSettings settings) {
+                  WidgetBuilder? builder = widget.errorBuilder;
+                  final nestedLength =
+                      widget.destinations[i].destinations.length;
+                  for (int j = 0; j < nestedLength; j++) {
+                    if (widget.destinations[i].destinations[j].route ==
+                        settings.name) {
+                      builder = (BuildContext _) =>
+                          widget.destinations[i].destinations[j].widget;
+                    }
+                  }
+                  return MaterialPageRoute(
+                      builder: builder!, settings: settings);
+                }),
+          ),
+        ));
+      }
+      return children;
+    }
+
     return WillPopScope(
       onWillPop: () async {
         final bool isExitingApp = await NavbarNotifier.onBackButtonPressed();
@@ -208,40 +250,8 @@ class _NavbarRouterState extends State<NavbarRouter>
                       duration: const Duration(milliseconds: 500),
                       padding: EdgeInsets.only(left: getPadding()),
                       child: IndexedStack(
-                        index: NavbarNotifier.currentIndex,
-                        children: [
-                          for (int i = 0; i < length; i++)
-                            IgnorePointer(
-                              ignoring: NavbarNotifier.currentIndex != i,
-                              child: FadeTransition(
-                                opacity: fadeAnimation,
-                                child: Navigator(
-                                    key: keys[i],
-                                    initialRoute:
-                                        widget.destinations[i].initialRoute,
-                                    onGenerateRoute: (RouteSettings settings) {
-                                      WidgetBuilder? builder =
-                                          widget.errorBuilder;
-                                      final nestedLength = widget
-                                          .destinations[i].destinations.length;
-                                      for (int j = 0; j < nestedLength; j++) {
-                                        if (widget.destinations[i]
-                                                .destinations[j].route ==
-                                            settings.name) {
-                                          builder = (BuildContext _) => widget
-                                              .destinations[i]
-                                              .destinations[j]
-                                              .widget;
-                                        }
-                                      }
-                                      return MaterialPageRoute(
-                                          builder: builder!,
-                                          settings: settings);
-                                    }),
-                              ),
-                            )
-                        ],
-                      ),
+                          index: NavbarNotifier.currentIndex,
+                          children: _buildChildren()),
                     ),
                     Positioned(
                       left: 0,
@@ -260,7 +270,7 @@ class _NavbarRouterState extends State<NavbarRouter>
                               }
                             } else {
                               NavbarNotifier.index = x;
-                              _animateDestinations();
+                              // _animateDestinations();
                               if (widget.onChanged != null) {
                                 widget.onChanged!(x);
                               }
