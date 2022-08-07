@@ -1,4 +1,4 @@
-## **navbar_router 0.2.2**
+## **navbar_router 0.3.0**
 
  <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
@@ -13,6 +13,7 @@ This is the ultimate BottomNavigionBar created by considering the advanced use c
 - persist state across bottom navbar tabs
 - Tapping the same navbar button pops to base route of nested navigator (same as instagram)
 - Switch the Navbar destination with animation
+- Remember navigatoon history on back button press
 - Adapatable to different device Sizes using `isDesktop` and `NavbarDecoration.isExtended` Property.
 
 
