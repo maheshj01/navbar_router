@@ -55,6 +55,8 @@ class NavbarRouter extends StatefulWidget {
   /// does not exist in the [destinations]
   final WidgetBuilder errorBuilder;
 
+  /// This callback is invoked, when the user taps the back button
+  /// on Android.
   /// Defines whether it is the root Navigator or not
   /// if the method returns true then the Navigator is at the base of the navigator stack
   final bool Function(bool)? onBackButtonPressed;
@@ -83,6 +85,12 @@ class NavbarRouter extends StatefulWidget {
   /// callback when the currentIndex changes
   final Function(int)? onChanged;
 
+  /// Whether the back button pressed should pop the current route and switch to the previous route,
+  /// defaults to true.
+  /// if false, the back button will trigger app exit.
+  /// This is applicable only for Android's back button.
+  final bool rememberRoutes;
+
   const NavbarRouter(
       {Key? key,
       required this.destinations,
@@ -93,6 +101,7 @@ class NavbarRouter extends StatefulWidget {
       this.isDesktop = true,
       this.destinationAnimationCurve = Curves.fastOutSlowIn,
       this.destinationAnimationDuration = 700,
+      this.rememberRoutes = true,
       this.onBackButtonPressed})
       : assert(destinations.length >= 2,
             "Destinations length must be greater than or equal to 2"),
@@ -109,6 +118,7 @@ class _NavbarRouterState extends State<NavbarRouter>
   late AnimationController _controller;
   List<GlobalKey<NavigatorState>> keys = [];
   late int length;
+
   @override
   void initState() {
     super.initState();
@@ -134,6 +144,9 @@ class _NavbarRouterState extends State<NavbarRouter>
     }
 
     NavbarNotifier.setKeys(keys);
+
+    /// set initial Index
+    NavbarNotifier.index = 2;
     _controller.forward();
   }
 
@@ -193,7 +206,8 @@ class _NavbarRouterState extends State<NavbarRouter>
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        final bool isExitingApp = await NavbarNotifier.onBackButtonPressed();
+        final bool isExitingApp = await NavbarNotifier.onBackButtonPressed(
+            rememberRoutes: widget.rememberRoutes);
         final bool value = widget.onBackButtonPressed!(isExitingApp);
         return value;
       },

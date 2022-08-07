@@ -11,11 +11,13 @@ class NavbarNotifier extends ChangeNotifier {
 
   NavbarNotifier._internal();
 
-  static int _index = 0;
+  static int? _index;
 
-  static int get currentIndex => _index;
+  static int get currentIndex => _index!;
 
   static bool _hideBottomNavBar = false;
+
+  static List<int> _navbarStackHistory = [];
 
   static List<GlobalKey<NavigatorState>> _keys = [];
 
@@ -27,8 +29,11 @@ class NavbarNotifier extends ChangeNotifier {
 
   static set index(int x) {
     _index = x;
+    _navbarStackHistory.add(x);
     _singleton.notify();
   }
+
+  static List<int> get navbarStackHistory => _navbarStackHistory;
 
   static bool get isNavbarHidden => _hideBottomNavBar;
 
@@ -37,10 +42,22 @@ class NavbarNotifier extends ChangeNotifier {
     _singleton.notify();
   }
 
+  static set navbarStackHistory(List<int> x) {
+    _navbarStackHistory = x;
+  }
+
   // pop routes from the nested navigator stack and not the main stack
   // this is done based on the currentIndex of the bottom navbar
   // if the backButton is pressed on the initial route the app will be terminated
-  static FutureOr<bool> onBackButtonPressed() async {
+  static FutureOr<bool> onBackButtonPressed(
+      {bool rememberRoutes = false}) async {
+    if (_navbarStackHistory.length > 1 && rememberRoutes) {
+      _navbarStackHistory.removeLast();
+      _index = _navbarStackHistory.last;
+      _singleton.notify();
+      return false;
+    }
+
     bool exitingApp = true;
     NavigatorState? currentState;
     for (int i = 0; i < _keys.length; i++) {
