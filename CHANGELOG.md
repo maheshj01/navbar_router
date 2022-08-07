@@ -1,4 +1,4 @@
-## [0.2.3]  Aug 7, 2022
+## [0.3.0]  Aug 7, 2022
 
 * Remebeer stack history on back nutton press [Issue 9](https://github.com/maheshmnj/navbar_router/issues/9)
 ## [0.2.2]  Jul 9, 2022
