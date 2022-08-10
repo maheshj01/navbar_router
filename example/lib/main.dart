@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:example/example2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:navbar_router/navbar_router.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.indigo,
         ),
         home: const HomePage());
+    // home: const Example2(title: 'BottomNavbar Demo'));
   }
 }
 

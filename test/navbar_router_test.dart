@@ -41,7 +41,7 @@ void main() {
     },
   };
 
-  Widget _boilerplate() {
+  Widget _boilerplate({bool isDesktop = false}) {
     return MaterialApp(
       home: Directionality(
           textDirection: TextDirection.ltr,
@@ -54,6 +54,7 @@ void main() {
                 onBackButtonPressed: (isExiting) {
                   return isExiting;
                 },
+                isDesktop: isDesktop,
                 destinationAnimationCurve: Curves.fastOutSlowIn,
                 destinationAnimationDuration: 600,
                 decoration: NavbarDecoration(
@@ -79,26 +80,67 @@ void main() {
   group('navbar_router should build destination and navbar items', () {
     testWidgets('navbar_router should build destinations',
         (WidgetTester tester) async {
-      final listView = (ListView).typeX();
+      final bottomNavigation = (BottomNavigationBar).typeX();
+      final navigationRail = (NavigationRail).typeX();
+
       await tester.pumpWidget(_boilerplate());
-      expect('Feeds'.textX(), findsOneWidget);
-      expect(listView, findsWidgets);
-      expect('Feed 1 card'.textX(), findsOneWidget);
-      final card5Text = 'Feed 5 card'.textX();
-      await tester.dragUntilVisible(
-          card5Text, listView.first, const Offset(0, -50.0));
-      await tester.tap(card5Text);
       await tester.pumpAndSettle();
-      expect((FeedDetail).typeX(), findsOneWidget);
+      expect(navigationRail, findsNothing);
+      expect(bottomNavigation, findsOneWidget);
+
+      for (int i = 0; i < items.length; i++) {
+        final icon = find.byIcon(items[i].iconData);
+        final destination = (routes[i]!['/']).runtimeType.typeX();
+        expect(icon, findsOneWidget);
+        await tester.tap(icon);
+        await tester.pumpAndSettle();
+        expect(destination, findsOneWidget);
+      }
     });
-  });
-  group('navbar_router should build navbar items', () {
-    testWidgets('', (WidgetTester tester) async {
+
+    testWidgets('navbar should build navbarItem labels',
+        (WidgetTester tester) async {
       await tester.pumpWidget(_boilerplate());
       expect(find.text(items[0].text), findsOneWidget);
-      // Products text also fuound on the appbar
       expect(find.text(items[1].text), findsWidgets);
       expect(find.text(items[2].text), findsOneWidget);
     });
   });
+  testWidgets('navbar_router default index must be zero',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(_boilerplate());
+    expect(NavbarNotifier.currentIndex, 0);
+    final destination = (routes[0]!['/']).runtimeType.typeX();
+    expect(destination, findsOneWidget);
+    final icon = find.byIcon(items[0].iconData);
+    expect(icon, findsOneWidget);
+  });
+
+  testWidgets('Navbar should switch to Navigation Rail in Desktop mode',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(_boilerplate());
+    await tester.pumpAndSettle();
+    expect(find.byType(NavigationRail), findsNothing);
+    expect(find.byType(BottomNavigationBar), findsOneWidget);
+    await tester.pumpWidget(_boilerplate(isDesktop: true));
+    await tester.pumpAndSettle();
+    expect(find.byType(NavigationRail), findsOneWidget);
+    expect(find.byType(BottomNavigationBar), findsNothing);
+  });
+
+  // group('navbar should maintain state across tabs', () {
+  //   testWidgets('navbar should maintain state across tabs',
+  //       (WidgetTester tester) async {
+  //     await tester.pumpWidget(_boilerplate());
+  //     await tester.pumpAndSettle();
+  //   });
+  // });
+
+  // group('test navbarstack history', () {
+  //   testWidgets('navbar should maintain state across tabs',
+  //       (WidgetTester tester) async {
+  //     await tester.pumpWidget(_boilerplate());
+  //     await tester.pumpAndSettle();
+  //   });
+  // });
 }

@@ -80,6 +80,7 @@ class NavbarRouter extends StatefulWidget {
   /// if true, navbar will be shown on the left, this property
   /// can be used along with `NavbarDecoration.isExtended` to make the navbar
   ///  adaptable for large screen sizes.
+  /// defaults to false.
   final bool isDesktop;
 
   /// callback when the currentIndex changes
@@ -98,7 +99,7 @@ class NavbarRouter extends StatefulWidget {
       this.shouldPopToBaseRoute = true,
       this.onChanged,
       this.decoration,
-      this.isDesktop = true,
+      this.isDesktop = false,
       this.destinationAnimationCurve = Curves.fastOutSlowIn,
       this.destinationAnimationDuration = 700,
       this.rememberRoutes = true,
@@ -146,7 +147,8 @@ class _NavbarRouterState extends State<NavbarRouter>
     NavbarNotifier.setKeys(keys);
 
     /// set initial Index
-    NavbarNotifier.index = 2;
+    NavbarNotifier.index = 0;
+
     _controller.forward();
   }
 
