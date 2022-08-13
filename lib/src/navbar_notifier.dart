@@ -38,13 +38,10 @@ class NavbarNotifier extends ChangeNotifier {
 
   static set index(int x) {
     _index = x;
-
-    /// Don't remove first item from stack
     if (_navbarStackHistory.contains(x)) {
       _navbarStackHistory.remove(x);
     }
     _navbarStackHistory.add(x);
-    print(_navbarStackHistory);
     _singleton.notify();
   }
 
