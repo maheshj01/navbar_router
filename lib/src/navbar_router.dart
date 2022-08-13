@@ -47,7 +47,15 @@ bool _isRoutePresent(String route, List<Destination> destinations) {
 }
 
 /// Enum for the Android's Back button behavior
-enum BackButtonBehavior { route, stack }
+enum BackButtonBehavior {
+  /// When the current NavbarItem is at the root of the navigation stack,
+  /// pressing the Back button will trigger app exit, which can be handled in [onBackButtonPressed].
+  exit,
+
+  /// When the selected NavbarItem is at the root of the navigation stack,
+  /// pressing the Back button will switch to the previous NavbarItem based on the stack History of navbar.
+  rememberHistory
+}
 
 class NavbarRouter extends StatefulWidget {
   /// The destination to show when the user taps the [NavbarItem]
@@ -64,8 +72,8 @@ class NavbarRouter extends StatefulWidget {
   /// if the method returns true then the Navigator is at the base of the navigator stack
   final bool Function(bool)? onBackButtonPressed;
 
-  /// whether the navbar should pop all routes except first
-  /// when the current navbar is tapped while the route is deeply nested
+  /// whether the navbar should pop to base route of current tab
+  /// when the selected navbarItem is tapped all the routes from that navigator are popped.
   /// feature similar to Instagram's navigation bar
   /// defaults to true.
   final bool shouldPopToBaseRoute;
@@ -93,7 +101,7 @@ class NavbarRouter extends StatefulWidget {
   /// defaults to true.
   /// if false, the back button will trigger app exit.
   /// This is applicable only for Android's back button.
-  final BackButtonBehavior backButtonHandle;
+  final BackButtonBehavior backButtonBehavior;
 
   /// Navbar item that is initially selected
   /// defaults to the first item in the list of [NavbarItems]
@@ -110,7 +118,7 @@ class NavbarRouter extends StatefulWidget {
       this.initialIndex = 0,
       this.destinationAnimationCurve = Curves.fastOutSlowIn,
       this.destinationAnimationDuration = 700,
-      this.backButtonHandle = BackButtonBehavior.stack,
+      this.backButtonBehavior = BackButtonBehavior.exit,
       this.onBackButtonPressed})
       : assert(destinations.length >= 2,
             "Destinations length must be greater than or equal to 2"),
@@ -215,7 +223,7 @@ class _NavbarRouterState extends State<NavbarRouter>
     return WillPopScope(
       onWillPop: () async {
         final bool isExitingApp = await NavbarNotifier.onBackButtonPressed(
-            behavior: widget.backButtonHandle);
+            behavior: widget.backButtonBehavior);
         final bool value = widget.onBackButtonPressed!(isExitingApp);
         return value;
       },

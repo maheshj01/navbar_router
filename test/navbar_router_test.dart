@@ -41,7 +41,7 @@ void main() {
     },
   };
 
-  Widget _boilerplate({bool isDesktop = false}) {
+  Widget boilerplate({bool isDesktop = false}) {
     return MaterialApp(
       home: Directionality(
           textDirection: TextDirection.ltr,
@@ -83,7 +83,7 @@ void main() {
       final bottomNavigation = (BottomNavigationBar).typeX();
       final navigationRail = (NavigationRail).typeX();
 
-      await tester.pumpWidget(_boilerplate());
+      await tester.pumpWidget(boilerplate());
       await tester.pumpAndSettle();
       expect(navigationRail, findsNothing);
       expect(bottomNavigation, findsOneWidget);
@@ -100,7 +100,7 @@ void main() {
 
     testWidgets('navbar should build navbarItem labels',
         (WidgetTester tester) async {
-      await tester.pumpWidget(_boilerplate());
+      await tester.pumpWidget(boilerplate());
       expect(find.text(items[0].text), findsOneWidget);
       expect(find.text(items[1].text), findsWidgets);
       expect(find.text(items[2].text), findsOneWidget);
@@ -108,7 +108,7 @@ void main() {
   });
   testWidgets('navbar_router default index must be zero',
       (WidgetTester tester) async {
-    await tester.pumpWidget(_boilerplate());
+    await tester.pumpWidget(boilerplate());
     expect(NavbarNotifier.currentIndex, 0);
     final destination = (routes[0]!['/']).runtimeType.typeX();
     expect(destination, findsOneWidget);
@@ -118,11 +118,11 @@ void main() {
 
   testWidgets('Navbar should switch to Navigation Rail in Desktop mode',
       (WidgetTester tester) async {
-    await tester.pumpWidget(_boilerplate());
+    await tester.pumpWidget(boilerplate());
     await tester.pumpAndSettle();
     expect(find.byType(NavigationRail), findsNothing);
     expect(find.byType(BottomNavigationBar), findsOneWidget);
-    await tester.pumpWidget(_boilerplate(isDesktop: true));
+    await tester.pumpWidget(boilerplate(isDesktop: true));
     await tester.pumpAndSettle();
     expect(find.byType(NavigationRail), findsOneWidget);
     expect(find.byType(BottomNavigationBar), findsNothing);

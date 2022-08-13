@@ -16,13 +16,13 @@ class NavbarNotifier extends ChangeNotifier {
 
   static int get currentIndex => _index!;
 
-  static int _length = 0;
+  static int? _length;
 
   static set length(int x) {
     _length = x;
   }
 
-  static int get length => _length;
+  static int get length => _length!;
 
   static bool _hideBottomNavBar = false;
 
@@ -45,7 +45,7 @@ class NavbarNotifier extends ChangeNotifier {
     _singleton.notify();
   }
 
-  static List<int> get navbarStackHistory => _navbarStackHistory;
+  static List<int> get stackHistory => _navbarStackHistory;
 
   static bool get isNavbarHidden => _hideBottomNavBar;
 
@@ -54,7 +54,8 @@ class NavbarNotifier extends ChangeNotifier {
     _singleton.notify();
   }
 
-  static set navbarStackHistory(List<int> x) {
+  static set setStackHistory(List<int> x) {
+    if (x.isEmpty) return;
     _navbarStackHistory = x;
   }
 
@@ -62,14 +63,15 @@ class NavbarNotifier extends ChangeNotifier {
   // this is done based on the currentIndex of the bottom navbar
   // if the backButton is pressed on the initial route the app will be terminated
   static FutureOr<bool> onBackButtonPressed(
-      {BackButtonBehavior behavior = BackButtonBehavior.stack}) async {
+      {BackButtonBehavior behavior =
+          BackButtonBehavior.rememberHistory}) async {
     bool exitingApp = true;
     NavigatorState? currentState = _keys[_index!].currentState;
     if (currentState != null && currentState.canPop()) {
       currentState.pop();
       exitingApp = false;
     } else {
-      if (behavior == BackButtonBehavior.stack) {
+      if (behavior == BackButtonBehavior.rememberHistory) {
         if (_navbarStackHistory.length > 1) {
           _navbarStackHistory.removeLast();
           _index = _navbarStackHistory.last;

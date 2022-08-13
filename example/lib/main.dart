@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:example/example2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:navbar_router/navbar_router.dart';
@@ -125,7 +124,7 @@ class _HomePageState extends State<HomePage> {
         onChanged: (x) {
           debugPrint('index changed $x');
         },
-        backButtonHandle: BackButtonBehavior.stack,
+        backButtonBehavior: BackButtonBehavior.rememberHistory,
         destinations: [
           for (int i = 0; i < items.length; i++)
             DestinationRouter(
