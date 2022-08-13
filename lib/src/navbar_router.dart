@@ -46,6 +46,9 @@ bool _isRoutePresent(String route, List<Destination> destinations) {
   return isPresent;
 }
 
+/// Enum for the Android's Back button behavior
+enum BackButtonBehavior { route, stack }
+
 class NavbarRouter extends StatefulWidget {
   /// The destination to show when the user taps the [NavbarItem]
   /// destination also defines the list of Nested destination sand the navbarItem associated with it
@@ -89,7 +92,7 @@ class NavbarRouter extends StatefulWidget {
   /// defaults to true.
   /// if false, the back button will trigger app exit.
   /// This is applicable only for Android's back button.
-  final bool rememberRoutes;
+  final BackButtonBehavior backButtonHandle;
 
   const NavbarRouter(
       {Key? key,
@@ -101,7 +104,7 @@ class NavbarRouter extends StatefulWidget {
       this.isDesktop = true,
       this.destinationAnimationCurve = Curves.fastOutSlowIn,
       this.destinationAnimationDuration = 700,
-      this.rememberRoutes = true,
+      this.backButtonHandle = BackButtonBehavior.stack,
       this.onBackButtonPressed})
       : assert(destinations.length >= 2,
             "Destinations length must be greater than or equal to 2"),
@@ -112,12 +115,13 @@ class NavbarRouter extends StatefulWidget {
 }
 
 class _NavbarRouterState extends State<NavbarRouter>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, RouteAware {
   final List<NavbarItem> items = [];
   late Animation<double> fadeAnimation;
   late AnimationController _controller;
   List<GlobalKey<NavigatorState>> keys = [];
-  late int length;
+
+  List<RouteObserver<ModalRoute<void>>> routeObservers = [];
 
   @override
   void initState() {
@@ -136,17 +140,18 @@ class _NavbarRouterState extends State<NavbarRouter>
   }
 
   void initialize() {
-    length = widget.destinations.length;
-    for (int i = 0; i < length; i++) {
+    NavbarNotifier.length = widget.destinations.length;
+    for (int i = 0; i < NavbarNotifier.length; i++) {
       final navbaritem = widget.destinations[i].navbarItem;
       keys.add(GlobalKey<NavigatorState>());
       items.add(navbaritem);
+      routeObservers.add(RouteObserver<ModalRoute<void>>());
     }
 
     NavbarNotifier.setKeys(keys);
 
     /// set initial Index
-    NavbarNotifier.index = 2;
+    NavbarNotifier.index = 0;
     _controller.forward();
   }
 
@@ -154,6 +159,10 @@ class _NavbarRouterState extends State<NavbarRouter>
     _controller.reset();
     keys.clear();
     items.clear();
+    for (var element in routeObservers) {
+      element.unsubscribe(this);
+    }
+    routeObservers.clear();
   }
 
   @override
@@ -179,11 +188,19 @@ class _NavbarRouterState extends State<NavbarRouter>
     }
 
     if (widget.destinations.length != oldWidget.destinations.length) {
-      length = widget.destinations.length;
+      NavbarNotifier.length = widget.destinations.length;
       clearInitialization();
       initialize();
     }
     super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    for (int i = 0; i < NavbarNotifier.length; i++) {
+      routeObservers[i].subscribe(this, ModalRoute.of(context)!);
+    }
   }
 
   double getPadding() {
@@ -203,11 +220,24 @@ class _NavbarRouterState extends State<NavbarRouter>
   }
 
   @override
+  void didPush() {
+    print('route pushed');
+    super.didPush();
+  }
+
+  @override
+  void didPop() {
+    print('route popped');
+    super.didPop();
+    // Covering route was popped off the navigator.
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
         final bool isExitingApp = await NavbarNotifier.onBackButtonPressed(
-            rememberRoutes: widget.rememberRoutes);
+            behavior: widget.backButtonHandle);
         final bool value = widget.onBackButtonPressed!(isExitingApp);
         return value;
       },
@@ -224,13 +254,14 @@ class _NavbarRouterState extends State<NavbarRouter>
                       child: IndexedStack(
                         index: NavbarNotifier.currentIndex,
                         children: [
-                          for (int i = 0; i < length; i++)
+                          for (int i = 0; i < NavbarNotifier.length; i++)
                             IgnorePointer(
                               ignoring: NavbarNotifier.currentIndex != i,
                               child: FadeTransition(
                                 opacity: fadeAnimation,
                                 child: Navigator(
                                     key: keys[i],
+                                    observers: [routeObservers[i]],
                                     initialRoute:
                                         widget.destinations[i].initialRoute,
                                     onGenerateRoute: (RouteSettings settings) {

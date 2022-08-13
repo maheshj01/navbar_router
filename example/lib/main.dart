@@ -44,6 +44,7 @@ class _HomePageState extends State<HomePage> {
     1: {
       '/': ProductList(),
       ProductDetail.route: ProductDetail(),
+      ProductComments.route: ProductComments(),
     },
     2: {
       '/': UserProfile(),
@@ -122,6 +123,7 @@ class _HomePageState extends State<HomePage> {
         onChanged: (x) {
           debugPrint('index changed $x');
         },
+        backButtonHandle: BackButtonBehavior.stack,
         destinations: [
           for (int i = 0; i < items.length; i++)
             DestinationRouter(
