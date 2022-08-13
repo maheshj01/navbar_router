@@ -94,6 +94,10 @@ class NavbarRouter extends StatefulWidget {
   /// This is applicable only for Android's back button.
   final BackButtonBehavior backButtonHandle;
 
+  /// Navbar item that is initially selected
+  /// defaults to the first item in the list of [NavbarItems]
+  final int initialIndex;
+
   const NavbarRouter(
       {Key? key,
       required this.destinations,
@@ -102,6 +106,7 @@ class NavbarRouter extends StatefulWidget {
       this.onChanged,
       this.decoration,
       this.isDesktop = true,
+      this.initialIndex = 0,
       this.destinationAnimationCurve = Curves.fastOutSlowIn,
       this.destinationAnimationDuration = 700,
       this.backButtonHandle = BackButtonBehavior.stack,
@@ -151,7 +156,7 @@ class _NavbarRouterState extends State<NavbarRouter>
     NavbarNotifier.setKeys(keys);
 
     /// set initial Index
-    NavbarNotifier.index = 0;
+    NavbarNotifier.index = widget.initialIndex;
     _controller.forward();
   }
 
