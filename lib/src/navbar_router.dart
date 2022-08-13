@@ -121,13 +121,11 @@ class NavbarRouter extends StatefulWidget {
 }
 
 class _NavbarRouterState extends State<NavbarRouter>
-    with SingleTickerProviderStateMixin, RouteAware {
+    with SingleTickerProviderStateMixin {
   final List<NavbarItem> items = [];
   late Animation<double> fadeAnimation;
   late AnimationController _controller;
   List<GlobalKey<NavigatorState>> keys = [];
-
-  List<RouteObserver<ModalRoute<void>>> routeObservers = [];
 
   @override
   void initState() {
@@ -151,7 +149,6 @@ class _NavbarRouterState extends State<NavbarRouter>
       final navbaritem = widget.destinations[i].navbarItem;
       keys.add(GlobalKey<NavigatorState>());
       items.add(navbaritem);
-      routeObservers.add(RouteObserver<ModalRoute<void>>());
     }
 
     NavbarNotifier.setKeys(keys);
@@ -165,10 +162,6 @@ class _NavbarRouterState extends State<NavbarRouter>
     _controller.reset();
     keys.clear();
     items.clear();
-    for (var element in routeObservers) {
-      element.unsubscribe(this);
-    }
-    routeObservers.clear();
   }
 
   @override
@@ -201,14 +194,6 @@ class _NavbarRouterState extends State<NavbarRouter>
     super.didUpdateWidget(oldWidget);
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    for (int i = 0; i < NavbarNotifier.length; i++) {
-      routeObservers[i].subscribe(this, ModalRoute.of(context)!);
-    }
-  }
-
   double getPadding() {
     if (widget.isDesktop) {
       if (widget.decoration!.isExtended) {
@@ -223,19 +208,6 @@ class _NavbarRouterState extends State<NavbarRouter>
   void _animateDestinations() {
     _controller.reset();
     _controller.forward();
-  }
-
-  @override
-  void didPush() {
-    print('route pushed');
-    super.didPush();
-  }
-
-  @override
-  void didPop() {
-    print('route popped');
-    super.didPop();
-    // Covering route was popped off the navigator.
   }
 
   @override
@@ -267,7 +239,6 @@ class _NavbarRouterState extends State<NavbarRouter>
                                 opacity: fadeAnimation,
                                 child: Navigator(
                                     key: keys[i],
-                                    observers: [routeObservers[i]],
                                     initialRoute:
                                         widget.destinations[i].initialRoute,
                                     onGenerateRoute: (RouteSettings settings) {
