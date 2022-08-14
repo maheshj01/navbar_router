@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:navbar_router/navbar_router.dart';
@@ -20,6 +22,10 @@ extension FindWidget on Widget {
   Finder widgetX() => find.byWidget(this);
 }
 
+extension FindIcon on IconData {
+  Finder iconX() => find.byIcon(this);
+}
+
 void main() {
   List<NavbarItem> items = [
     NavbarItem(Icons.home, 'Home', backgroundColor: colors[0]),
@@ -34,6 +40,7 @@ void main() {
     1: {
       '/': const ProductList(),
       ProductDetail.route: const ProductDetail(),
+      ProductComments.route: const ProductComments(),
     },
     2: {
       '/': const UserProfile(),
@@ -41,7 +48,9 @@ void main() {
     },
   };
 
-  Widget boilerplate({bool isDesktop = false}) {
+  Widget boilerplate(
+      {bool isDesktop = false,
+      BackButtonBehavior behavior = BackButtonBehavior.exit}) {
     return MaterialApp(
       home: Directionality(
           textDirection: TextDirection.ltr,
@@ -54,6 +63,7 @@ void main() {
                 onBackButtonPressed: (isExiting) {
                   return isExiting;
                 },
+                backButtonBehavior: behavior,
                 isDesktop: isDesktop,
                 destinationAnimationCurve: Curves.fastOutSlowIn,
                 destinationAnimationDuration: 600,
@@ -128,13 +138,126 @@ void main() {
     expect(find.byType(BottomNavigationBar), findsNothing);
   });
 
-  // group('navbar should maintain state across tabs', () {
-  //   testWidgets('navbar should maintain state across tabs',
-  //       (WidgetTester tester) async {
-  //     await tester.pumpWidget(_boilerplate());
-  //     await tester.pumpAndSettle();
-  //   });
-  // });
+  group('navbar should respect BackButtonBehavior', () {
+    Future<void> changeNavbarDestination(
+        WidgetTester tester, Widget destination, IconData iconData) async {
+      final icon = find.byIcon(iconData);
+      final destinationType = destination.runtimeType.typeX();
+      expect(icon, findsOneWidget);
+      await tester.tap(icon);
+      await tester.pumpAndSettle();
+      expect(destinationType, findsOneWidget);
+    }
+
+    Future<void> navigateToNestedTarget(
+        WidgetTester tester, Finder tapTarget, Widget destination) async {
+      expect(tapTarget, findsOneWidget);
+      await tester.tap(tapTarget);
+      await tester.pumpAndSettle();
+      final destinationFinder = (destination).runtimeType.typeX();
+      expect(destinationFinder, findsOneWidget);
+    }
+
+    Future<void> triggerBackButton(WidgetTester tester) async {
+      final dynamic widgetsAppState = tester.state(find.byType(WidgetsApp));
+      await widgetsAppState.didPopRoute();
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets(
+        'Navbar should exit app when at the root of the Navigator stack(default)',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate());
+      await tester.pumpAndSettle();
+
+      expect(find.byType(NavigationRail), findsNothing);
+      expect(find.byType(BottomNavigationBar), findsOneWidget);
+
+      /// verify feeds is the current destination
+      await changeNavbarDestination(
+          tester, routes[0]!['/']!, items[0].iconData);
+
+      /// Navigate to FeedDetail
+      await navigateToNestedTarget(
+          tester, "Feed 0 card".textX(), routes[0]![FeedDetail.route]!);
+
+      /// Change index to products
+      await changeNavbarDestination(
+          tester, routes[1]![ProductList.route]!, items[1].iconData);
+
+      /// Navigate to ProductDetail
+      await navigateToNestedTarget(
+          tester, "Product 0".textX(), routes[1]![ProductDetail.route]!);
+
+      /// Navigate to Product comments
+      await navigateToNestedTarget(
+          tester, "show comments".textX(), routes[1]![ProductComments.route]!);
+
+      /// Change index to profile
+      await changeNavbarDestination(
+          tester, routes[2]![UserProfile.route]!, items[2].iconData);
+
+      /// Navigate to ProfileEdit
+      await navigateToNestedTarget(
+          tester, (Icons.edit).iconX(), routes[2]![ProfileEdit.route]!);
+
+      await triggerBackButton(tester);
+      expect(routes[2]![UserProfile.route].runtimeType.typeX(), findsOneWidget);
+
+      /// This will exit the app
+      await triggerBackButton(tester);
+      debugPrint(NavbarNotifier.stackHistory.toString());
+      expect(exitCode, 0);
+    });
+    testWidgets('Navbar should remember navigation history',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+          boilerplate(behavior: BackButtonBehavior.rememberHistory));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(NavigationRail), findsNothing);
+      expect(find.byType(BottomNavigationBar), findsOneWidget);
+
+      /// verify feeds is the current destination
+      await changeNavbarDestination(
+          tester, routes[0]!['/']!, items[0].iconData);
+
+      /// Navigate to FeedDetail
+      await navigateToNestedTarget(
+          tester, "Feed 0 card".textX(), routes[0]![FeedDetail.route]!);
+
+      /// Change index to products
+      await changeNavbarDestination(
+          tester, routes[1]![ProductList.route]!, items[1].iconData);
+
+      /// Navigate to ProductDetail
+      await navigateToNestedTarget(
+          tester, "Product 0".textX(), routes[1]![ProductDetail.route]!);
+
+      /// Navigate to Product comments
+      await navigateToNestedTarget(
+          tester, "show comments".textX(), routes[1]![ProductComments.route]!);
+
+      /// Change index to profile
+      await changeNavbarDestination(
+          tester, routes[2]![UserProfile.route]!, items[2].iconData);
+
+      /// Navigate to ProfileEdit
+      await navigateToNestedTarget(
+          tester, (Icons.edit).iconX(), routes[2]![ProfileEdit.route]!);
+
+      expect(NavbarNotifier.stackHistory, equals([0, 1, 2]));
+
+      await triggerBackButton(tester);
+      await triggerBackButton(tester);
+      expect(NavbarNotifier.stackHistory, equals([0, 1]));
+
+      await triggerBackButton(tester);
+      await triggerBackButton(tester);
+      await triggerBackButton(tester);
+      expect(NavbarNotifier.stackHistory, equals([0]));
+    });
+  });
 
   // group('test navbarstack history', () {
   //   testWidgets('navbar should maintain state across tabs',
