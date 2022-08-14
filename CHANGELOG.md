@@ -1,4 +1,7 @@
-## [0.3.1]  Aug 13, 2022
+## [0.3.2]  Aug 14, 2022
+
+- update docs
+## [0.3.1]  Aug 14, 2022
 
 - Fix back button did not pop up nested routes
 - add `initialIndex` property

@@ -1,8 +1,8 @@
-## **navbar_router 0.3.0**
+<!-- ## **navbar_router 0.3.0** -->
 
  <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
-This is the ultimate BottomNavigionBar created by considering the advanced use cases in real world applications. This widget handles the boilerplate code required to handle the below features with minimal code and hassle. All you need to do is specify the navbar menu items, routes and destinations and the rest will be taken care by the navbar_router.
+This is a BottomNavigionBar created by considering the advanced use cases in real world applications. This widget handles the boilerplate code required to handle some of the most common features (specified below) with minimal code and hassle. All you need to do is specify the navbar menu items, routes and destinations and the rest will be taken care by the navbar_router.
 
 ## **Features**
 
@@ -200,13 +200,13 @@ Hide/show navbar on scroll             |  Hide/show navbar on drawer open/close
 
   **initialIndex**: Navbar item that is initially selected, defaults to the first item in the list of [NavbarItems]
 
+  ***isDesktop***: if true, navbar will be shown on the left, this property can be used along with `NavbarDecoration.isExtended` to make the navbar adaptable for large screen sizes.
+
   ***onBackButtonPressed***: A function which defines whether it is the root Navigator or not. if the method returns true then the Navigator is at the base of the navigator stack
 
   ***onChanged***: A callback that is called when the currentIndex of the navbarchanges.
 
   ***shouldPopToBaseRoute***: A boolean which decides, whether the navbar should pop to the base route (pop all except first) when the current navbar is tapped while the route is deeply nested. This feature is similar to Instagram's navigation bar defaults to true.
-
-  ***isDesktop***: if true, navbar will be shown on the left, this property can be used along with `NavbarDecoration.isExtended` to make the navbar adaptable for large screen sizes.
 
 ### Curious how the navbar_router works?
 
