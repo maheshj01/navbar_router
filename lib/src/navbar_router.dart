@@ -46,6 +46,17 @@ bool _isRoutePresent(String route, List<Destination> destinations) {
   return isPresent;
 }
 
+/// Enum for the Android's Back button behavior
+enum BackButtonBehavior {
+  /// When the current NavbarItem is at the root of the navigation stack,
+  /// pressing the Back button will trigger app exit, which can be handled in [onBackButtonPressed].
+  exit,
+
+  /// When the selected NavbarItem is at the root of the navigation stack,
+  /// pressing the Back button will switch to the previous NavbarItem based on the stack History of navbar.
+  rememberHistory
+}
+
 class NavbarRouter extends StatefulWidget {
   /// The destination to show when the user taps the [NavbarItem]
   /// destination also defines the list of Nested destination sand the navbarItem associated with it
@@ -61,8 +72,8 @@ class NavbarRouter extends StatefulWidget {
   /// if the method returns true then the Navigator is at the base of the navigator stack
   final bool Function(bool)? onBackButtonPressed;
 
-  /// whether the navbar should pop all routes except first
-  /// when the current navbar is tapped while the route is deeply nested
+  /// whether the navbar should pop to base route of current tab
+  /// when the selected navbarItem is tapped all the routes from that navigator are popped.
   /// feature similar to Instagram's navigation bar
   /// defaults to true.
   final bool shouldPopToBaseRoute;
@@ -90,7 +101,11 @@ class NavbarRouter extends StatefulWidget {
   /// defaults to true.
   /// if false, the back button will trigger app exit.
   /// This is applicable only for Android's back button.
-  final bool rememberRoutes;
+  final BackButtonBehavior backButtonBehavior;
+
+  /// Navbar item that is initially selected
+  /// defaults to the first item in the list of [NavbarItems]
+  final int initialIndex;
 
   const NavbarRouter(
       {Key? key,
@@ -100,9 +115,10 @@ class NavbarRouter extends StatefulWidget {
       this.onChanged,
       this.decoration,
       this.isDesktop = false,
+      this.initialIndex = 0,
       this.destinationAnimationCurve = Curves.fastOutSlowIn,
       this.destinationAnimationDuration = 700,
-      this.rememberRoutes = true,
+      this.backButtonBehavior = BackButtonBehavior.exit,
       this.onBackButtonPressed})
       : assert(destinations.length >= 2,
             "Destinations length must be greater than or equal to 2"),
@@ -118,7 +134,6 @@ class _NavbarRouterState extends State<NavbarRouter>
   late Animation<double> fadeAnimation;
   late AnimationController _controller;
   List<GlobalKey<NavigatorState>> keys = [];
-  late int length;
 
   @override
   void initState() {
@@ -137,8 +152,8 @@ class _NavbarRouterState extends State<NavbarRouter>
   }
 
   void initialize() {
-    length = widget.destinations.length;
-    for (int i = 0; i < length; i++) {
+    NavbarNotifier.length = widget.destinations.length;
+    for (int i = 0; i < NavbarNotifier.length; i++) {
       final navbaritem = widget.destinations[i].navbarItem;
       keys.add(GlobalKey<NavigatorState>());
       items.add(navbaritem);
@@ -147,8 +162,7 @@ class _NavbarRouterState extends State<NavbarRouter>
     NavbarNotifier.setKeys(keys);
 
     /// set initial Index
-    NavbarNotifier.index = 0;
-
+    NavbarNotifier.index = widget.initialIndex;
     _controller.forward();
   }
 
@@ -181,7 +195,7 @@ class _NavbarRouterState extends State<NavbarRouter>
     }
 
     if (widget.destinations.length != oldWidget.destinations.length) {
-      length = widget.destinations.length;
+      NavbarNotifier.length = widget.destinations.length;
       clearInitialization();
       initialize();
     }
@@ -209,7 +223,7 @@ class _NavbarRouterState extends State<NavbarRouter>
     return WillPopScope(
       onWillPop: () async {
         final bool isExitingApp = await NavbarNotifier.onBackButtonPressed(
-            rememberRoutes: widget.rememberRoutes);
+            behavior: widget.backButtonBehavior);
         final bool value = widget.onBackButtonPressed!(isExitingApp);
         return value;
       },
@@ -226,7 +240,7 @@ class _NavbarRouterState extends State<NavbarRouter>
                       child: IndexedStack(
                         index: NavbarNotifier.currentIndex,
                         children: [
-                          for (int i = 0; i < length; i++)
+                          for (int i = 0; i < NavbarNotifier.length; i++)
                             IgnorePointer(
                               ignoring: NavbarNotifier.currentIndex != i,
                               child: FadeTransition(

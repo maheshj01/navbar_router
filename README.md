@@ -6,16 +6,14 @@ This is the ultimate BottomNavigionBar created by considering the advanced use c
 
 ## **Features**
 
-- Smooth transitions when changing navbar destinations
-- Ability to push routes in the nested or root navigator
-- Notifies onBackButtonPress to handle app exits like a pro
-- Programmatically control state of bottom navbar from any part of widget tree e.g change index, hide/show bottom navbar, pop routes of a specific tab etc
-- persist state across bottom navbar tabs
-- Tapping the same navbar button pops to base route of nested navigator (same as instagram)
-- Switch the Navbar destination with animation
-- Remember navigatoon history on back button press
 - Adapatable to different device Sizes using `isDesktop` and `NavbarDecoration.isExtended` Property.
-
+- Remembers navigation history of Navbar.
+- Ability to push routes in the nested or root navigator
+- Smooth transitions when changing navbar destinations
+- Notifies onBackButtonPress to handle app exits.
+- Programmatically control state of bottom navbar from any part of widget tree e.g change index, hide/show bottom navbar, pop routes of a specific tab etc
+- persist state across bottom navbar tabs.
+- Tapping the same navbar button pops to base route of nested navigator (same as instagram).
 
 _Heres a [sample app](example/lib/main.dart) built using this package to see how it works._
 
@@ -96,12 +94,25 @@ class HomePage extends StatelessWidget {
 
 # Features Breakdown
 
+## Remembers NavigationBar history
+
+When the selected NavbarItem is at the root of the navigation stack, pressing the Back button will by default trigger app exit. By specifying
+
+```dart
+behavior: BackButtonBehavior.rememberHistory,
+```
+will switch the navbar current index to the last selected NavbarItem from the navbarHistory.
+
+
+<img src="https://user-images.githubusercontent.com/31410839/184479993-01c85b2d-4453-4137-93b2-5242d1ed0e7e.gif" width ="300"> 
+
 ## Fading between NavbarDestinations
 
 You can have smooth Transitions between NavbarDestinations by setting the `destinationAnimationCurve` and `destinationAnimationDuration` properties.
 
 defaults to
-```
+
+```dart
   destinationAnimationCurve: Curves.fastOutSlowIn,
   destinationAnimationDuration: 700,
 ```
@@ -125,8 +136,7 @@ Hide/show navbar on scroll             |  Hide/show navbar on drawer open/close
 
 ## Notify onBackButtonPress
 
-*navbar_router* provides a `onBackButtonPressed` callback to intercept events from android back button. Giving you the ability to
-handle app exits (e.g you might want to implement double press back button to exit).
+*navbar_router* provides a `onBackButtonPressed` callback to intercept events from android back button. Giving you the ability to handle app exits (e.g you might want to implement double press back button to exit).
 
 *sample code implementing double press back button to exit*
 
@@ -172,7 +182,10 @@ handle app exits (e.g you might want to implement double press back button to ex
 
 <img src="https://user-images.githubusercontent.com/31410839/175865246-39b783fd-2030-4bc1-ad87-528db50fe3d7.gif">
 
+
 ## **Docs**
+
+  **backButtonBehavior**:An enum which decides, How the back button is handled, defaults to `BackButtonBehavior.rememberHistory`.
 
   ***destinations***: A List of `DestinationRouter` to show when the user taps the [NavbarItem].
   Each DestinationRouter specifies a List of Destinations, initialRoute, and the navbarItem corresponding to that destination.
@@ -185,12 +198,13 @@ handle app exits (e.g you might want to implement double press back button to ex
 
   ***errorBuilder***: A WidgetBuilder to show the user when the user tried to navigate to a route that does not exist in the [destinations].
 
-  ***onBackButtonPressed***: A Function which defines whether it is the root Navigator or not
-   if the method returns true then the Navigator is at the base of the navigator stack
+  **initialIndex**: Navbar item that is initially selected, defaults to the first item in the list of [NavbarItems]
+
+  ***onBackButtonPressed***: A function which defines whether it is the root Navigator or not. if the method returns true then the Navigator is at the base of the navigator stack
 
   ***onChanged***: A callback that is called when the currentIndex of the navbarchanges.
 
-  ***shouldPopToBaseRoute***: A boolean which decides, whether the navbar should pop to the base route (pop all except first) when the current navbar is tapped while the route is deeply nested. This feature similar to Instagram's navigation bar defaults to true.
+  ***shouldPopToBaseRoute***: A boolean which decides, whether the navbar should pop to the base route (pop all except first) when the current navbar is tapped while the route is deeply nested. This feature is similar to Instagram's navigation bar defaults to true.
 
   ***isDesktop***: if true, navbar will be shown on the left, this property can be used along with `NavbarDecoration.isExtended` to make the navbar adaptable for large screen sizes.
 

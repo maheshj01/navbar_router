@@ -1,9 +1,15 @@
+## [0.3.1]  Aug 13, 2022
+
+- Fix back button did not pop up nested routes
+- add `initialIndex` property
+
 ## [0.3.0]  Aug 7, 2022
 
-* Remebeer stack history on back nutton press [Issue 9](https://github.com/maheshmnj/navbar_router/issues/9)
+* Remember stack history on back button press [Issue 9](https://github.com/maheshmnj/navbar_router/issues/9)
 ## [0.2.2]  Jul 9, 2022
 
 * Remove unnecessary shadow from BottomNavigationBar.
+
 ## [0.2.1]  Jul 2, 2022
 
 * Add `onChanged` callback to `NavbarRouter`

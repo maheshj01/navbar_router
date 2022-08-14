@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:example/example2.dart';
+import 'package:example/sample.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:navbar_router/navbar_router.dart';
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.indigo,
         ),
         home: const HomePage());
-    // home: const Example2(title: 'BottomNavbar Demo'));
+    // home: const NavbarSample(title: 'BottomNavbar Demo'));
   }
 }
 
@@ -46,6 +46,7 @@ class _HomePageState extends State<HomePage> {
     1: {
       '/': ProductList(),
       ProductDetail.route: ProductDetail(),
+      ProductComments.route: ProductComments(),
     },
     2: {
       '/': UserProfile(),
@@ -124,6 +125,7 @@ class _HomePageState extends State<HomePage> {
         onChanged: (x) {
           debugPrint('index changed $x');
         },
+        backButtonBehavior: BackButtonBehavior.rememberHistory,
         destinations: [
           for (int i = 0; i < items.length; i++)
             DestinationRouter(

@@ -2,14 +2,14 @@ import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:navbar_router/navbar_router.dart';
 
-class Example2 extends StatefulWidget {
-  const Example2({Key? key, required this.title}) : super(key: key);
+class NavbarSample extends StatefulWidget {
+  const NavbarSample({Key? key, required this.title}) : super(key: key);
   final String title;
   @override
-  State<Example2> createState() => _Example2State();
+  State<NavbarSample> createState() => _NavbarSampleState();
 }
 
-class _Example2State extends State<Example2> {
+class _NavbarSampleState extends State<NavbarSample> {
   List<NavbarItem> items = [
     NavbarItem(Icons.home, 'Home', backgroundColor: colors[0]),
     NavbarItem(Icons.shopping_bag, 'Products', backgroundColor: colors[1]),
