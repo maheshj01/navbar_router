@@ -161,8 +161,10 @@ class _NavbarRouterState extends State<NavbarRouter>
 
     NavbarNotifier.setKeys(keys);
 
-    /// set initial Index
-    NavbarNotifier.index = widget.initialIndex;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      /// set initial Index
+      NavbarNotifier.index = widget.initialIndex;
+    });
     _controller.forward();
   }
 
