@@ -8,6 +8,7 @@
 .buildlog/
 .history
 .svn/
+.metadata
 migrate_working_dir/
 
 # IntelliJ related

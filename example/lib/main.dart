@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:navbar_router/navbar_router.dart';
@@ -487,6 +488,14 @@ class UserProfile extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(
+              height: 24,
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  NavbarNotifier.popRoute(1);
+                },
+                child: const Text('Pop Product Route')),
           ],
         ),
       ),

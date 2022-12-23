@@ -1,3 +1,6 @@
+## [0.3.3]  Aug 14, 2022
+- Pop route programmatically
+
 ## [0.3.2]  Aug 14, 2022
 
 - update docs

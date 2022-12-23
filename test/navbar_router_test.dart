@@ -262,7 +262,6 @@ void main() {
 
       /// This will exit the app
       await triggerBackButton(tester);
-      debugPrint(NavbarNotifier.stackHistory.toString());
       expect(exitCode, 0);
     });
     testWidgets('Navbar should remember navigation history',
@@ -315,11 +314,65 @@ void main() {
     });
   });
 
-  // group('test navbarstack history', () {
-  //   testWidgets('navbar should maintain state across tabs',
-  //       (WidgetTester tester) async {
-  //     await tester.pumpWidget(_boilerplate());
-  //     await tester.pumpAndSettle();
-  //   });
-  // });
+  group('Pop routes Programmatically', () {
+    testWidgets('Navbar should pop route programmatically',
+        (WidgetTester tester) async {
+      int index = 1;
+      await tester.pumpWidget(boilerplate());
+      await tester.pumpAndSettle();
+      final productIcon = find.byIcon(items[index].iconData);
+      final productDestination = (routes[index]!['/']).runtimeType.typeX();
+      expect(productIcon, findsOneWidget);
+      await tester.tap(productIcon);
+      await tester.pumpAndSettle();
+      expect(productDestination, findsOneWidget);
+
+      /// Navigate to ProductDetail
+
+      await tester.tap("Product 0".textX());
+      await tester.pumpAndSettle();
+      final productDetail =
+          (routes[1]![ProductDetail.route]).runtimeType.typeX();
+      expect(productDetail, findsOneWidget);
+      NavbarNotifier.popRoute(index);
+      await tester.pumpAndSettle();
+      expect(productDetail, findsNothing);
+      expect(productDestination, findsOneWidget);
+    });
+
+    testWidgets('Navbar should pop to base route programmatically',
+        (WidgetTester tester) async {
+      int index = 1;
+      await tester.pumpWidget(boilerplate());
+      await tester.pumpAndSettle();
+      final productIcon = find.byIcon(items[index].iconData);
+      final productDestination = (routes[index]!['/']).runtimeType.typeX();
+      expect(productIcon, findsOneWidget);
+      await tester.tap(productIcon);
+      await tester.pumpAndSettle();
+      expect(productDestination, findsOneWidget);
+
+      /// Navigate to ProductDetail
+
+      await tester.tap("Product 0".textX());
+      await tester.pumpAndSettle();
+      final productDetail =
+          (routes[1]![ProductDetail.route]).runtimeType.typeX();
+      expect(productDetail, findsOneWidget);
+
+      /// Navigate to Product comments
+
+      await tester.tap("show comments".textX());
+      await tester.pumpAndSettle();
+      final productComments =
+          (routes[1]![ProductComments.route]).runtimeType.typeX();
+      expect(productComments, findsOneWidget);
+      NavbarNotifier.popAllRoutes(index);
+      await tester.pumpAndSettle();
+
+      expect(productComments, findsNothing);
+      expect(productDetail, findsNothing);
+      expect(productDestination, findsOneWidget);
+    });
+  });
 }

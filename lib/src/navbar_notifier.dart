@@ -87,6 +87,14 @@ class NavbarNotifier extends ChangeNotifier {
     return exitingApp;
   }
 
+  static void popRoute(int index) {
+    NavigatorState? currentState;
+    currentState = _keys[index].currentState;
+    if (currentState != null && currentState.canPop()) {
+      currentState.pop();
+    }
+  }
+
   // pops all routes except first, if there are more than 1 route in each navigator stack
   static void popAllRoutes(int index) {
     NavigatorState? currentState;
