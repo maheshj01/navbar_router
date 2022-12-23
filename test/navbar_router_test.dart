@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -27,30 +28,32 @@ extension FindIcon on IconData {
 }
 
 void main() {
-  List<NavbarItem> items = [
-    NavbarItem(Icons.home, 'Home', backgroundColor: colors[0]),
-    NavbarItem(Icons.shopping_bag, 'Products', backgroundColor: colors[1]),
-    NavbarItem(Icons.person, 'Me', backgroundColor: colors[2]),
+  const List<NavbarItem> items = [
+    NavbarItem(Icons.home, 'Home', backgroundColor: mediumPurple),
+    NavbarItem(Icons.shopping_bag, 'Products', backgroundColor: Colors.orange),
+    NavbarItem(Icons.person, 'Me', backgroundColor: Colors.teal),
   ];
-  final Map<int, Map<String, Widget>> routes = {
+  const Map<int, Map<String, Widget>> routes = {
     0: {
-      '/': const HomeFeeds(),
-      FeedDetail.route: const FeedDetail(),
+      '/': HomeFeeds(),
+      FeedDetail.route: FeedDetail(),
     },
     1: {
-      '/': const ProductList(),
-      ProductDetail.route: const ProductDetail(),
-      ProductComments.route: const ProductComments(),
+      '/': ProductList(),
+      ProductDetail.route: ProductDetail(),
+      ProductComments.route: ProductComments(),
     },
     2: {
-      '/': const UserProfile(),
-      ProfileEdit.route: const ProfileEdit(),
+      '/': UserProfile(),
+      ProfileEdit.route: ProfileEdit(),
     },
   };
 
   Widget boilerplate(
       {bool isDesktop = false,
-      BackButtonBehavior behavior = BackButtonBehavior.exit}) {
+      BackButtonBehavior behavior = BackButtonBehavior.exit,
+      Map<int, Map<String, Widget>> navBarRoutes = routes,
+      List<NavbarItem> navBarItems = items}) {
     return MaterialApp(
       home: Directionality(
           textDirection: TextDirection.ltr,
@@ -70,17 +73,17 @@ void main() {
                 decoration: NavbarDecoration(
                     navbarType: BottomNavigationBarType.shifting),
                 destinations: [
-                  for (int i = 0; i < items.length; i++)
+                  for (int i = 0; i < navBarItems.length; i++)
                     DestinationRouter(
-                      navbarItem: items[i],
+                      navbarItem: navBarItems[i],
                       destinations: [
-                        for (int j = 0; j < routes[i]!.keys.length; j++)
+                        for (int j = 0; j < navBarRoutes[i]!.keys.length; j++)
                           Destination(
-                            route: routes[i]!.keys.elementAt(j),
-                            widget: routes[i]!.values.elementAt(j),
+                            route: navBarRoutes[i]!.keys.elementAt(j),
+                            widget: navBarRoutes[i]!.values.elementAt(j),
                           ),
                       ],
-                      initialRoute: routes[i]!.keys.first,
+                      initialRoute: navBarRoutes[i]!.keys.first,
                     ),
                 ],
               ))),
@@ -114,6 +117,59 @@ void main() {
       expect(find.text(items[0].text), findsOneWidget);
       expect(find.text(items[1].text), findsWidgets);
       expect(find.text(items[2].text), findsOneWidget);
+    });
+
+    testWidgets("Navbar should allow updating navbar routes dynamically ",
+        (WidgetTester tester) async {
+      List<NavbarItem>? menuitems = [
+        const NavbarItem(Icons.home, 'Home', backgroundColor: mediumPurple),
+        const NavbarItem(Icons.shopping_bag, 'Products',
+            backgroundColor: Colors.orange),
+        const NavbarItem(Icons.person, 'Me', backgroundColor: Colors.teal),
+      ];
+      Map<int, Map<String, Widget>>? navBarRoutes = {
+        0: {
+          '/': const HomeFeeds(),
+          FeedDetail.route: const FeedDetail(),
+        },
+        1: {
+          '/': const ProductList(),
+          ProductDetail.route: const ProductDetail(),
+          ProductComments.route: const ProductComments(),
+        },
+        2: {
+          '/': const UserProfile(),
+          ProfileEdit.route: const ProfileEdit(),
+        },
+      };
+      await tester.pumpWidget(boilerplate(
+        navBarItems: menuitems,
+        navBarRoutes: navBarRoutes,
+      ));
+      await tester.pumpAndSettle();
+      final bottomNavigation = (BottomNavigationBar).typeX();
+      expect(bottomNavigation, findsOneWidget);
+
+      for (int i = 0; i < menuitems.length; i++) {
+        final icon = find.byIcon(menuitems[i].iconData);
+        final destination = (navBarRoutes[i]!['/']).runtimeType.typeX();
+        expect(icon, findsOneWidget);
+        await tester.tap(icon);
+        await tester.pumpAndSettle();
+        expect(destination, findsOneWidget);
+      }
+      int randomIndex = Random().nextInt(menuitems.length);
+      menuitems.add(items[randomIndex]);
+      navBarRoutes[navBarRoutes.length] = routes[randomIndex]!;
+      await tester.pumpAndSettle();
+      for (int i = 0; i < menuitems.length; i++) {
+        final icon = find.byIcon(menuitems[i].iconData);
+        final destination = (navBarRoutes[i]!['/']).runtimeType.typeX();
+        expect(icon, findsOneWidget);
+        await tester.tap(icon);
+        await tester.pumpAndSettle();
+        expect(destination, findsOneWidget);
+      }
     });
   });
   testWidgets('navbar_router default index must be zero',
