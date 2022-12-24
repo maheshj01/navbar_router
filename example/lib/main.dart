@@ -120,12 +120,13 @@ class _HomePageState extends State<HomePage> {
             return isExitingApp;
           }
         },
+        type: NavbarType.notched,
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 600,
         decoration: NavbarDecoration(
             selectedLabelTextStyle: const TextStyle(color: Colors.red),
             showUnselectedLabels: true,
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.primaries[4],
             unselectedLabelTextStyle:
                 const TextStyle(color: Colors.black, fontSize: 10),
             selectedIconTheme: const IconThemeData(color: Colors.red),

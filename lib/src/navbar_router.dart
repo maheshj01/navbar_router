@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:navbar_router/navbar_router.dart';
 
@@ -98,6 +98,11 @@ class NavbarRouter extends StatefulWidget {
   /// callback when the currentIndex changes
   final Function(int)? onChanged;
 
+  /// The type of the [Navbar] that is to be rendered.
+  /// defaults to [NavbarType.standard] which is a standard [BottomNavigationBar]
+  /// [NavbarType.notched] is a [BottomNavigationBar] with a notch
+  final NavbarType type;
+
   /// Whether the back button pressed should pop the current route and switch to the previous route,
   /// defaults to true.
   /// if false, the back button will trigger app exit.
@@ -117,6 +122,7 @@ class NavbarRouter extends StatefulWidget {
       this.decoration,
       this.isDesktop = false,
       this.initialIndex = 0,
+      this.type = NavbarType.standard,
       this.destinationAnimationCurve = Curves.fastOutSlowIn,
       this.destinationAnimationDuration = 700,
       this.backButtonBehavior = BackButtonBehavior.exit,
@@ -194,7 +200,8 @@ class _NavbarRouterState extends State<NavbarRouter>
       );
     }
 
-    if (widget.destinations.length != oldWidget.destinations.length) {
+    if (widget.destinations.length != oldWidget.destinations.length ||
+        widget.type != oldWidget.type) {
       NavbarNotifier.length = widget.destinations.length;
       clearInitialization();
       initialize();
@@ -282,6 +289,7 @@ class _NavbarRouterState extends State<NavbarRouter>
                           model: _navbarNotifier,
                           isDesktop: widget.isDesktop,
                           decoration: widget.decoration,
+                          navbarType: widget.type,
                           onItemTapped: (x) {
                             // User pressed  on the same tab twice
                             if (NavbarNotifier.currentIndex == x) {

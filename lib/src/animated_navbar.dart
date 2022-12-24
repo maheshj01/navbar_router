@@ -88,7 +88,7 @@ class _AnimatedNavBar extends StatefulWidget {
       this.decoration,
       required this.model,
       this.isDesktop = false,
-      this.navbarType = NavbarType.notched,
+      this.navbarType = NavbarType.standard,
       required this.menuItems,
       required this.onItemTapped})
       : super(key: key);
@@ -156,7 +156,6 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
             navBarDecoration: widget.decoration!,
             items: widget.menuItems,
             onTap: widget.onItemTapped,
-            color: widget.decoration!.backgroundColor,
             navBarElevation: widget.decoration!.elevation,
           );
         case NavbarType.notched:
@@ -172,7 +171,6 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
             navBarDecoration: widget.decoration!,
             items: widget.menuItems,
             onTap: widget.onItemTapped,
-            color: widget.decoration!.backgroundColor,
             navBarElevation: widget.decoration!.elevation,
           );
       }
@@ -216,8 +214,6 @@ abstract class NavbarBase extends StatefulWidget {
   const NavbarBase({Key? key}) : super(key: key);
   NavbarDecoration get decoration;
 
-  Color? get backgroundColor;
-
   double? get elevation;
 
   Function(int)? get onItemTapped;
@@ -229,7 +225,6 @@ class StandardNavbar extends NavbarBase {
   const StandardNavbar(
       {Key? key,
       required this.navBarDecoration,
-      required this.color,
       required this.navBarElevation,
       required this.onTap,
       required this.items})
@@ -238,11 +233,7 @@ class StandardNavbar extends NavbarBase {
   final List<NavbarItem> items;
   final Function(int) onTap;
   final NavbarDecoration navBarDecoration;
-  final Color? color;
   final double? navBarElevation;
-
-  @override
-  Color? get backgroundColor => color;
 
   @override
   StandardNavbarState createState() => StandardNavbarState();
@@ -360,7 +351,7 @@ class NotchedNavBarState extends State<NotchedNavBar>
   int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final _selectedWidget = AnimatedBuilder(
+    final selectedWidget = AnimatedBuilder(
         animation: _controller!,
         builder: (context, snapshot) {
           return Transform.scale(
@@ -384,7 +375,7 @@ class NotchedNavBarState extends State<NotchedNavBar>
                     index: NavbarNotifier.currentIndex,
                     animation: animation.value),
                 child: Container(
-                  color: Colors.blue,
+                  color: widget.decoration.backgroundColor,
                   height: kBottomNavigationBarHeight * 1.6,
                   alignment: Alignment.center,
                 ),
@@ -397,9 +388,9 @@ class NotchedNavBarState extends State<NotchedNavBar>
               for (int i = 0; i < widget.menuItems.length; i++)
                 Expanded(
                     child: _selectedIndex == i
-                        ? _selectedWidget
+                        ? selectedWidget
                         : IconButton(
-                            icon: Icon(widget.menuItems[i].iconData),
+                            icon: MenuTile(item: widget.menuItems[i]),
                             onPressed: () {
                               _selectedIndex = i;
                               widget.onItemTapped!(i);
@@ -408,6 +399,19 @@ class NotchedNavBarState extends State<NotchedNavBar>
                           ))
             ]),
       ],
+    );
+  }
+}
+
+class MenuTile extends StatelessWidget {
+  final NavbarItem item;
+
+  const MenuTile({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [Icon(item.iconData), Flexible(child: Text(item.text))],
     );
   }
 }
@@ -423,7 +427,7 @@ class NotchedClipper extends CustomClipper<Path> {
     final width = size.width;
     final height = size.height;
     double curveRadius = 60.0 * animation;
-    final elevationFromEdge = 5.0;
+    const elevationFromEdge = 5.0;
 
     path.moveTo(0, elevationFromEdge);
     int items = NavbarNotifier.length;
