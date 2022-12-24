@@ -347,14 +347,6 @@ class NotchedNavBarState extends State<NotchedNavBar>
     super.dispose();
   }
 
-  @override
-  void didUpdateWidget(covariant NotchedNavBar oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.decoration != widget.decoration) {
-      _startAnimation();
-    }
-  }
-
   late AnimationController? _controller;
   late Animation<double> animation = CurvedAnimation(
     parent: _controller!,
@@ -392,7 +384,7 @@ class NotchedNavBarState extends State<NotchedNavBar>
                     index: NavbarNotifier.currentIndex,
                     animation: animation.value),
                 child: Container(
-                  color: widget.decoration.backgroundColor,
+                  color: Colors.blue,
                   height: kBottomNavigationBarHeight * 1.6,
                   alignment: Alignment.center,
                 ),
@@ -401,19 +393,19 @@ class NotchedNavBarState extends State<NotchedNavBar>
         Row(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               for (int i = 0; i < widget.menuItems.length; i++)
-                _selectedIndex == i
-                    ? _selectedWidget
-                    : IconButton(
-                        icon: Icon(widget.menuItems[i].iconData),
-                        onPressed: () {
-                          _selectedIndex = i;
-                          widget.onItemTapped!(i);
-                          _startAnimation();
-                        },
-                      )
+                Expanded(
+                    child: _selectedIndex == i
+                        ? _selectedWidget
+                        : IconButton(
+                            icon: Icon(widget.menuItems[i].iconData),
+                            onPressed: () {
+                              _selectedIndex = i;
+                              widget.onItemTapped!(i);
+                              _startAnimation();
+                            },
+                          ))
             ]),
       ],
     );
@@ -434,9 +426,36 @@ class NotchedClipper extends CustomClipper<Path> {
     final elevationFromEdge = 5.0;
 
     path.moveTo(0, elevationFromEdge);
-    int items = 4;
+    int items = NavbarNotifier.length;
     // path.lineTo(size.width / 2, 0);
-    double centerX = width * (index / items) + curveRadius;
+
+    // work around for calculating the center of notched navbar
+    // for different number of items
+    // 0 -> 0.16
+    // 1 -> 0.5
+    // 2 -> 0.84
+    // 2 items width * (0.1 + (0.2 * index));
+    // 3 items width * (0.16 + (0.34 * index));
+    // 4 items width * (0.12 + (0.25 * index));
+    // 5 items width * (0.1 + (0.2 * index));
+    // in general width * (0.12 + (0.25 * index));
+
+    double centerX = width * (0.1 + (0.2 * index));
+
+    switch (items) {
+      case 3:
+        centerX = width * (0.16 + (0.34 * index));
+        break;
+      case 4:
+        centerX = width * (0.12 + (0.25 * index));
+        break;
+      case 5:
+        centerX = width * (0.1 + (0.2 * index));
+        break;
+      default:
+        centerX = width * (0.1 + (0.2 * index));
+    }
+
     double centerY = height * 0.5;
 
     Offset point1 = Offset(centerX - curveRadius, 0);
