@@ -126,15 +126,15 @@ class _HomePageState extends State<HomePage> {
         decoration: NavbarDecoration(
             selectedLabelTextStyle: const TextStyle(color: Colors.red),
             showUnselectedLabels: true,
-            backgroundColor: Colors.primaries[4],
-            unselectedLabelTextStyle:
-                const TextStyle(color: Colors.black, fontSize: 10),
+            backgroundColor: Colors.white,
+            unselectedIconColor: Colors.black,
+            unselectedItemColor: Colors.black,
+            // unselectedLabelTextStyle:
+            //     const TextStyle(color: Colors.white, fontSize: 12),
             selectedIconTheme: const IconThemeData(color: Colors.red),
             isExtended: size.width > 800 ? true : false,
             navbarType: BottomNavigationBarType.shifting),
-        onChanged: (x) {
-          debugPrint('index changed $x');
-        },
+        onChanged: (x) {},
         backButtonBehavior: BackButtonBehavior.rememberHistory,
         destinations: [
           for (int i = 0; i < items.length; i++)

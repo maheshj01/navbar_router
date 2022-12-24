@@ -222,11 +222,12 @@ abstract class NavbarBase extends StatefulWidget {
 }
 
 class StandardNavbar extends NavbarBase {
-  const StandardNavbar(
+  StandardNavbar(
       {Key? key,
       required this.navBarDecoration,
       required this.navBarElevation,
       required this.onTap,
+      this.index = 0,
       required this.items})
       : super(key: key);
 
@@ -234,6 +235,7 @@ class StandardNavbar extends NavbarBase {
   final Function(int) onTap;
   final NavbarDecoration navBarDecoration;
   final double? navBarElevation;
+  final int index;
 
   @override
   StandardNavbarState createState() => StandardNavbarState();
@@ -292,6 +294,7 @@ class NotchedNavBar extends NavbarBase {
       required this.color,
       required this.navBarElevation,
       required this.onTap,
+      this.index = 0,
       required this.items})
       : super(key: key);
 
@@ -300,9 +303,7 @@ class NotchedNavBar extends NavbarBase {
   final NavbarDecoration navBarDecoration;
   final Color? color;
   final double? navBarElevation;
-
-  @override
-  Color? get backgroundColor => color;
+  final int index;
 
   @override
   NotchedNavBarState createState() => NotchedNavBarState();
@@ -327,9 +328,10 @@ class NotchedNavBarState extends State<NotchedNavBar>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 500),
     );
-    _controller!.forward();
+
+    _startAnimation();
   }
 
   @override
@@ -339,29 +341,68 @@ class NotchedNavBarState extends State<NotchedNavBar>
   }
 
   late AnimationController? _controller;
-  late Animation<double> animation = CurvedAnimation(
+  late Animation<double> notchAnimation = CurvedAnimation(
     parent: _controller!,
-    curve: Curves.bounceInOut,
+    curve: const Interval(
+      0.0,
+      0.8,
+      curve: Curves.bounceInOut,
+    ),
   );
+
+  late Animation<double> iconAnimation =
+      Tween<double>(begin: -40, end: 10).animate(CurvedAnimation(
+    parent: _controller!,
+    curve: const Interval(
+      0.6,
+      1.0,
+      curve: Curves.easeIn,
+    ),
+  ));
+
+  late Animation<double> opacityAnimation =
+      Tween<double>(begin: 0.2, end: 1).animate(CurvedAnimation(
+    parent: _controller!,
+    curve: const Interval(
+      0.4,
+      1.0,
+      curve: Curves.easeIn,
+    ),
+  ));
+
   void _startAnimation() async {
     _controller!.reset();
     _controller!.forward();
   }
 
   int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     final selectedWidget = AnimatedBuilder(
         animation: _controller!,
         builder: (context, snapshot) {
-          return Transform.scale(
-            scale: animation.value,
-            child: FloatingActionButton(
-                onPressed: () {
-                  widget.onItemTapped!(NavbarNotifier.currentIndex);
-                },
-                child: Icon(
-                    widget.menuItems[NavbarNotifier.currentIndex].iconData)),
+          return Transform.translate(
+            offset: Offset(0, -iconAnimation.value),
+            // scale: animation.value,
+            child: Opacity(
+              opacity: opacityAnimation.value,
+              child: SizedBox(
+                  height: 60.0,
+                  width: 60.0,
+                  child: FittedBox(
+                    child: FloatingActionButton(
+                        backgroundColor: widget.decoration.backgroundColor,
+                        onPressed: () {
+                          widget.onItemTapped!(NavbarNotifier.currentIndex);
+                        },
+                        child: Icon(
+                          widget
+                              .menuItems[NavbarNotifier.currentIndex].iconData,
+                          color: widget.decoration.selectedIconTheme!.color,
+                        )),
+                  )),
+            ),
           );
         });
 
@@ -373,45 +414,78 @@ class NotchedNavBarState extends State<NotchedNavBar>
               return ClipPath(
                 clipper: NotchedClipper(
                     index: NavbarNotifier.currentIndex,
-                    animation: animation.value),
+                    animation: notchAnimation.value),
                 child: Container(
-                  color: widget.decoration.backgroundColor,
+                  decoration: BoxDecoration(
+                    color: widget.decoration.backgroundColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black
+                            .withOpacity(widget.decoration.elevation ?? 0.2),
+                        blurRadius: 10,
+                        spreadRadius: 5,
+                      ),
+                    ],
+                  ),
                   height: kBottomNavigationBarHeight * 1.6,
                   alignment: Alignment.center,
                 ),
               );
             }),
-        Row(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              for (int i = 0; i < widget.menuItems.length; i++)
-                Expanded(
-                    child: _selectedIndex == i
-                        ? selectedWidget
-                        : IconButton(
-                            icon: MenuTile(item: widget.menuItems[i]),
-                            onPressed: () {
-                              _selectedIndex = i;
-                              widget.onItemTapped!(i);
-                              _startAnimation();
-                            },
-                          ))
-            ]),
+        // IconButton(onPressed: () {}, icon: Icon(Icons.menu))
+        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          for (int i = 0; i < widget.menuItems.length; i++)
+            Expanded(
+                child: _selectedIndex == i
+                    ? selectedWidget
+                    : InkWell(
+                        onTap: () {
+                          _selectedIndex = i;
+                          widget.onItemTapped!(i);
+                          _startAnimation();
+                        },
+                        child: Container(
+                          // color: Colors.red,
+                          alignment: Alignment.center,
+                          height: 80,
+                          child: MenuTile(
+                            item: widget.menuItems[i],
+                            decoration: widget.decoration,
+                          ),
+                        ),
+                      ))
+        ]),
       ],
     );
   }
 }
 
 class MenuTile extends StatelessWidget {
+  final NavbarDecoration decoration;
   final NavbarItem item;
 
-  const MenuTile({super.key, required this.item});
+  const MenuTile({super.key, required this.item, required this.decoration});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [Icon(item.iconData), Flexible(child: Text(item.text))],
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          item.iconData,
+          color:
+              decoration.unselectedIconColor ?? decoration.unselectedItemColor,
+        ),
+        const SizedBox(
+          height: 6,
+        ),
+        Flexible(
+            child: Text(item.text,
+                style: decoration.unselectedLabelTextStyle?.copyWith(
+                  color: decoration.unselectedItemColor ??
+                      decoration.unselectedItemColor,
+                )))
+      ],
     );
   }
 }
@@ -444,7 +518,7 @@ class NotchedClipper extends CustomClipper<Path> {
     // 5 items width * (0.1 + (0.2 * index));
     // in general width * (0.12 + (0.25 * index));
 
-    double centerX = width * (0.1 + (0.2 * index));
+    double centerX = width * (0.1 + (0.2 * index) * animation);
 
     switch (items) {
       case 3:
@@ -478,7 +552,7 @@ class NotchedClipper extends CustomClipper<Path> {
         point1.dx, point1.dy, point2.dx, point2.dy, point3.dx, point3.dy);
 
     point1 = Offset(centerX + (curveRadius / 1.2), curveRadius);
-    point2 = Offset(centerX + (curveRadius / 4), 0);
+    point2 = Offset(centerX + (curveRadius / 3), 0);
     point3 = Offset(centerX + curveRadius, 0);
     path.cubicTo(
         point1.dx, point1.dy, point2.dx, point2.dy, point3.dx, point3.dy);
