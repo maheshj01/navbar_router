@@ -36,6 +36,7 @@ class _HomePageState extends State<HomePage> {
     NavbarItem(Icons.home, 'Home', backgroundColor: colors[0]),
     NavbarItem(Icons.shopping_bag, 'Products', backgroundColor: colors[1]),
     NavbarItem(Icons.person, 'Me', backgroundColor: colors[2]),
+    NavbarItem(Icons.settings, 'Settings', backgroundColor: colors[0]),
   ];
 
   final Map<int, Map<String, Widget>> _routes = const {
@@ -51,6 +52,9 @@ class _HomePageState extends State<HomePage> {
     2: {
       '/': UserProfile(),
       ProfileEdit.route: ProfileEdit(),
+    },
+    3: {
+      '/': Settings(),
     },
   };
 
@@ -117,11 +121,12 @@ class _HomePageState extends State<HomePage> {
         decoration: NavbarDecoration(
             selectedLabelTextStyle: const TextStyle(color: Colors.red),
             showUnselectedLabels: true,
+            backgroundColor: Colors.red,
             unselectedLabelTextStyle:
                 const TextStyle(color: Colors.black, fontSize: 10),
             selectedIconTheme: const IconThemeData(color: Colors.red),
             isExtended: size.width > 800 ? true : false,
-            navbarType: BottomNavigationBarType.fixed),
+            navbarType: BottomNavigationBarType.shifting),
         onChanged: (x) {
           debugPrint('index changed $x');
         },
@@ -503,6 +508,31 @@ class UserProfile extends StatelessWidget {
   }
 }
 
+class Settings extends StatefulWidget {
+  const Settings({super.key});
+
+  @override
+  State<Settings> createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+      ),
+      body: ListView.builder(
+          itemCount: 10,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text('Setting $index'),
+            );
+          }),
+    );
+  }
+}
+
 class ProfileEdit extends StatelessWidget {
   static const String route = '/profile/edit';
 
@@ -518,3 +548,4 @@ class ProfileEdit extends StatelessWidget {
     );
   }
 }
+
