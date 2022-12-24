@@ -82,18 +82,22 @@ class _HomePageState extends State<HomePage> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-            NavbarNotifier.isNavbarHidden ? Icons.toggle_off : Icons.toggle_on),
-        onPressed: () {
-          // Programmatically toggle the Navbar visibility
-          if (NavbarNotifier.isNavbarHidden) {
-            NavbarNotifier.hideBottomNavBar = false;
-          } else {
-            NavbarNotifier.hideBottomNavBar = true;
-          }
-          setState(() {});
-        },
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 24.0),
+        child: FloatingActionButton(
+          child: Icon(NavbarNotifier.isNavbarHidden
+              ? Icons.toggle_off
+              : Icons.toggle_on),
+          onPressed: () {
+            // Programmatically toggle the Navbar visibility
+            if (NavbarNotifier.isNavbarHidden) {
+              NavbarNotifier.hideBottomNavBar = false;
+            } else {
+              NavbarNotifier.hideBottomNavBar = true;
+            }
+            setState(() {});
+          },
+        ),
       ),
       body: NavbarRouter(
         errorBuilder: (context) {
@@ -548,4 +552,3 @@ class ProfileEdit extends StatelessWidget {
     );
   }
 }
-
