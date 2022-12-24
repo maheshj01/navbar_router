@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:navbar_router/navbar_router.dart';
+import 'package:navbar_router/src/navbar_decoration.dart';
 
 import 'navbar_utils.dart';
 
