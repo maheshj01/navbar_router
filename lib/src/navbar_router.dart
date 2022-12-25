@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:navbar_router/navbar_router.dart';
 
@@ -97,6 +98,17 @@ class NavbarRouter extends StatefulWidget {
   /// callback when the currentIndex changes
   final Function(int)? onChanged;
 
+  /// The type of the [Navbar] that is to be rendered.
+  /// defaults to [NavbarType.standard] which is a standard [BottomNavigationBar]
+  ///
+  /// Alternatively, you can use [NavbarType.notched] which is a Navbar with a notch
+  ///
+  /// Use appropriate [NavbarDecoration] for the type of [NavbarType] you are using.
+  /// For
+  /// NavbarType.standard use [NavbarDecoration]
+  /// NavbarType.notched use [NotchedDecoration]
+  final NavbarType type;
+
   /// Whether the back button pressed should pop the current route and switch to the previous route,
   /// defaults to true.
   /// if false, the back button will trigger app exit.
@@ -116,6 +128,7 @@ class NavbarRouter extends StatefulWidget {
       this.decoration,
       this.isDesktop = false,
       this.initialIndex = 0,
+      this.type = NavbarType.standard,
       this.destinationAnimationCurve = Curves.fastOutSlowIn,
       this.destinationAnimationDuration = 700,
       this.backButtonBehavior = BackButtonBehavior.exit,
@@ -193,7 +206,8 @@ class _NavbarRouterState extends State<NavbarRouter>
       );
     }
 
-    if (widget.destinations.length != oldWidget.destinations.length) {
+    if (widget.destinations.length != oldWidget.destinations.length ||
+        widget.type != oldWidget.type) {
       NavbarNotifier.length = widget.destinations.length;
       clearInitialization();
       initialize();
@@ -226,80 +240,78 @@ class _NavbarRouterState extends State<NavbarRouter>
         final bool value = widget.onBackButtonPressed!(isExitingApp);
         return value;
       },
-      child: Material(
-          child: AnimatedBuilder(
-              animation: _navbarNotifier,
-              builder: (context, snapshot) {
-                return Stack(
-                  children: [
-                    AnimatedPadding(
-                      /// same duration as [_AnimatedNavbar]'s animation duration
-                      duration: const Duration(milliseconds: 500),
-                      padding: EdgeInsets.only(left: getPadding()),
-                      child: IndexedStack(
-                        index: NavbarNotifier.currentIndex,
-                        children: [
-                          for (int i = 0; i < NavbarNotifier.length; i++)
-                            IgnorePointer(
-                              ignoring: NavbarNotifier.currentIndex != i,
-                              child: FadeTransition(
-                                opacity: fadeAnimation,
-                                child: Navigator(
-                                    key: keys[i],
-                                    initialRoute:
-                                        widget.destinations[i].initialRoute,
-                                    onGenerateRoute: (RouteSettings settings) {
-                                      WidgetBuilder? builder =
-                                          widget.errorBuilder;
-                                      final nestedLength = widget
-                                          .destinations[i].destinations.length;
-                                      for (int j = 0; j < nestedLength; j++) {
-                                        if (widget.destinations[i]
-                                                .destinations[j].route ==
-                                            settings.name) {
-                                          builder = (BuildContext _) => widget
-                                              .destinations[i]
-                                              .destinations[j]
-                                              .widget;
-                                        }
-                                      }
-                                      return MaterialPageRoute(
-                                          builder: builder!,
-                                          settings: settings);
-                                    }),
-                              ),
-                            )
-                        ],
-                      ),
-                    ),
-                    Positioned(
-                      left: 0,
-                      top: widget.isDesktop ? 0 : null,
-                      bottom: 0,
-                      right: widget.isDesktop ? null : 0,
-                      child: _AnimatedNavBar(
-                          model: _navbarNotifier,
-                          isDesktop: widget.isDesktop,
-                          decoration: widget.decoration,
-                          onItemTapped: (x) {
-                            // User pressed  on the same tab twice
-                            if (NavbarNotifier.currentIndex == x) {
-                              if (widget.shouldPopToBaseRoute) {
-                                NavbarNotifier.popAllRoutes(x);
-                              }
-                            } else {
-                              NavbarNotifier.index = x;
-                              _animateDestinations();
-                              if (widget.onChanged != null) {
-                                widget.onChanged!(x);
-                              }
-                            }
-                          },
-                          menuItems: items),
-                    ),
-                  ],
-                );
-              })),
+      child: AnimatedBuilder(
+          animation: _navbarNotifier,
+          builder: (context, snapshot) {
+            return Stack(
+              children: [
+                AnimatedPadding(
+                  /// same duration as [_AnimatedNavbar]'s animation duration
+                  duration: const Duration(milliseconds: 500),
+                  padding: EdgeInsets.only(left: getPadding()),
+                  child: IndexedStack(
+                    index: NavbarNotifier.currentIndex,
+                    children: [
+                      for (int i = 0; i < NavbarNotifier.length; i++)
+                        IgnorePointer(
+                          ignoring: NavbarNotifier.currentIndex != i,
+                          child: FadeTransition(
+                            opacity: fadeAnimation,
+                            child: Navigator(
+                                key: keys[i],
+                                initialRoute:
+                                    widget.destinations[i].initialRoute,
+                                onGenerateRoute: (RouteSettings settings) {
+                                  WidgetBuilder? builder = widget.errorBuilder;
+                                  final nestedLength = widget
+                                      .destinations[i].destinations.length;
+                                  for (int j = 0; j < nestedLength; j++) {
+                                    if (widget.destinations[i].destinations[j]
+                                            .route ==
+                                        settings.name) {
+                                      builder = (BuildContext _) => widget
+                                          .destinations[i]
+                                          .destinations[j]
+                                          .widget;
+                                    }
+                                  }
+                                  return MaterialPageRoute(
+                                      builder: builder!, settings: settings);
+                                }),
+                          ),
+                        )
+                    ],
+                  ),
+                ),
+                Positioned(
+                  left: 0,
+                  top: widget.isDesktop ? 0 : null,
+                  bottom: 0,
+                  right: widget.isDesktop ? null : 0,
+                  child: _AnimatedNavBar(
+                      model: _navbarNotifier,
+                      isDesktop: widget.isDesktop,
+                      decoration: widget.decoration,
+                      navbarType: widget.type,
+                      onItemTapped: (x) {
+                        // User pressed  on the same tab twice
+                        if (NavbarNotifier.currentIndex == x) {
+                          if (widget.shouldPopToBaseRoute) {
+                            NavbarNotifier.popAllRoutes(x);
+                          }
+                        } else {
+                          NavbarNotifier.index = x;
+                          _animateDestinations();
+                          if (widget.onChanged != null) {
+                            widget.onChanged!(x);
+                          }
+                        }
+                      },
+                      menuItems: items),
+                ),
+              ],
+            );
+          }),
     );
   }
 }

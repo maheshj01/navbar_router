@@ -53,6 +53,7 @@ void main() {
       {bool isDesktop = false,
       BackButtonBehavior behavior = BackButtonBehavior.exit,
       Map<int, Map<String, Widget>> navBarRoutes = routes,
+      NavbarType type = NavbarType.standard,
       List<NavbarItem> navBarItems = items}) {
     return MaterialApp(
       home: Directionality(
@@ -66,6 +67,7 @@ void main() {
                 onBackButtonPressed: (isExiting) {
                   return isExiting;
                 },
+                type: type,
                 backButtonBehavior: behavior,
                 isDesktop: isDesktop,
                 destinationAnimationCurve: Curves.fastOutSlowIn,
@@ -90,289 +92,606 @@ void main() {
     );
   }
 
-  group('navbar_router should build destination and navbar items', () {
-    testWidgets('navbar_router should build destinations',
-        (WidgetTester tester) async {
-      final bottomNavigation = (BottomNavigationBar).typeX();
-      final navigationRail = (NavigationRail).typeX();
+  group('Test NavbarType: NavbarType.standard ', () {
+    group('NavbarType.standard: should build destination and navbar items', () {
+      testWidgets('NavbarType.standard: should build destinations',
+          (WidgetTester tester) async {
+        final bottomNavigation = (BottomNavigationBar).typeX();
+        final navigationRail = (NavigationRail).typeX();
 
+        await tester.pumpWidget(boilerplate());
+        await tester.pumpAndSettle();
+        expect(navigationRail, findsNothing);
+        expect(bottomNavigation, findsOneWidget);
+
+        for (int i = 0; i < items.length; i++) {
+          final icon = find.byIcon(items[i].iconData);
+          final destination = (routes[i]!['/']).runtimeType.typeX();
+          expect(icon, findsOneWidget);
+          await tester.tap(icon);
+          await tester.pumpAndSettle();
+          expect(destination, findsOneWidget);
+        }
+      });
+
+      testWidgets('NavbarType.standard: should build navbarItem labels',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(boilerplate());
+        expect(find.text(items[0].text), findsOneWidget);
+        expect(find.text(items[1].text), findsWidgets);
+        expect(find.text(items[2].text), findsOneWidget);
+      });
+
+      testWidgets(
+          "NavbarType.standard: should allow updating navbar routes dynamically ",
+          (WidgetTester tester) async {
+        List<NavbarItem>? menuitems = [
+          const NavbarItem(Icons.home, 'Home', backgroundColor: mediumPurple),
+          const NavbarItem(Icons.shopping_bag, 'Products',
+              backgroundColor: Colors.orange),
+          const NavbarItem(Icons.person, 'Me', backgroundColor: Colors.teal),
+        ];
+        Map<int, Map<String, Widget>>? navBarRoutes = {
+          0: {
+            '/': const HomeFeeds(),
+            FeedDetail.route: const FeedDetail(),
+          },
+          1: {
+            '/': const ProductList(),
+            ProductDetail.route: const ProductDetail(),
+            ProductComments.route: const ProductComments(),
+          },
+          2: {
+            '/': const UserProfile(),
+            ProfileEdit.route: const ProfileEdit(),
+          },
+        };
+        await tester.pumpWidget(boilerplate(
+          navBarItems: menuitems,
+          navBarRoutes: navBarRoutes,
+        ));
+        await tester.pumpAndSettle();
+        final bottomNavigation = (BottomNavigationBar).typeX();
+        expect(bottomNavigation, findsOneWidget);
+
+        for (int i = 0; i < menuitems.length; i++) {
+          final icon = find.byIcon(menuitems[i].iconData);
+          final destination = (navBarRoutes[i]!['/']).runtimeType.typeX();
+          expect(icon, findsOneWidget);
+          await tester.tap(icon);
+          await tester.pumpAndSettle();
+          expect(destination, findsOneWidget);
+        }
+        int randomIndex = Random().nextInt(menuitems.length);
+        menuitems.add(items[randomIndex]);
+        navBarRoutes[navBarRoutes.length] = routes[randomIndex]!;
+        await tester.pumpAndSettle();
+        for (int i = 0; i < menuitems.length; i++) {
+          final icon = find.byIcon(menuitems[i].iconData);
+          final destination = (navBarRoutes[i]!['/']).runtimeType.typeX();
+          expect(icon, findsOneWidget);
+          await tester.tap(icon);
+          await tester.pumpAndSettle();
+          expect(destination, findsOneWidget);
+        }
+      });
+    });
+    testWidgets('NavbarType.standard: default index must be zero',
+        (WidgetTester tester) async {
       await tester.pumpWidget(boilerplate());
-      await tester.pumpAndSettle();
-      expect(navigationRail, findsNothing);
-      expect(bottomNavigation, findsOneWidget);
-
-      for (int i = 0; i < items.length; i++) {
-        final icon = find.byIcon(items[i].iconData);
-        final destination = (routes[i]!['/']).runtimeType.typeX();
-        expect(icon, findsOneWidget);
-        await tester.tap(icon);
-        await tester.pumpAndSettle();
-        expect(destination, findsOneWidget);
-      }
-    });
-
-    testWidgets('navbar should build navbarItem labels',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(boilerplate());
-      expect(find.text(items[0].text), findsOneWidget);
-      expect(find.text(items[1].text), findsWidgets);
-      expect(find.text(items[2].text), findsOneWidget);
-    });
-
-    testWidgets("Navbar should allow updating navbar routes dynamically ",
-        (WidgetTester tester) async {
-      List<NavbarItem>? menuitems = [
-        const NavbarItem(Icons.home, 'Home', backgroundColor: mediumPurple),
-        const NavbarItem(Icons.shopping_bag, 'Products',
-            backgroundColor: Colors.orange),
-        const NavbarItem(Icons.person, 'Me', backgroundColor: Colors.teal),
-      ];
-      Map<int, Map<String, Widget>>? navBarRoutes = {
-        0: {
-          '/': const HomeFeeds(),
-          FeedDetail.route: const FeedDetail(),
-        },
-        1: {
-          '/': const ProductList(),
-          ProductDetail.route: const ProductDetail(),
-          ProductComments.route: const ProductComments(),
-        },
-        2: {
-          '/': const UserProfile(),
-          ProfileEdit.route: const ProfileEdit(),
-        },
-      };
-      await tester.pumpWidget(boilerplate(
-        navBarItems: menuitems,
-        navBarRoutes: navBarRoutes,
-      ));
-      await tester.pumpAndSettle();
-      final bottomNavigation = (BottomNavigationBar).typeX();
-      expect(bottomNavigation, findsOneWidget);
-
-      for (int i = 0; i < menuitems.length; i++) {
-        final icon = find.byIcon(menuitems[i].iconData);
-        final destination = (navBarRoutes[i]!['/']).runtimeType.typeX();
-        expect(icon, findsOneWidget);
-        await tester.tap(icon);
-        await tester.pumpAndSettle();
-        expect(destination, findsOneWidget);
-      }
-      int randomIndex = Random().nextInt(menuitems.length);
-      menuitems.add(items[randomIndex]);
-      navBarRoutes[navBarRoutes.length] = routes[randomIndex]!;
-      await tester.pumpAndSettle();
-      for (int i = 0; i < menuitems.length; i++) {
-        final icon = find.byIcon(menuitems[i].iconData);
-        final destination = (navBarRoutes[i]!['/']).runtimeType.typeX();
-        expect(icon, findsOneWidget);
-        await tester.tap(icon);
-        await tester.pumpAndSettle();
-        expect(destination, findsOneWidget);
-      }
-    });
-  });
-  testWidgets('navbar_router default index must be zero',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(boilerplate());
-    expect(NavbarNotifier.currentIndex, 0);
-    final destination = (routes[0]!['/']).runtimeType.typeX();
-    expect(destination, findsOneWidget);
-    final icon = find.byIcon(items[0].iconData);
-    expect(icon, findsOneWidget);
-  });
-
-  testWidgets('Navbar should switch to Navigation Rail in Desktop mode',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(boilerplate());
-    await tester.pumpAndSettle();
-    expect(find.byType(NavigationRail), findsNothing);
-    expect(find.byType(BottomNavigationBar), findsOneWidget);
-    await tester.pumpWidget(boilerplate(isDesktop: true));
-    await tester.pumpAndSettle();
-    expect(find.byType(NavigationRail), findsOneWidget);
-    expect(find.byType(BottomNavigationBar), findsNothing);
-  });
-
-  group('navbar should respect BackButtonBehavior', () {
-    Future<void> changeNavbarDestination(
-        WidgetTester tester, Widget destination, IconData iconData) async {
-      final icon = find.byIcon(iconData);
-      final destinationType = destination.runtimeType.typeX();
+      expect(NavbarNotifier.currentIndex, 0);
+      final destination = (routes[0]!['/']).runtimeType.typeX();
+      expect(destination, findsOneWidget);
+      final icon = find.byIcon(items[0].iconData);
       expect(icon, findsOneWidget);
-      await tester.tap(icon);
-      await tester.pumpAndSettle();
-      expect(destinationType, findsOneWidget);
-    }
-
-    Future<void> navigateToNestedTarget(
-        WidgetTester tester, Finder tapTarget, Widget destination) async {
-      expect(tapTarget, findsOneWidget);
-      await tester.tap(tapTarget);
-      await tester.pumpAndSettle();
-      final destinationFinder = (destination).runtimeType.typeX();
-      expect(destinationFinder, findsOneWidget);
-    }
-
-    Future<void> triggerBackButton(WidgetTester tester) async {
-      final dynamic widgetsAppState = tester.state(find.byType(WidgetsApp));
-      await widgetsAppState.didPopRoute();
-      await tester.pumpAndSettle();
-    }
+    });
 
     testWidgets(
-        'Navbar should exit app when at the root of the Navigator stack(default)',
+        'NavbarType.standard: should switch to Navigation Rail in Desktop mode',
         (WidgetTester tester) async {
       await tester.pumpWidget(boilerplate());
       await tester.pumpAndSettle();
-
       expect(find.byType(NavigationRail), findsNothing);
       expect(find.byType(BottomNavigationBar), findsOneWidget);
-
-      /// verify feeds is the current destination
-      await changeNavbarDestination(
-          tester, routes[0]!['/']!, items[0].iconData);
-
-      /// Navigate to FeedDetail
-      await navigateToNestedTarget(
-          tester, "Feed 0 card".textX(), routes[0]![FeedDetail.route]!);
-
-      /// Change index to products
-      await changeNavbarDestination(
-          tester, routes[1]![ProductList.route]!, items[1].iconData);
-
-      /// Navigate to ProductDetail
-      await navigateToNestedTarget(
-          tester, "Product 0".textX(), routes[1]![ProductDetail.route]!);
-
-      /// Navigate to Product comments
-      await navigateToNestedTarget(
-          tester, "show comments".textX(), routes[1]![ProductComments.route]!);
-
-      /// Change index to profile
-      await changeNavbarDestination(
-          tester, routes[2]![UserProfile.route]!, items[2].iconData);
-
-      /// Navigate to ProfileEdit
-      await navigateToNestedTarget(
-          tester, (Icons.edit).iconX(), routes[2]![ProfileEdit.route]!);
-
-      await triggerBackButton(tester);
-      expect(routes[2]![UserProfile.route].runtimeType.typeX(), findsOneWidget);
-
-      /// This will exit the app
-      await triggerBackButton(tester);
-      expect(exitCode, 0);
-    });
-    testWidgets('Navbar should remember navigation history',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(
-          boilerplate(behavior: BackButtonBehavior.rememberHistory));
+      await tester.pumpWidget(boilerplate(isDesktop: true));
       await tester.pumpAndSettle();
+      expect(find.byType(NavigationRail), findsOneWidget);
+      expect(find.byType(BottomNavigationBar), findsNothing);
+    });
 
-      expect(find.byType(NavigationRail), findsNothing);
-      expect(find.byType(BottomNavigationBar), findsOneWidget);
+    group('NavbarType.standard: should respect BackButtonBehavior', () {
+      Future<void> changeNavbarDestination(
+          WidgetTester tester, Widget destination, IconData iconData) async {
+        final icon = find.byIcon(iconData);
+        final destinationType = destination.runtimeType.typeX();
+        expect(icon, findsOneWidget);
+        await tester.tap(icon);
+        await tester.pumpAndSettle();
+        expect(destinationType, findsOneWidget);
+      }
 
-      /// verify feeds is the current destination
-      await changeNavbarDestination(
-          tester, routes[0]!['/']!, items[0].iconData);
+      Future<void> navigateToNestedTarget(
+          WidgetTester tester, Finder tapTarget, Widget destination) async {
+        expect(tapTarget, findsOneWidget);
+        await tester.tap(tapTarget);
+        await tester.pumpAndSettle();
+        final destinationFinder = (destination).runtimeType.typeX();
+        expect(destinationFinder, findsOneWidget);
+      }
 
-      /// Navigate to FeedDetail
-      await navigateToNestedTarget(
-          tester, "Feed 0 card".textX(), routes[0]![FeedDetail.route]!);
+      Future<void> triggerBackButton(WidgetTester tester) async {
+        final dynamic widgetsAppState = tester.state(find.byType(WidgetsApp));
+        await widgetsAppState.didPopRoute();
+        await tester.pumpAndSettle();
+      }
 
-      /// Change index to products
-      await changeNavbarDestination(
-          tester, routes[1]![ProductList.route]!, items[1].iconData);
+      testWidgets(
+          'Navbar should exit app when at the root of the Navigator stack(default)',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(boilerplate());
+        await tester.pumpAndSettle();
 
-      /// Navigate to ProductDetail
-      await navigateToNestedTarget(
-          tester, "Product 0".textX(), routes[1]![ProductDetail.route]!);
+        expect(find.byType(NavigationRail), findsNothing);
+        expect(find.byType(BottomNavigationBar), findsOneWidget);
 
-      /// Navigate to Product comments
-      await navigateToNestedTarget(
-          tester, "show comments".textX(), routes[1]![ProductComments.route]!);
+        /// verify feeds is the current destination
+        await changeNavbarDestination(
+            tester, routes[0]!['/']!, items[0].iconData);
 
-      /// Change index to profile
-      await changeNavbarDestination(
-          tester, routes[2]![UserProfile.route]!, items[2].iconData);
+        /// Navigate to FeedDetail
+        await navigateToNestedTarget(
+            tester, "Feed 0 card".textX(), routes[0]![FeedDetail.route]!);
 
-      /// Navigate to ProfileEdit
-      await navigateToNestedTarget(
-          tester, (Icons.edit).iconX(), routes[2]![ProfileEdit.route]!);
+        /// Change index to products
+        await changeNavbarDestination(
+            tester, routes[1]![ProductList.route]!, items[1].iconData);
 
-      expect(NavbarNotifier.stackHistory, equals([0, 1, 2]));
+        /// Navigate to ProductDetail
+        await navigateToNestedTarget(
+            tester, "Product 0".textX(), routes[1]![ProductDetail.route]!);
 
-      await triggerBackButton(tester);
-      await triggerBackButton(tester);
-      expect(NavbarNotifier.stackHistory, equals([0, 1]));
+        /// Navigate to Product comments
+        await navigateToNestedTarget(tester, "show comments".textX(),
+            routes[1]![ProductComments.route]!);
 
-      await triggerBackButton(tester);
-      await triggerBackButton(tester);
-      await triggerBackButton(tester);
-      expect(NavbarNotifier.stackHistory, equals([0]));
+        /// Change index to profile
+        await changeNavbarDestination(
+            tester, routes[2]![UserProfile.route]!, items[2].iconData);
+
+        /// Navigate to ProfileEdit
+        await navigateToNestedTarget(
+            tester, (Icons.edit).iconX(), routes[2]![ProfileEdit.route]!);
+
+        await triggerBackButton(tester);
+        expect(
+            routes[2]![UserProfile.route].runtimeType.typeX(), findsOneWidget);
+
+        /// This will exit the app
+        await triggerBackButton(tester);
+        expect(exitCode, 0);
+      });
+      testWidgets('Navbar should remember navigation history',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(
+            boilerplate(behavior: BackButtonBehavior.rememberHistory));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(NavigationRail), findsNothing);
+        expect(find.byType(BottomNavigationBar), findsOneWidget);
+
+        /// verify feeds is the current destination
+        await changeNavbarDestination(
+            tester, routes[0]!['/']!, items[0].iconData);
+
+        /// Navigate to FeedDetail
+        await navigateToNestedTarget(
+            tester, "Feed 0 card".textX(), routes[0]![FeedDetail.route]!);
+
+        /// Change index to products
+        await changeNavbarDestination(
+            tester, routes[1]![ProductList.route]!, items[1].iconData);
+
+        /// Navigate to ProductDetail
+        await navigateToNestedTarget(
+            tester, "Product 0".textX(), routes[1]![ProductDetail.route]!);
+
+        /// Navigate to Product comments
+        await navigateToNestedTarget(tester, "show comments".textX(),
+            routes[1]![ProductComments.route]!);
+
+        /// Change index to profile
+        await changeNavbarDestination(
+            tester, routes[2]![UserProfile.route]!, items[2].iconData);
+
+        /// Navigate to ProfileEdit
+        await navigateToNestedTarget(
+            tester, (Icons.edit).iconX(), routes[2]![ProfileEdit.route]!);
+
+        expect(NavbarNotifier.stackHistory, equals([0, 1, 2]));
+
+        await triggerBackButton(tester);
+        await triggerBackButton(tester);
+        expect(NavbarNotifier.stackHistory, equals([0, 1]));
+
+        await triggerBackButton(tester);
+        await triggerBackButton(tester);
+        await triggerBackButton(tester);
+        expect(NavbarNotifier.stackHistory, equals([0]));
+      });
+    });
+
+    group('NavbarType.standard: Should Pop routes Programmatically', () {
+      testWidgets('Navbar should pop route programmatically',
+          (WidgetTester tester) async {
+        int index = 1;
+        await tester.pumpWidget(boilerplate());
+        await tester.pumpAndSettle();
+        final productIcon = find.byIcon(items[index].iconData);
+        final productDestination = (routes[index]!['/']).runtimeType.typeX();
+        expect(productIcon, findsOneWidget);
+        await tester.tap(productIcon);
+        await tester.pumpAndSettle();
+        expect(productDestination, findsOneWidget);
+
+        /// Navigate to ProductDetail
+
+        await tester.tap("Product 0".textX());
+        await tester.pumpAndSettle();
+        final productDetail =
+            (routes[1]![ProductDetail.route]).runtimeType.typeX();
+        expect(productDetail, findsOneWidget);
+        NavbarNotifier.popRoute(index);
+        await tester.pumpAndSettle();
+        expect(productDetail, findsNothing);
+        expect(productDestination, findsOneWidget);
+      });
+
+      testWidgets('Navbar should pop to base route programmatically',
+          (WidgetTester tester) async {
+        int index = 1;
+        await tester.pumpWidget(boilerplate());
+        await tester.pumpAndSettle();
+        final productIcon = find.byIcon(items[index].iconData);
+        final productDestination = (routes[index]!['/']).runtimeType.typeX();
+        expect(productIcon, findsOneWidget);
+        await tester.tap(productIcon);
+        await tester.pumpAndSettle();
+        expect(productDestination, findsOneWidget);
+
+        /// Navigate to ProductDetail
+
+        await tester.tap("Product 0".textX());
+        await tester.pumpAndSettle();
+        final productDetail =
+            (routes[1]![ProductDetail.route]).runtimeType.typeX();
+        expect(productDetail, findsOneWidget);
+
+        /// Navigate to Product comments
+
+        await tester.tap("show comments".textX());
+        await tester.pumpAndSettle();
+        final productComments =
+            (routes[1]![ProductComments.route]).runtimeType.typeX();
+        expect(productComments, findsOneWidget);
+        NavbarNotifier.popAllRoutes(index);
+        await tester.pumpAndSettle();
+
+        expect(productComments, findsNothing);
+        expect(productDetail, findsNothing);
+        expect(productDestination, findsOneWidget);
+      });
     });
   });
 
-  group('Pop routes Programmatically', () {
-    testWidgets('Navbar should pop route programmatically',
-        (WidgetTester tester) async {
-      int index = 1;
-      await tester.pumpWidget(boilerplate());
-      await tester.pumpAndSettle();
-      final productIcon = find.byIcon(items[index].iconData);
-      final productDestination = (routes[index]!['/']).runtimeType.typeX();
-      expect(productIcon, findsOneWidget);
-      await tester.tap(productIcon);
-      await tester.pumpAndSettle();
-      expect(productDestination, findsOneWidget);
+  /// Test navbar type notched
+  ///
 
-      /// Navigate to ProductDetail
+  group('Test NavbarType: NavbarType.notched ', () {
+    group('NavbarType.notched: should build destination and navbar items', () {
+      testWidgets('navbar_router should build destinations',
+          (WidgetTester tester) async {
+        final navbar = (NotchedNavBar).typeX();
+        final navigationRail = (NavigationRail).typeX();
 
-      await tester.tap("Product 0".textX());
-      await tester.pumpAndSettle();
-      final productDetail =
-          (routes[1]![ProductDetail.route]).runtimeType.typeX();
-      expect(productDetail, findsOneWidget);
-      NavbarNotifier.popRoute(index);
-      await tester.pumpAndSettle();
-      expect(productDetail, findsNothing);
-      expect(productDestination, findsOneWidget);
+        await tester.pumpWidget(boilerplate(
+          type: NavbarType.notched,
+        ));
+        await tester.pumpAndSettle();
+        expect(navigationRail, findsNothing);
+        expect(navbar, findsOneWidget);
+
+        for (int i = 0; i < items.length; i++) {
+          final icon = find.byIcon(items[i].iconData);
+          final destination = (routes[i]!['/']).runtimeType.typeX();
+          expect(icon, findsOneWidget);
+          await tester.tap(icon);
+          await tester.pumpAndSettle();
+          expect(destination, findsOneWidget);
+        }
+      });
+
+      testWidgets('NavbarType.notched: should build navbarItem labels',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(boilerplate(
+          type: NavbarType.notched,
+        ));
+        expect(
+            find.text(items[0].text), findsNothing); // 0 is selected by default
+        expect(find.text(items[1].text), findsWidgets);
+        expect(find.text(items[2].text), findsOneWidget);
+      });
+
+      testWidgets(
+          "NavbarType.notched: should allow updating navbar routes dynamically ",
+          (WidgetTester tester) async {
+        List<NavbarItem>? menuitems = [
+          const NavbarItem(Icons.home, 'Home', backgroundColor: mediumPurple),
+          const NavbarItem(Icons.shopping_bag, 'Products',
+              backgroundColor: Colors.orange),
+          const NavbarItem(Icons.person, 'Me', backgroundColor: Colors.teal),
+        ];
+        Map<int, Map<String, Widget>>? navBarRoutes = {
+          0: {
+            '/': const HomeFeeds(),
+            FeedDetail.route: const FeedDetail(),
+          },
+          1: {
+            '/': const ProductList(),
+            ProductDetail.route: const ProductDetail(),
+            ProductComments.route: const ProductComments(),
+          },
+          2: {
+            '/': const UserProfile(),
+            ProfileEdit.route: const ProfileEdit(),
+          },
+        };
+        await tester.pumpWidget(boilerplate(
+          navBarItems: menuitems,
+          navBarRoutes: navBarRoutes,
+          type: NavbarType.notched,
+        ));
+        await tester.pumpAndSettle();
+        final navbar = (NotchedNavBar).typeX();
+        expect(navbar, findsOneWidget);
+
+        for (int i = 0; i < menuitems.length; i++) {
+          final icon = find.byIcon(menuitems[i].iconData);
+          final destination = (navBarRoutes[i]!['/']).runtimeType.typeX();
+          expect(icon, findsOneWidget);
+          await tester.tap(icon);
+          await tester.pumpAndSettle();
+          expect(destination, findsOneWidget);
+        }
+        int randomIndex = Random().nextInt(menuitems.length);
+        menuitems.add(items[randomIndex]);
+        navBarRoutes[navBarRoutes.length] = routes[randomIndex]!;
+        await tester.pumpAndSettle();
+        for (int i = 0; i < menuitems.length; i++) {
+          final icon = find.byIcon(menuitems[i].iconData);
+          final destination = (navBarRoutes[i]!['/']).runtimeType.typeX();
+          expect(icon, findsOneWidget);
+          await tester.tap(icon);
+          await tester.pumpAndSettle();
+          expect(destination, findsOneWidget);
+        }
+      });
+
+      testWidgets('NavbarType.notched: default index must be zero',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(boilerplate(
+          type: NavbarType.notched,
+        ));
+        expect(NavbarNotifier.currentIndex, 0);
+        final destination = (routes[0]!['/']).runtimeType.typeX();
+        expect(destination, findsOneWidget);
+        final icon = find.byIcon(items[0].iconData);
+        expect(icon, findsOneWidget);
+      });
+
+      testWidgets(
+          'NavbarType.notched: should switch to Navigation Rail in Desktop mode',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(boilerplate(
+          type: NavbarType.notched,
+        ));
+        await tester.pumpAndSettle();
+        expect(find.byType(NavigationRail), findsNothing);
+        expect(find.byType(NotchedNavBar), findsOneWidget);
+        await tester.pumpWidget(boilerplate(isDesktop: true));
+        await tester.pumpAndSettle();
+        expect(find.byType(NavigationRail), findsOneWidget);
+        expect(find.byType(NotchedNavBar), findsNothing);
+      });
     });
 
-    testWidgets('Navbar should pop to base route programmatically',
-        (WidgetTester tester) async {
-      int index = 1;
-      await tester.pumpWidget(boilerplate());
-      await tester.pumpAndSettle();
-      final productIcon = find.byIcon(items[index].iconData);
-      final productDestination = (routes[index]!['/']).runtimeType.typeX();
-      expect(productIcon, findsOneWidget);
-      await tester.tap(productIcon);
-      await tester.pumpAndSettle();
-      expect(productDestination, findsOneWidget);
+    group('NavbarType.notched: should respect BackButtonBehavior', () {
+      Future<void> changeNavbarDestination(
+          WidgetTester tester, Widget destination, IconData iconData) async {
+        final icon = find.byIcon(iconData);
+        final destinationType = destination.runtimeType.typeX();
+        expect(icon, findsOneWidget);
+        await tester.tap(icon);
+        await tester.pumpAndSettle();
+        expect(destinationType, findsOneWidget);
+      }
 
-      /// Navigate to ProductDetail
+      Future<void> navigateToNestedTarget(
+          WidgetTester tester, Finder tapTarget, Widget destination) async {
+        expect(tapTarget, findsOneWidget);
+        await tester.tap(tapTarget);
+        await tester.pumpAndSettle();
+        final destinationFinder = (destination).runtimeType.typeX();
+        expect(destinationFinder, findsOneWidget);
+      }
 
-      await tester.tap("Product 0".textX());
-      await tester.pumpAndSettle();
-      final productDetail =
-          (routes[1]![ProductDetail.route]).runtimeType.typeX();
-      expect(productDetail, findsOneWidget);
+      Future<void> triggerBackButton(WidgetTester tester) async {
+        final dynamic widgetsAppState = tester.state(find.byType(WidgetsApp));
+        await widgetsAppState.didPopRoute();
+        await tester.pumpAndSettle();
+      }
 
-      /// Navigate to Product comments
+      testWidgets(
+          'NavbarType.notched: should exit app when at the root of the Navigator stack(default)',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(boilerplate(
+          type: NavbarType.notched,
+        ));
+        await tester.pumpAndSettle();
 
-      await tester.tap("show comments".textX());
-      await tester.pumpAndSettle();
-      final productComments =
-          (routes[1]![ProductComments.route]).runtimeType.typeX();
-      expect(productComments, findsOneWidget);
-      NavbarNotifier.popAllRoutes(index);
-      await tester.pumpAndSettle();
+        expect(find.byType(NavigationRail), findsNothing);
+        expect(find.byType(NotchedNavBar), findsOneWidget);
 
-      expect(productComments, findsNothing);
-      expect(productDetail, findsNothing);
-      expect(productDestination, findsOneWidget);
+        /// verify feeds is the current destination
+        await changeNavbarDestination(
+            tester, routes[0]!['/']!, items[0].iconData);
+
+        /// Navigate to FeedDetail
+        await navigateToNestedTarget(
+            tester, "Feed 0 card".textX(), routes[0]![FeedDetail.route]!);
+
+        /// Change index to products
+        await changeNavbarDestination(
+            tester, routes[1]![ProductList.route]!, items[1].iconData);
+
+        /// Navigate to ProductDetail
+        await navigateToNestedTarget(
+            tester, "Product 0".textX(), routes[1]![ProductDetail.route]!);
+
+        /// Navigate to Product comments
+        await navigateToNestedTarget(tester, "show comments".textX(),
+            routes[1]![ProductComments.route]!);
+
+        /// Change index to profile
+        await changeNavbarDestination(
+            tester, routes[2]![UserProfile.route]!, items[2].iconData);
+
+        /// Navigate to ProfileEdit
+        await navigateToNestedTarget(
+            tester, (Icons.edit).iconX(), routes[2]![ProfileEdit.route]!);
+
+        await triggerBackButton(tester);
+        expect(
+            routes[2]![UserProfile.route].runtimeType.typeX(), findsOneWidget);
+
+        /// This will exit the app
+        await triggerBackButton(tester);
+        expect(exitCode, 0);
+      });
+      testWidgets('NavbarType.notched: should remember navigation history',
+          (WidgetTester tester) async {
+        await tester.pumpWidget(boilerplate(
+            type: NavbarType.notched,
+            behavior: BackButtonBehavior.rememberHistory));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(NavigationRail), findsNothing);
+        expect(find.byType(NotchedNavBar), findsOneWidget);
+
+        /// verify feeds is the current destination
+        await changeNavbarDestination(
+            tester, routes[0]!['/']!, items[0].iconData);
+
+        /// Navigate to FeedDetail
+        await navigateToNestedTarget(
+            tester, "Feed 0 card".textX(), routes[0]![FeedDetail.route]!);
+
+        /// Change index to products
+        await changeNavbarDestination(
+            tester, routes[1]![ProductList.route]!, items[1].iconData);
+
+        /// Navigate to ProductDetail
+        await navigateToNestedTarget(
+            tester, "Product 0".textX(), routes[1]![ProductDetail.route]!);
+
+        /// Navigate to Product comments
+        await navigateToNestedTarget(tester, "show comments".textX(),
+            routes[1]![ProductComments.route]!);
+
+        /// Change index to profile
+        await changeNavbarDestination(
+            tester, routes[2]![UserProfile.route]!, items[2].iconData);
+
+        /// Navigate to ProfileEdit
+        await navigateToNestedTarget(
+            tester, (Icons.edit).iconX(), routes[2]![ProfileEdit.route]!);
+
+        expect(NavbarNotifier.stackHistory, equals([0, 1, 2]));
+
+        await triggerBackButton(tester);
+        await triggerBackButton(tester);
+        expect(NavbarNotifier.stackHistory, equals([0, 1]));
+
+        await triggerBackButton(tester);
+        await triggerBackButton(tester);
+        await triggerBackButton(tester);
+        expect(NavbarNotifier.stackHistory, equals([0]));
+      });
+    });
+
+    group('NavbarType.notched: Should Pop routes Programmatically', () {
+      testWidgets('Navbar should pop route programmatically',
+          (WidgetTester tester) async {
+        int index = 1;
+        await tester.pumpWidget(boilerplate(
+          type: NavbarType.notched,
+        ));
+        await tester.pumpAndSettle();
+        final productIcon = find.byIcon(items[index].iconData);
+        final productDestination = (routes[index]!['/']).runtimeType.typeX();
+        expect(productIcon, findsOneWidget);
+        await tester.tap(productIcon);
+        await tester.pumpAndSettle();
+        expect(productDestination, findsOneWidget);
+
+        /// Navigate to ProductDetail
+
+        await tester.tap("Product 0".textX());
+        await tester.pumpAndSettle();
+        final productDetail =
+            (routes[1]![ProductDetail.route]).runtimeType.typeX();
+        expect(productDetail, findsOneWidget);
+        NavbarNotifier.popRoute(index);
+        await tester.pumpAndSettle();
+        expect(productDetail, findsNothing);
+        expect(productDestination, findsOneWidget);
+      });
+
+      testWidgets('Navbar should pop to base route programmatically',
+          (WidgetTester tester) async {
+        int index = 1;
+        await tester.pumpWidget(boilerplate(
+          type: NavbarType.notched,
+        ));
+        await tester.pumpAndSettle();
+        final productIcon = find.byIcon(items[index].iconData);
+        final productDestination = (routes[index]!['/']).runtimeType.typeX();
+        expect(productIcon, findsOneWidget);
+        await tester.tap(productIcon);
+        await tester.pumpAndSettle();
+        expect(productDestination, findsOneWidget);
+
+        /// Navigate to ProductDetail
+
+        await tester.tap("Product 0".textX());
+        await tester.pumpAndSettle();
+        final productDetail =
+            (routes[1]![ProductDetail.route]).runtimeType.typeX();
+        expect(productDetail, findsOneWidget);
+
+        /// Navigate to Product comments
+
+        await tester.tap("show comments".textX());
+        await tester.pumpAndSettle();
+        final productComments =
+            (routes[1]![ProductComments.route]).runtimeType.typeX();
+        expect(productComments, findsOneWidget);
+        NavbarNotifier.popAllRoutes(index);
+        await tester.pumpAndSettle();
+
+        expect(productComments, findsNothing);
+        expect(productDetail, findsNothing);
+        expect(productDestination, findsOneWidget);
+      });
     });
   });
 }

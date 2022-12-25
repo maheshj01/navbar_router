@@ -1,4 +1,4 @@
-## **navbar_router 0.3.3**
+## **navbar_router 0.4.0**
 
  <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
@@ -7,6 +7,7 @@ This is a BottomNavigionBar created by considering the advanced use cases in rea
 ## **Features**
 
 - Adapatable to different device Sizes using `isDesktop` and `NavbarDecoration.isExtended` Property.
+- Choose between set of NavigtaionBars using `NavbarDecoration.navbarType` property.
 - Remembers navigation history of Navbar.
 - Ability to push routes in the nested or root navigator
 - Smooth transitions when changing navbar destinations
@@ -120,6 +121,20 @@ defaults to
 <img src="https://miro.medium.com/max/600/1*08wCOOPCe1C1l_2uqIYEEg.gif">
 
 
+## Choose between different NavbarTypes
+
+You can choose between different NavbarTypes using the `NavbarDecoration.navbarType` property. This allows you to choose between the default NavbarType.standard and NavbarType.notched
+
+
+### NavbarType.standard (default)
+ 
+![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/31410839/209458339-d66524c4-2897-4136-a70f-275d5b6f786e.gif)
+
+
+### NavbarType.notched
+
+![ezgif com-gif-maker](https://user-images.githubusercontent.com/31410839/209458282-2ac3f194-abf4-4406-a7ff-0581dfd09229.gif)
+
 
 ## Hide or show bottomNavigationBar
 
@@ -189,6 +204,8 @@ Hide/show navbar on scroll             |  Hide/show navbar on drawer open/close
 
   ***destinations***: A List of `DestinationRouter` to show when the user taps the [NavbarItem].
   Each DestinationRouter specifies a List of Destinations, initialRoute, and the navbarItem corresponding to that destination.
+
+  **type**: The type of NavigationBar to be passed to NavbarRouter defaults to `NavbarType.standard`. This allows you to choose between the default `NavbarType.standard` and `NavbarType.notched`.
 
   ***decoration*** : The decoraton for Navbar has all the properties you would expect in a [BottomNavigationBar] to adjust the style of the Navbar.
 
