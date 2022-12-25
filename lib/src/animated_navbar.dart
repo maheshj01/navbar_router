@@ -81,7 +81,8 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
       unselectedItemColor:
           Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
       unselectedLabelTextStyle:
-          Theme.of(context).bottomNavigationBarTheme.unselectedLabelStyle,
+          Theme.of(context).bottomNavigationBarTheme.unselectedLabelStyle ??
+              const TextStyle(color: Colors.black),
       unselectedIconTheme: Theme.of(context).iconTheme,
       selectedIconTheme: Theme.of(context).iconTheme,
       selectedLabelTextStyle:
@@ -449,11 +450,8 @@ class MenuTile extends StatelessWidget {
         ),
         decoration.showUnselectedLabels
             ? Flexible(
-                child: Text(item.text,
-                    style: decoration.unselectedLabelTextStyle?.copyWith(
-                      color: decoration.unselectedItemColor ??
-                          decoration.unselectedItemColor,
-                    )))
+                child:
+                    Text(item.text, style: decoration.unselectedLabelTextStyle))
             : const SizedBox.shrink()
       ],
     );
