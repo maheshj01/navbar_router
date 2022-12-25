@@ -100,7 +100,13 @@ class NavbarRouter extends StatefulWidget {
 
   /// The type of the [Navbar] that is to be rendered.
   /// defaults to [NavbarType.standard] which is a standard [BottomNavigationBar]
-  /// [NavbarType.notched] is a [BottomNavigationBar] with a notch
+  ///
+  /// Alternatively, you can use [NavbarType.notched] which is a Navbar with a notch
+  ///
+  /// Use appropriate [NavbarDecoration] for the type of [NavbarType] you are using.
+  /// For
+  /// NavbarType.standard use [NavbarDecoration]
+  /// NavbarType.notched use [NotchedDecoration]
   final NavbarType type;
 
   /// Whether the back button pressed should pop the current route and switch to the previous route,

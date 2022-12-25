@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -36,25 +37,21 @@ class _HomePageState extends State<HomePage> {
     NavbarItem(Icons.home, 'Home', backgroundColor: colors[0]),
     NavbarItem(Icons.shopping_bag, 'Products', backgroundColor: colors[1]),
     NavbarItem(Icons.person, 'Me', backgroundColor: colors[2]),
-    NavbarItem(Icons.settings, 'Settings', backgroundColor: colors[0]),
   ];
 
-  final Map<int, Map<String, Widget>> _routes = const {
+  final Map<int, Map<String, Widget>> _routes = {
     0: {
-      '/': HomeFeeds(),
-      FeedDetail.route: FeedDetail(),
+      '/': const HomeFeeds(),
+      FeedDetail.route: const FeedDetail(),
     },
     1: {
-      '/': ProductList(),
-      ProductDetail.route: ProductDetail(),
-      ProductComments.route: ProductComments(),
+      '/': const ProductList(),
+      ProductDetail.route: const ProductDetail(),
+      ProductComments.route: const ProductComments(),
     },
     2: {
-      '/': UserProfile(),
-      ProfileEdit.route: ProfileEdit(),
-    },
-    3: {
-      '/': Settings(),
+      '/': const UserProfile(),
+      ProfileEdit.route: const ProfileEdit(),
     },
   };
 
@@ -74,6 +71,23 @@ class _HomePageState extends State<HomePage> {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
 
+  void addRoute() {
+    int index = Random().nextInt(items.length);
+    setState(() {
+      items.add(items[index]);
+      _routes[_routes.length] = _routes[index]!;
+    });
+  }
+
+  void removeRoute() {
+    if (_routes.length > 2 && items.length > 2) {
+      setState(() {
+        items.removeLast();
+        _routes.remove(_routes.keys.last);
+      });
+    }
+  }
+
   DateTime oldTime = DateTime.now();
   DateTime newTime = DateTime.now();
 
@@ -83,20 +97,39 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 24.0),
-        child: FloatingActionButton(
-          child: Icon(NavbarNotifier.isNavbarHidden
-              ? Icons.toggle_off
-              : Icons.toggle_on),
-          onPressed: () {
-            // Programmatically toggle the Navbar visibility
-            if (NavbarNotifier.isNavbarHidden) {
-              NavbarNotifier.hideBottomNavBar = false;
-            } else {
-              NavbarNotifier.hideBottomNavBar = true;
-            }
-            setState(() {});
-          },
+        padding: const EdgeInsets.only(bottom: 32.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            FloatingActionButton(
+              child: Icon(NavbarNotifier.isNavbarHidden
+                  ? Icons.toggle_off
+                  : Icons.toggle_on),
+              onPressed: () {
+                // Programmatically toggle the Navbar visibility
+                if (NavbarNotifier.isNavbarHidden) {
+                  NavbarNotifier.hideBottomNavBar = false;
+                } else {
+                  NavbarNotifier.hideBottomNavBar = true;
+                }
+                setState(() {});
+              },
+            ),
+            const SizedBox(width: 8),
+            FloatingActionButton(
+              child: const Icon(Icons.add),
+              onPressed: () {
+                addRoute();
+              },
+            ),
+            const SizedBox(width: 8),
+            FloatingActionButton(
+              child: const Icon(Icons.remove),
+              onPressed: () {
+                removeRoute();
+              },
+            ),
+          ],
         ),
       ),
       body: NavbarRouter(
@@ -120,21 +153,20 @@ class _HomePageState extends State<HomePage> {
             return isExitingApp;
           }
         },
-        type: NavbarType.notched,
         destinationAnimationCurve: Curves.fastOutSlowIn,
-        destinationAnimationDuration: 600,
+        destinationAnimationDuration: 1200,
+        type: NavbarType.notched,
         decoration: NavbarDecoration(
             selectedLabelTextStyle: const TextStyle(color: Colors.red),
             showUnselectedLabels: true,
-            backgroundColor: Colors.white,
-            unselectedIconColor: Colors.black,
-            unselectedItemColor: Colors.black,
             // unselectedLabelTextStyle:
-            //     const TextStyle(color: Colors.white, fontSize: 12),
+            //     const TextStyle(color: Colors.black, fontSize: 10),
             selectedIconTheme: const IconThemeData(color: Colors.red),
             isExtended: size.width > 800 ? true : false,
-            navbarType: BottomNavigationBarType.shifting),
-        onChanged: (x) {},
+            navbarType: BottomNavigationBarType.fixed),
+        onChanged: (x) {
+          debugPrint('index changed $x');
+        },
         backButtonBehavior: BackButtonBehavior.rememberHistory,
         destinations: [
           for (int i = 0; i < items.length; i++)
@@ -498,42 +530,9 @@ class UserProfile extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(
-              height: 24,
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  NavbarNotifier.popRoute(1);
-                },
-                child: const Text('Pop Product Route')),
           ],
         ),
       ),
-    );
-  }
-}
-
-class Settings extends StatefulWidget {
-  const Settings({super.key});
-
-  @override
-  State<Settings> createState() => _SettingsState();
-}
-
-class _SettingsState extends State<Settings> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: ListView.builder(
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text('Setting $index'),
-            );
-          }),
     );
   }
 }

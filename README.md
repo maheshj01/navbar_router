@@ -1,4 +1,4 @@
-## **navbar_router 0.3.3**
+## **navbar_router 0.4.0**
 
  <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
@@ -7,6 +7,7 @@ This is a BottomNavigionBar created by considering the advanced use cases in rea
 ## **Features**
 
 - Adapatable to different device Sizes using `isDesktop` and `NavbarDecoration.isExtended` Property.
+- Choose between set of NavigtaionBars using `NavbarDecoration.navbarType` property.
 - Remembers navigation history of Navbar.
 - Ability to push routes in the nested or root navigator
 - Smooth transitions when changing navbar destinations
@@ -119,6 +120,18 @@ defaults to
 
 <img src="https://miro.medium.com/max/600/1*08wCOOPCe1C1l_2uqIYEEg.gif">
 
+
+## Choose between different NavbarTypes
+
+You can choose between different NavbarTypes using the `NavbarDecoration.navbarType` property. This allows you to choose between the default NavbarType.standard and NavbarType.notched
+
+
+NavbarType.standard        |       NavbarType.notched
+:-------------------------:|:-------------------------:
+
+
+
+```dart
 
 
 ## Hide or show bottomNavigationBar

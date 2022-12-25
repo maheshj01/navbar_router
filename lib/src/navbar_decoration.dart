@@ -12,7 +12,8 @@ class NavbarItem {
   /// background color for the navbar item whnen type is [NavbarType.shifting]
   final Color? backgroundColor;
 }
-
+/// Decoration class for the navbar [NavbarType.standard]
+/// if you are using Navbartype.notched then use [NotchedDecoration] instead.
 class NavbarDecoration {
   /// The type of the Navbar to be displayed
   /// [BottomNavigationBarType.fixed] or [BottomNavigationBarType.shifting]
@@ -35,7 +36,7 @@ class NavbarDecoration {
   final Color? unselectedIconColor;
 
   /// Whether or not to show the unselected label text
-  final bool? showUnselectedLabels;
+  final bool showUnselectedLabels;
 
   /// The color of the unselected label text
   final Color? unselectedLabelColor;
@@ -78,4 +79,89 @@ class NavbarDecoration {
     this.unselectedItemColor,
     this.unselectedLabelColor,
   });
+
+  // copyWith
+  NavbarDecoration copyWith({
+    BottomNavigationBarType? navbarType,
+    Color? backgroundColor,
+    bool? isExtended,
+    Color? unselectedItemColor,
+    double? elevation,
+    Color? unselectedIconColor,
+    bool? showUnselectedLabels,
+    Color? unselectedLabelColor,
+    Color? selectedLabelColor,
+    bool? showSelectedLabels,
+    bool? enableFeedback,
+    TextStyle? selectedLabelTextStyle,
+    TextStyle? unselectedLabelTextStyle,
+    IconThemeData? selectedIconTheme,
+    IconThemeData? unselectedIconTheme,
+  }) =>
+      NavbarDecoration(
+        navbarType: navbarType ?? this.navbarType,
+        backgroundColor: backgroundColor ?? this.backgroundColor,
+        isExtended: isExtended ?? this.isExtended,
+        unselectedItemColor: unselectedItemColor ?? this.unselectedItemColor,
+        elevation: elevation ?? this.elevation,
+        unselectedIconColor: unselectedIconColor ?? this.unselectedIconColor,
+        showUnselectedLabels: showUnselectedLabels ?? this.showUnselectedLabels,
+        unselectedLabelColor: unselectedLabelColor ?? this.unselectedLabelColor,
+        selectedLabelColor: selectedLabelColor ?? this.selectedLabelColor,
+        showSelectedLabels: showSelectedLabels ?? this.showSelectedLabels,
+        enableFeedback: enableFeedback ?? this.enableFeedback,
+        selectedLabelTextStyle:
+            selectedLabelTextStyle ?? this.selectedLabelTextStyle,
+        unselectedLabelTextStyle:
+            unselectedLabelTextStyle ?? this.unselectedLabelTextStyle,
+        selectedIconTheme: selectedIconTheme ?? this.selectedIconTheme,
+        unselectedIconTheme: unselectedIconTheme ?? this.unselectedIconTheme,
+      );
+}
+
+class NotchedDecoration extends NavbarDecoration {
+  NotchedDecoration({
+    Color? backgroundColor,
+    double? elevation,
+    bool? showUnselectedLabels,
+    TextStyle? unselectedLabelTextStyle,
+    Color? unselectedIconColor,
+    Color? unselectedItemColor,
+    Color? unselectedLabelColor,
+    IconThemeData? selectedIconTheme,
+  }) : super(
+          backgroundColor: backgroundColor,
+          elevation: elevation,
+          unselectedItemColor: unselectedItemColor,
+          unselectedIconColor: unselectedIconColor,
+          showUnselectedLabels: showUnselectedLabels!,
+          unselectedLabelColor: unselectedLabelColor,
+          unselectedLabelTextStyle: unselectedLabelTextStyle,
+          selectedIconTheme: selectedIconTheme,
+        );
+
+  factory NotchedDecoration.fromNavbarDecoration(
+          NavbarDecoration navbarDecoration) =>
+      NotchedDecoration(
+        backgroundColor: navbarDecoration.backgroundColor,
+        elevation: navbarDecoration.elevation,
+        unselectedItemColor: navbarDecoration.unselectedItemColor,
+        unselectedIconColor: navbarDecoration.unselectedIconColor,
+        showUnselectedLabels: navbarDecoration.showUnselectedLabels,
+        unselectedLabelColor: navbarDecoration.unselectedLabelColor,
+        unselectedLabelTextStyle: navbarDecoration.unselectedLabelTextStyle,
+        selectedIconTheme: navbarDecoration.selectedIconTheme,
+      );
+
+  /// to navb bar decoration
+
+  NavbarDecoration toNavbarDecoration() => NavbarDecoration(
+        backgroundColor: backgroundColor,
+        elevation: elevation,
+        unselectedItemColor: unselectedItemColor,
+        unselectedIconColor: unselectedIconColor,
+        showUnselectedLabels: showUnselectedLabels,
+        unselectedLabelColor: unselectedLabelColor,
+        unselectedLabelTextStyle: unselectedLabelTextStyle,
+      );
 }

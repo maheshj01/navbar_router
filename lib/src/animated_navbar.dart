@@ -69,18 +69,61 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
 
   @override
   Widget build(BuildContext context) {
+    final _defaultDecoration = NavbarDecoration(
+      backgroundColor:
+          Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+      elevation: 8,
+      showUnselectedLabels: true,
+      unselectedIconColor:
+          Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
+      unselectedLabelColor:
+          Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
+      unselectedItemColor:
+          Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
+      unselectedLabelTextStyle:
+          Theme.of(context).bottomNavigationBarTheme.unselectedLabelStyle,
+      unselectedIconTheme: Theme.of(context).iconTheme,
+      selectedIconTheme: Theme.of(context).iconTheme ??
+          IconThemeData(color: Theme.of(context).primaryColor, size: 24),
+      selectedLabelTextStyle:
+          Theme.of(context).bottomNavigationBarTheme.selectedLabelStyle,
+      enableFeedback: true,
+      isExtended: true,
+      navbarType: BottomNavigationBarType.fixed,
+      selectedLabelColor:
+          Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
+      showSelectedLabels: true,
+    );
+
     NavbarBase _buildNavBar() {
       switch (widget.navbarType) {
         case NavbarType.standard:
           return StandardNavbar(
-            navBarDecoration: widget.decoration!,
+            navBarDecoration: widget.decoration ?? _defaultDecoration,
             items: widget.menuItems,
             onTap: widget.onItemTapped,
             navBarElevation: widget.decoration!.elevation,
           );
         case NavbarType.notched:
+          final _decoration = _defaultDecoration.copyWith(
+              backgroundColor: widget.decoration!.backgroundColor ??
+                  Theme.of(context).primaryColor,
+              elevation: widget.decoration!.elevation,
+              showUnselectedLabels: widget.decoration!.showUnselectedLabels,
+              unselectedIconColor: widget.decoration!.unselectedIconColor,
+              unselectedLabelColor: widget.decoration!.unselectedLabelColor,
+              unselectedItemColor: widget.decoration!.unselectedItemColor,
+              unselectedLabelTextStyle:
+                  widget.decoration!.unselectedLabelTextStyle,
+              unselectedIconTheme: widget.decoration!.unselectedIconTheme,
+              selectedIconTheme: widget.decoration!.selectedIconTheme ??
+                  IconThemeData(
+                      color: Theme.of(context).primaryColor, size: 24),
+              enableFeedback: widget.decoration!.enableFeedback,
+              showSelectedLabels: false);
           return NotchedNavBar(
-            navBarDecoration: widget.decoration!,
+            notchDecoration:
+                NotchedDecoration.fromNavbarDecoration(_decoration),
             items: widget.menuItems,
             onTap: widget.onItemTapped,
             color: widget.decoration!.backgroundColor,
@@ -142,7 +185,7 @@ abstract class NavbarBase extends StatefulWidget {
 }
 
 class StandardNavbar extends NavbarBase {
-  StandardNavbar(
+  const StandardNavbar(
       {Key? key,
       required this.navBarDecoration,
       required this.navBarElevation,
@@ -210,17 +253,23 @@ class StandardNavbarState extends State<StandardNavbar> {
 class NotchedNavBar extends NavbarBase {
   const NotchedNavBar(
       {Key? key,
-      required this.navBarDecoration,
+      required this.notchDecoration,
       required this.color,
       required this.navBarElevation,
       required this.onTap,
       this.index = 0,
       required this.items})
-      : super(key: key);
+      : assert(items.length > 2,
+            """NotchedNavBar requires at least 3 items to function properly,
+            This is a temporary limitation and will be fixed in the future.
+            If you need a navbar with less than 3 items, please use the StandardNavbar widget
+            using the NavbarDecoration.navbarType: NavbarType.standard property.
+            """),
+        super(key: key);
 
   final List<NavbarItem> items;
   final Function(int) onTap;
-  final NavbarDecoration navBarDecoration;
+  final NotchedDecoration notchDecoration;
   final Color? color;
   final double? navBarElevation;
   final int index;
@@ -229,7 +278,9 @@ class NotchedNavBar extends NavbarBase {
   NotchedNavBarState createState() => NotchedNavBarState();
 
   @override
-  NavbarDecoration get decoration => navBarDecoration;
+  NotchedDecoration get decoration {
+    return notchDecoration;
+  }
 
   @override
   double? get elevation => navBarElevation;
@@ -271,7 +322,7 @@ class NotchedNavBarState extends State<NotchedNavBar>
   );
 
   late Animation<double> iconAnimation =
-      Tween<double>(begin: -40, end: 10).animate(CurvedAnimation(
+      Tween<double>(begin: -10, end: 10).animate(CurvedAnimation(
     parent: _controller!,
     curve: const Interval(
       0.6,
@@ -284,7 +335,7 @@ class NotchedNavBarState extends State<NotchedNavBar>
       Tween<double>(begin: 0.2, end: 1).animate(CurvedAnimation(
     parent: _controller!,
     curve: const Interval(
-      0.4,
+      0.2,
       1.0,
       curve: Curves.easeIn,
     ),
@@ -317,10 +368,9 @@ class NotchedNavBarState extends State<NotchedNavBar>
                           widget.onItemTapped!(NavbarNotifier.currentIndex);
                         },
                         child: Icon(
-                          widget
-                              .menuItems[NavbarNotifier.currentIndex].iconData,
-                          color: widget.decoration.selectedIconTheme!.color,
-                        )),
+                            widget.menuItems[NavbarNotifier.currentIndex]
+                                .iconData,
+                            color: widget.decoration.selectedIconTheme?.color)),
                   )),
             ),
           );
@@ -340,8 +390,7 @@ class NotchedNavBarState extends State<NotchedNavBar>
                     color: widget.decoration.backgroundColor,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black
-                            .withOpacity(widget.decoration.elevation ?? 0.2),
+                        color: Colors.black.withOpacity(0.2),
                         blurRadius: 10,
                         spreadRadius: 5,
                       ),
@@ -399,12 +448,14 @@ class MenuTile extends StatelessWidget {
         const SizedBox(
           height: 6,
         ),
-        Flexible(
-            child: Text(item.text,
-                style: decoration.unselectedLabelTextStyle?.copyWith(
-                  color: decoration.unselectedItemColor ??
-                      decoration.unselectedItemColor,
-                )))
+        decoration.showUnselectedLabels
+            ? Flexible(
+                child: Text(item.text,
+                    style: decoration.unselectedLabelTextStyle?.copyWith(
+                      color: decoration.unselectedItemColor ??
+                          decoration.unselectedItemColor,
+                    )))
+            : const SizedBox.shrink()
       ],
     );
   }
@@ -426,13 +477,14 @@ class NotchedClipper extends CustomClipper<Path> {
     path.moveTo(0, elevationFromEdge);
     int items = NavbarNotifier.length;
     // path.lineTo(size.width / 2, 0);
+    // TODO: fix the center of the notched navbar logic
+    // to a general formula
 
     // work around for calculating the center of notched navbar
     // for different number of items
     // 0 -> 0.16
     // 1 -> 0.5
     // 2 -> 0.84
-    // 2 items width * (0.1 + (0.2 * index));
     // 3 items width * (0.16 + (0.34 * index));
     // 4 items width * (0.12 + (0.25 * index));
     // 5 items width * (0.1 + (0.2 * index));
@@ -442,7 +494,7 @@ class NotchedClipper extends CustomClipper<Path> {
 
     switch (items) {
       case 3:
-        centerX = width * (0.16 + (0.34 * index));
+        centerX = width * (0.15 + (0.34 * index));
         break;
       case 4:
         centerX = width * (0.12 + (0.25 * index));
@@ -453,9 +505,7 @@ class NotchedClipper extends CustomClipper<Path> {
       default:
         centerX = width * (0.1 + (0.2 * index));
     }
-
-    double centerY = height * 0.5;
-
+    double depth = curveRadius * 1;
     Offset point1 = Offset(centerX - curveRadius, 0);
     path.lineTo(point1.dx, point1.dy);
     point1 = Offset(centerX - curveRadius * 2, elevationFromEdge);
@@ -465,18 +515,18 @@ class NotchedClipper extends CustomClipper<Path> {
         point1.dx, point1.dy, point2.dx, point2.dy, point3.dx, point3.dy);
 
     point1 = Offset(centerX - (curveRadius / 4), 0);
-    point2 = Offset(centerX - (curveRadius / 1.2), curveRadius);
-    point3 = Offset(centerX, curveRadius);
+    point2 = Offset(centerX - (curveRadius / 1.2), depth);
+    point3 = Offset(centerX, depth);
 
     path.cubicTo(
         point1.dx, point1.dy, point2.dx, point2.dy, point3.dx, point3.dy);
 
-    point1 = Offset(centerX + (curveRadius / 1.2), curveRadius);
+    point1 = Offset(centerX + (curveRadius), depth);
     point2 = Offset(centerX + (curveRadius / 3), 0);
     point3 = Offset(centerX + curveRadius, 0);
     path.cubicTo(
         point1.dx, point1.dy, point2.dx, point2.dy, point3.dx, point3.dy);
-    // path.quadraticBezierTo(point1.dx, point1.dy, point2.dx, point2.dy);
+
     // center point of the notch curve
     path.lineTo(width, elevationFromEdge);
     path.lineTo(width, height);
