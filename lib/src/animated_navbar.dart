@@ -127,6 +127,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
             onTap: widget.onItemTapped,
             color: widget.decoration!.backgroundColor,
             navBarElevation: widget.decoration!.elevation,
+            index: NavbarNotifier.currentIndex,
           );
         default:
           return StandardNavbar(
@@ -300,7 +301,7 @@ class NotchedNavBarState extends State<NotchedNavBar>
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-
+    _selectedIndex = widget.index;
     _startAnimation();
   }
 
@@ -346,6 +347,15 @@ class NotchedNavBarState extends State<NotchedNavBar>
   }
 
   int _selectedIndex = 0;
+
+  @override
+  void didUpdateWidget(NotchedNavBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.index != widget.index) {
+      _selectedIndex = widget.index;
+      _startAnimation();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -411,7 +421,6 @@ class NotchedNavBarState extends State<NotchedNavBar>
                           onTap: () {
                             _selectedIndex = i;
                             widget.onItemTapped!(i);
-                            _startAnimation();
                           },
                           child: Container(
                             alignment: Alignment.center,

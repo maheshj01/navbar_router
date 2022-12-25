@@ -77,6 +77,22 @@ class _HomePageState extends State<HomePage> {
   DateTime oldTime = DateTime.now();
   DateTime newTime = DateTime.now();
 
+  /// This is only for demo purposes
+  void simulateTabChange() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      for (int i = 0; i < items.length * 2; i++) {
+        NavbarNotifier.index = i % items.length;
+        await Future.delayed(const Duration(milliseconds: 1000));
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // simulateTabChange();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -120,6 +136,7 @@ class _HomePageState extends State<HomePage> {
             return isExitingApp;
           }
         },
+        initialIndex: 2,
         type: NavbarType.notched,
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 600,
@@ -128,7 +145,6 @@ class _HomePageState extends State<HomePage> {
             showUnselectedLabels: true,
             unselectedIconColor: Colors.white54,
             unselectedItemColor: Colors.white54
-            
             // unselectedLabelTextStyle:
             //     const TextStyle(color: Colors.white, fontSize: 12),
             // selectedIconTheme: const IconThemeData(color: Colors.red),

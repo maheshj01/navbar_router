@@ -2,11 +2,14 @@
 
 
  - [X] Make NavigationBar.notched more accurate
- - [ ] Clarify to Pass appropriate NavbarDecoration to NavbarType
+ - [X] Clarify to Pass appropriate NavbarDecoration to NavbarType
+ - [ ] Improve notch curve for perfect semi circle and remove workaround.
 
-  Add tests for it
+  Add tests
  - [ ] Change navigation bar type in runtime
  - [ ] Check all properties of NavigationBar are set correctly.
- - [ ] Tests are failing because type BottomNavigationBar not found. Fix it.
- - [ ] Ensure all the tests are passing before merging.
- - [ ] Update readme and version number.
+ - [X] Tests are failing because type BottomNavigationBar not found. Fix it.
+ - [X] Ensure all the tests are passing before merging.
+ - [X] Update readme and version number.
+ - [ ] test initial Index
+ - [ ] Test programatically hiding and showing navbar

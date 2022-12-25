@@ -203,6 +203,8 @@ Hide/show navbar on scroll             |  Hide/show navbar on drawer open/close
   ***destinations***: A List of `DestinationRouter` to show when the user taps the [NavbarItem].
   Each DestinationRouter specifies a List of Destinations, initialRoute, and the navbarItem corresponding to that destination.
 
+  **type**: The type of NavigationBar to be passed to NavbarRouter defaults to `NavbarType.standard`. This allows you to choose between the default `NavbarType.standard` and `NavbarType.notched`.
+
   ***decoration*** : The decoraton for Navbar has all the properties you would expect in a [BottomNavigationBar] to adjust the style of the Navbar.
 
   ***destinationAnimationCurve***: Curve for the destination animation when the user taps a navbar item. Defaults to `Curves.fastOutSlowIn`.
