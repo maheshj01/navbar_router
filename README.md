@@ -126,12 +126,14 @@ defaults to
 You can choose between different NavbarTypes using the `NavbarDecoration.navbarType` property. This allows you to choose between the default NavbarType.standard and NavbarType.notched
 
 
-NavbarType.standard        |       NavbarType.notched
-:-------------------------:|:-------------------------:
+### NavbarType.standard (default)
+ 
+![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/31410839/209458339-d66524c4-2897-4136-a70f-275d5b6f786e.gif)
 
 
+### NavbarType.notched
 
-```dart
+![ezgif com-gif-maker](https://user-images.githubusercontent.com/31410839/209458282-2ac3f194-abf4-4406-a7ff-0581dfd09229.gif)
 
 
 ## Hide or show bottomNavigationBar
