@@ -83,8 +83,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
       unselectedLabelTextStyle:
           Theme.of(context).bottomNavigationBarTheme.unselectedLabelStyle,
       unselectedIconTheme: Theme.of(context).iconTheme,
-      selectedIconTheme: Theme.of(context).iconTheme ??
-          IconThemeData(color: Theme.of(context).primaryColor, size: 24),
+      selectedIconTheme: Theme.of(context).iconTheme,
       selectedLabelTextStyle:
           Theme.of(context).bottomNavigationBarTheme.selectedLabelStyle,
       enableFeedback: true,
@@ -117,8 +116,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
                   widget.decoration!.unselectedLabelTextStyle,
               unselectedIconTheme: widget.decoration!.unselectedIconTheme,
               selectedIconTheme: widget.decoration!.selectedIconTheme ??
-                  IconThemeData(
-                      color: Theme.of(context).primaryColor, size: 24),
+                  const IconThemeData(color: Colors.white, size: 24),
               enableFeedback: widget.decoration!.enableFeedback,
               showSelectedLabels: false);
           return NotchedNavBar(
@@ -376,55 +374,56 @@ class NotchedNavBarState extends State<NotchedNavBar>
           );
         });
 
-    return Stack(
-      children: [
-        AnimatedBuilder(
-            animation: _controller!,
-            builder: (context, snapshot) {
-              return ClipPath(
-                clipper: NotchedClipper(
-                    index: NavbarNotifier.currentIndex,
-                    animation: notchAnimation.value),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: widget.decoration.backgroundColor,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 10,
-                        spreadRadius: 5,
-                      ),
-                    ],
-                  ),
-                  height: kBottomNavigationBarHeight * 1.6,
-                  alignment: Alignment.center,
-                ),
-              );
-            }),
-        // IconButton(onPressed: () {}, icon: Icon(Icons.menu))
-        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          for (int i = 0; i < widget.menuItems.length; i++)
-            Expanded(
-                child: _selectedIndex == i
-                    ? selectedWidget
-                    : InkWell(
-                        onTap: () {
-                          _selectedIndex = i;
-                          widget.onItemTapped!(i);
-                          _startAnimation();
-                        },
-                        child: Container(
-                          // color: Colors.red,
-                          alignment: Alignment.center,
-                          height: 80,
-                          child: MenuTile(
-                            item: widget.menuItems[i],
-                            decoration: widget.decoration,
-                          ),
+    return Material(
+      color: Colors.transparent,
+      child: Stack(
+        children: [
+          AnimatedBuilder(
+              animation: _controller!,
+              builder: (context, snapshot) {
+                return ClipPath(
+                  clipper: NotchedClipper(
+                      index: NavbarNotifier.currentIndex,
+                      animation: notchAnimation.value),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: widget.decoration.backgroundColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 10,
+                          spreadRadius: 5,
                         ),
-                      ))
-        ]),
-      ],
+                      ],
+                    ),
+                    height: kBottomNavigationBarHeight * 1.6,
+                    alignment: Alignment.center,
+                  ),
+                );
+              }),
+          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            for (int i = 0; i < widget.menuItems.length; i++)
+              Expanded(
+                  child: _selectedIndex == i
+                      ? selectedWidget
+                      : InkWell(
+                          onTap: () {
+                            _selectedIndex = i;
+                            widget.onItemTapped!(i);
+                            _startAnimation();
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: 80,
+                            child: MenuTile(
+                              item: widget.menuItems[i],
+                              decoration: widget.decoration,
+                            ),
+                          ),
+                        ))
+          ]),
+        ],
+      ),
     );
   }
 }
