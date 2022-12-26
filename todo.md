@@ -6,10 +6,10 @@
  - [X] Improve notch curve for perfect semi circle and remove workaround.
 
   Add tests
- - [ ] Change navigation bar type in runtime
- - [ ] Check all properties of NavigationBar are set correctly.
+ - [X] Change navigation bar type in runtime
  - [X] Tests are failing because type BottomNavigationBar not found. Fix it.
  - [X] Ensure all the tests are passing before merging.
  - [X] Update readme and version number.
- - [ ] test initial Index
- - [ ] Test programatically hiding and showing navbar
+ - [X] test initial Index
+ - [X] Test programatically hiding and showing navbar
+ - [ ] Check all properties of NavigationBar are set correctly.

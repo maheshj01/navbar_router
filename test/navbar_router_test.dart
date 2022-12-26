@@ -54,6 +54,7 @@ void main() {
       BackButtonBehavior behavior = BackButtonBehavior.exit,
       Map<int, Map<String, Widget>> navBarRoutes = routes,
       NavbarType type = NavbarType.standard,
+      int index = 0,
       List<NavbarItem> navBarItems = items}) {
     return MaterialApp(
       home: Directionality(
@@ -67,6 +68,7 @@ void main() {
                 onBackButtonPressed: (isExiting) {
                   return isExiting;
                 },
+                initialIndex: index,
                 type: type,
                 backButtonBehavior: behavior,
                 isDesktop: isDesktop,
@@ -183,6 +185,17 @@ void main() {
       final destination = (routes[0]!['/']).runtimeType.typeX();
       expect(destination, findsOneWidget);
       final icon = find.byIcon(items[0].iconData);
+      expect(icon, findsOneWidget);
+    });
+    testWidgets('NavbarType.standard: Set initial index to non-zero',
+        (WidgetTester tester) async {
+      int initialIndex = 2;
+      await tester.pumpWidget(
+          boilerplate(type: NavbarType.standard, index: initialIndex));
+      expect(NavbarNotifier.currentIndex, initialIndex);
+      final destination = (routes[initialIndex]!['/']).runtimeType.typeX();
+      expect(destination, findsOneWidget);
+      final icon = find.byIcon(items[initialIndex].iconData);
       expect(icon, findsOneWidget);
     });
 
@@ -488,6 +501,18 @@ void main() {
         expect(icon, findsOneWidget);
       });
 
+      testWidgets('NavbarType.notched: Set initial index to non-zero',
+          (WidgetTester tester) async {
+        int initialIndex = 2;
+        await tester.pumpWidget(
+            boilerplate(type: NavbarType.notched, index: initialIndex));
+        expect(NavbarNotifier.currentIndex, initialIndex);
+        final destination = (routes[initialIndex]!['/']).runtimeType.typeX();
+        expect(destination, findsOneWidget);
+        final icon = find.byIcon(items[initialIndex].iconData);
+        expect(icon, findsOneWidget);
+      });
+
       testWidgets(
           'NavbarType.notched: should switch to Navigation Rail in Desktop mode',
           (WidgetTester tester) async {
@@ -693,5 +718,32 @@ void main() {
         expect(productDestination, findsOneWidget);
       });
     });
+  });
+
+  testWidgets('NavbarType can be changed during runtime',
+      (WidgetTester tester) async {
+    NavbarType type = NavbarType.notched;
+    await tester.pumpWidget(boilerplate(type: type));
+    final finder = find.byType(NotchedNavBar);
+    expect(finder, findsOneWidget);
+    type = NavbarType.standard;
+    await tester.pumpWidget(boilerplate(type: type));
+    final finder2 = find.byType(BottomNavigationBar);
+    expect(finder2, findsOneWidget);
+    expect(finder, findsNothing);
+  });
+
+  testWidgets('Navbar can be hidden during runtime',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(boilerplate());
+    final finder = find.byType(BottomNavigationBar);
+    expect(finder, findsOneWidget);
+    NavbarNotifier.hideBottomNavBar = true;
+    await tester.pumpAndSettle();
+    // test if widget is hidden (not visible in view port)
+    expect(finder.hitTestable(), findsNothing);
+    NavbarNotifier.hideBottomNavBar = false;
+    await tester.pumpAndSettle();
+    expect(finder, findsOneWidget);
   });
 }
