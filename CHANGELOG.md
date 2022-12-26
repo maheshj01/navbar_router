@@ -1,3 +1,6 @@
+## [0.4.1]  Dec 26, 2022
+- Improve NavbarType.notched shape and selected icon accuracy
+
 ## [0.4.0]  Dec 25, 2022
 - [WIP Ref:#8](https://github.com/maheshmnj/navbar_router/issues/8) Adds support for custom Navbar using `NavbarRouter.type: NavbarType.notched`
 
