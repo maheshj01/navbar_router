@@ -119,6 +119,14 @@ class NavbarRouter extends StatefulWidget {
   /// defaults to the first item in the list of [NavbarItems]
   final int initialIndex;
 
+  /// Take a look at the [readme](https://github.com/maheshmnj/navbar_router) for more information on how to use this package.
+  ///
+  /// Please help me improve this package.
+  /// Found a bug? Please file an issue [here](https://github.com/maheshmnj/navbar_router/issues/new?assignees=&labels=&template=bug_report.md&title=)
+  /// or
+  /// File a feature request by clicking [here](https://github.com/maheshmnj/navbar_router/issues/new?assignees=&labels=&template=feature_request.md&title=)
+  ///
+  ///
   const NavbarRouter(
       {Key? key,
       required this.destinations,
