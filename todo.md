@@ -3,7 +3,7 @@
 
  - [X] Make NavigationBar.notched more accurate
  - [X] Clarify to Pass appropriate NavbarDecoration to NavbarType
- - [ ] Improve notch curve for perfect semi circle and remove workaround.
+ - [X] Improve notch curve for perfect semi circle and remove workaround.
 
   Add tests
  - [ ] Change navigation bar type in runtime

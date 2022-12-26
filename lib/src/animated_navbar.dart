@@ -69,7 +69,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
 
   @override
   Widget build(BuildContext context) {
-    final _defaultDecoration = NavbarDecoration(
+    final defaultDecoration = NavbarDecoration(
       backgroundColor:
           Theme.of(context).bottomNavigationBarTheme.backgroundColor,
       elevation: 8,
@@ -99,13 +99,13 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
       switch (widget.navbarType) {
         case NavbarType.standard:
           return StandardNavbar(
-            navBarDecoration: widget.decoration ?? _defaultDecoration,
+            navBarDecoration: widget.decoration ?? defaultDecoration,
             items: widget.menuItems,
             onTap: widget.onItemTapped,
             navBarElevation: widget.decoration!.elevation,
           );
         case NavbarType.notched:
-          final _decoration = _defaultDecoration.copyWith(
+          final decoration = defaultDecoration.copyWith(
               backgroundColor: widget.decoration!.backgroundColor ??
                   Theme.of(context).primaryColor,
               elevation: widget.decoration!.elevation,
@@ -121,8 +121,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
               enableFeedback: widget.decoration!.enableFeedback,
               showSelectedLabels: false);
           return NotchedNavBar(
-            notchDecoration:
-                NotchedDecoration.fromNavbarDecoration(_decoration),
+            notchDecoration: NotchedDecoration.fromNavbarDecoration(decoration),
             items: widget.menuItems,
             onTap: widget.onItemTapped,
             color: widget.decoration!.backgroundColor,
@@ -477,62 +476,27 @@ class NotchedClipper extends CustomClipper<Path> {
     final path = Path();
     final width = size.width;
     final height = size.height;
-    double curveRadius = 60.0 * animation;
-    const elevationFromEdge = 5.0;
+    double curveRadius = 38.0 * animation;
+    const elevationFromEdge = 2.0;
 
     path.moveTo(0, elevationFromEdge);
     int items = NavbarNotifier.length;
-    // path.lineTo(size.width / 2, 0);
-    // TODO: fix the center of the notched navbar logic
-    // to a general formula
+    double iconSize = 24.0;
+    double padding = (width - (iconSize * items)) / (items);
+    double centerX =
+        (index) * padding + (index) * iconSize + iconSize / 2 + padding / 2;
 
-    // work around for calculating the center of notched navbar
-    // for different number of items
-    // 0 -> 0.16
-    // 1 -> 0.5
-    // 2 -> 0.84
-    // 3 items width * (0.16 + (0.34 * index));
-    // 4 items width * (0.12 + (0.25 * index));
-    // 5 items width * (0.1 + (0.2 * index));
-    // in general width * (0.12 + (0.25 * index));
-
-    double centerX = width * (0.1 + (0.2 * index) * animation);
-
-    switch (items) {
-      case 3:
-        centerX = width * (0.15 + (0.34 * index));
-        break;
-      case 4:
-        centerX = width * (0.12 + (0.25 * index));
-        break;
-      case 5:
-        centerX = width * (0.1 + (0.2 * index));
-        break;
-      default:
-        centerX = width * (0.1 + (0.2 * index));
-    }
-    double depth = curveRadius * 1;
-    Offset point1 = Offset(centerX - curveRadius, 0);
-    path.lineTo(point1.dx, point1.dy);
-    point1 = Offset(centerX - curveRadius * 2, elevationFromEdge);
-    Offset point2 = Offset(point1.dx + 20, 0);
-    Offset point3 = Offset(centerX - curveRadius, 0);
-    path.cubicTo(
-        point1.dx, point1.dy, point2.dx, point2.dy, point3.dx, point3.dy);
-
-    point1 = Offset(centerX - (curveRadius / 4), 0);
-    point2 = Offset(centerX - (curveRadius / 1.2), depth);
-    point3 = Offset(centerX, depth);
-
-    path.cubicTo(
-        point1.dx, point1.dy, point2.dx, point2.dy, point3.dx, point3.dy);
-
-    point1 = Offset(centerX + (curveRadius), depth);
-    point2 = Offset(centerX + (curveRadius / 3), 0);
-    point3 = Offset(centerX + curveRadius, 0);
-    path.cubicTo(
-        point1.dx, point1.dy, point2.dx, point2.dy, point3.dx, point3.dy);
-
+    Offset point1 = Offset(centerX - curveRadius - 20, 0);
+    path.lineTo(point1.dx - 40, point1.dy);
+    point1 = Offset(point1.dx + 20, -10);
+    Offset point2 = Offset(point1.dx, 20);
+    path.quadraticBezierTo(point1.dx, point1.dy, point2.dx, point2.dy);
+    Offset point3 = Offset(centerX + curveRadius, 20);
+    path.arcToPoint(point3,
+        radius: const Radius.circular(10), clockwise: false);
+    Offset point4 = Offset(point3.dx, -6);
+    Offset point5 = Offset(point4.dx + 40, 0);
+    path.quadraticBezierTo(point4.dx, point4.dy, point5.dx, point5.dy);
     // center point of the notch curve
     path.lineTo(width, elevationFromEdge);
     path.lineTo(width, height);
