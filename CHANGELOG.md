@@ -1,3 +1,6 @@
+## [0.4.2]  Jan 25, 2023
+- Update default decoration values
+
 ## [0.4.1]  Dec 26, 2022
 - Improve NavbarType.notched shape and selected icon accuracy
 
