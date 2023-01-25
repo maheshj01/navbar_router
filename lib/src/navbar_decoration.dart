@@ -12,6 +12,7 @@ class NavbarItem {
   /// background color for the navbar item whnen type is [NavbarType.shifting]
   final Color? backgroundColor;
 }
+
 /// Decoration class for the navbar [NavbarType.standard]
 /// if you are using Navbartype.notched then use [NotchedDecoration] instead.
 class NavbarDecoration {
@@ -123,7 +124,7 @@ class NotchedDecoration extends NavbarDecoration {
   NotchedDecoration({
     Color? backgroundColor,
     double? elevation,
-    bool? showUnselectedLabels,
+    bool? showUnselectedLabels = true,
     TextStyle? unselectedLabelTextStyle,
     Color? unselectedIconColor,
     Color? unselectedItemColor,

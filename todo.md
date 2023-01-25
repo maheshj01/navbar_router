@@ -5,6 +5,7 @@
  - [X] Clarify to Pass appropriate NavbarDecoration to NavbarType
  - [X] Improve notch curve for perfect semi circle and remove workaround.
  - [ ] refactor to abstract out irrelevant properties for decoration.
+-  [ ] The shape of notch on the left end has a grey bump, notice the gif in readme.
 
   Add tests
  - [X] Change navigation bar type in runtime

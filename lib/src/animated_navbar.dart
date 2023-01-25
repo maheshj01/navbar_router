@@ -69,29 +69,26 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final defaultDecoration = NavbarDecoration(
-      backgroundColor:
-          Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+      backgroundColor: theme.bottomNavigationBarTheme.backgroundColor,
       elevation: 8,
       showUnselectedLabels: true,
-      unselectedIconColor:
-          Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
+      unselectedIconColor: theme.bottomNavigationBarTheme.unselectedItemColor,
       unselectedLabelColor:
-          Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
-      unselectedItemColor:
-          Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
+          theme.bottomNavigationBarTheme.unselectedItemColor ??
+              theme.primaryColor,
+      unselectedItemColor: theme.bottomNavigationBarTheme.unselectedItemColor,
       unselectedLabelTextStyle:
-          Theme.of(context).bottomNavigationBarTheme.unselectedLabelStyle ??
+          theme.bottomNavigationBarTheme.unselectedLabelStyle ??
               const TextStyle(color: Colors.black),
-      unselectedIconTheme: Theme.of(context).iconTheme,
-      selectedIconTheme: Theme.of(context).iconTheme,
-      selectedLabelTextStyle:
-          Theme.of(context).bottomNavigationBarTheme.selectedLabelStyle,
+      unselectedIconTheme: theme.iconTheme,
+      selectedIconTheme: theme.iconTheme,
+      selectedLabelTextStyle: theme.bottomNavigationBarTheme.selectedLabelStyle,
       enableFeedback: true,
       isExtended: true,
       navbarType: BottomNavigationBarType.fixed,
-      selectedLabelColor:
-          Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
+      selectedLabelColor: theme.bottomNavigationBarTheme.selectedItemColor,
       showSelectedLabels: true,
     );
 
@@ -339,6 +336,15 @@ class NotchedNavBarState extends State<NotchedNavBar>
       curve: Curves.easeIn,
     ),
   ));
+  late Animation<double> scaleAnimation =
+      Tween<double>(begin: 1.0, end: 1.4).animate(CurvedAnimation(
+    parent: _controller!,
+    curve: const Interval(
+      0.6,
+      1.0,
+      curve: Curves.easeIn,
+    ),
+  ));
 
   void _startAnimation() async {
     _controller!.reset();
@@ -363,7 +369,6 @@ class NotchedNavBarState extends State<NotchedNavBar>
         builder: (context, snapshot) {
           return Transform.translate(
             offset: Offset(0, -iconAnimation.value),
-            // scale: animation.value,
             child: Opacity(
               opacity: opacityAnimation.value,
               child: SizedBox(
@@ -371,14 +376,19 @@ class NotchedNavBarState extends State<NotchedNavBar>
                   width: 60.0,
                   child: FittedBox(
                     child: FloatingActionButton(
+                        heroTag: "notchedNavBar",
                         backgroundColor: widget.decoration.backgroundColor,
                         onPressed: () {
                           widget.onItemTapped!(NavbarNotifier.currentIndex);
                         },
                         child: Icon(
-                            widget.menuItems[NavbarNotifier.currentIndex]
-                                .iconData,
-                            color: widget.decoration.selectedIconTheme?.color)),
+                          widget
+                              .menuItems[NavbarNotifier.currentIndex].iconData,
+                          color: widget.decoration.selectedIconTheme?.color,
+                          size: (widget.decoration.selectedIconTheme?.size ??
+                                  24.0) *
+                              scaleAnimation.value,
+                        )),
                   )),
             ),
           );
