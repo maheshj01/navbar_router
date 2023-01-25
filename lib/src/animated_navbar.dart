@@ -71,7 +71,8 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final defaultDecoration = NavbarDecoration(
-      backgroundColor: theme.bottomNavigationBarTheme.backgroundColor,
+      backgroundColor: theme.bottomNavigationBarTheme.backgroundColor ??
+          theme.colorScheme.primary,
       elevation: 8,
       showUnselectedLabels: true,
       unselectedIconColor: theme.bottomNavigationBarTheme.unselectedItemColor,
@@ -82,7 +83,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
       unselectedLabelTextStyle:
           theme.bottomNavigationBarTheme.unselectedLabelStyle ??
               const TextStyle(color: Colors.black),
-      unselectedIconTheme: theme.iconTheme,
+      unselectedIconTheme: theme.iconTheme.copyWith(color: Colors.black),
       selectedIconTheme: theme.iconTheme,
       selectedLabelTextStyle: theme.bottomNavigationBarTheme.selectedLabelStyle,
       enableFeedback: true,
@@ -91,6 +92,10 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
       selectedLabelColor: theme.bottomNavigationBarTheme.selectedItemColor,
       showSelectedLabels: true,
     );
+    final foregroundColor =
+        defaultDecoration.backgroundColor!.computeLuminance() > 0.5
+            ? Colors.black
+            : Colors.white;
 
     NavbarBase _buildNavBar() {
       switch (widget.navbarType) {
@@ -114,7 +119,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
                   widget.decoration!.unselectedLabelTextStyle,
               unselectedIconTheme: widget.decoration!.unselectedIconTheme,
               selectedIconTheme: widget.decoration!.selectedIconTheme ??
-                  const IconThemeData(color: Colors.white, size: 24),
+                  theme.iconTheme.copyWith(color: foregroundColor),
               enableFeedback: widget.decoration!.enableFeedback,
               showSelectedLabels: false);
           return NotchedNavBar(
