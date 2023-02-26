@@ -2,7 +2,7 @@
 
  <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
-This is a BottomNavigionBar created by considering most of the common use cases of BottomNaavigationBar in real world applications. This widget handles the boilerplate code required to handle some of the most common features (specified below) with minimal code and hassle. All you need to do is specify the navbar menu items, routes and destinations and the rest will be taken care by the navbar_router.
+This is a custom BottomNavigationBar created by considering most of the common use cases of BottomNavigationBar in real world applications. This widget handles the boilerplate code required to handle some of the most common features (specified below) with minimal code and hassle. All you need to do is specify the navbar menu items, routes and destinations and the rest will be taken care by the navbar_router.
 
 Most of the features which this package provides are mainly to improve the user experience by handling the smallest things possible.
 
@@ -112,6 +112,8 @@ Your app has three tabs and you navigate from Tab1 -> Tab2 -> Tab3
  This will switch the navbar current index to the last selected NavbarItem (Tab 2) from the navbarHistory.
 
 <img src="https://user-images.githubusercontent.com/31410839/184479993-01c85b2d-4453-4137-93b2-5242d1ed0e7e.gif" width ="300">
+
+You can read [more about this feature here.](https://github.com/maheshmnj/navbar_router/issues/9#issuecomment-1211569478)
 
 ## Fading between NavbarDestinations
 
