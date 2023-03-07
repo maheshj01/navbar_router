@@ -235,6 +235,7 @@ onBackButtonPressed: (isExitingApp) {
 
 Read more in a [medium blog post](https://maheshmnj.medium.com/everything-about-the-bottomnavigationbar-in-flutter-e99e5470dddb) for detailed explanation.
 
+Youtube: [Heres a discussion](https://youtu.be/IhlikgW8OY8) I had with Allen Wyma from Flying high with Fluter regarding this package 
 
 ## **Contribution**
 
