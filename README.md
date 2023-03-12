@@ -1,19 +1,22 @@
-## **navbar_router 0.3.3**
+## **navbar_router 0.4.1**
 
  <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
-This is a NavigationBar widget created by considering the advanced use cases in real world applications. This widget handles the boilerplate code required to handle some of the most common features (specified below) with minimal code and hassle. All you need to do is specify the navbar menu items, routes and destinations and the rest will be taken care by the navbar_router.
+This is a custom BottomNavigationBar created by considering most of the common use cases of BottomNavigationBar in real world applications. This widget handles the boilerplate code required to handle some of the most common features (specified below) with minimal code and hassle. All you need to do is specify the navbar menu items, routes and destinations and the rest will be taken care by the navbar_router.
+
+Most of the features which this package provides are mainly to improve the user experience by handling the smallest things possible.
 
 ## **Features**
 
-- Adapatable to different device Sizes using `isDesktop` and `NavbarDecoration.isExtended` Property.
-- Remembers navigation history of Navbar.
+- Choose between different NavigationBar types.
+- Remembers navigation history of Navbar (Android).
 - Ability to push routes in the nested or root navigator
-- Smooth transitions when changing navbar destinations
-- Notifies onBackButtonPress to handle app exits.
+- Intercept back button press to handle app exits (Android).
+- Fading between NavbarDestinations
 - Programmatically control state of bottom navbar from any part of widget tree e.g change index, hide/show bottom navbar, pop routes of a specific tab etc
 - persist state across bottom navbar tabs.
-- Tapping the same navbar button pops to base route of nested navigator (same as instagram).
+- Jump to base route from a deep nested route with a single tap(same as instagram).
+- Adapatable to different device Sizes.
 
 _Heres a [sample app](example/lib/main.dart) built using this package to see how it works._
 
@@ -94,17 +97,23 @@ class HomePage extends StatelessWidget {
 
 # Features Breakdown
 
-## Remembers NavigationBar history
+## Remembers NavigationBar history (for Android Devices)
 
-When the selected NavbarItem is at the root of the navigation stack, pressing the Back button will by default trigger app exit. By specifying
+When the selected NavbarItem is at the root of the navigation stack, pressing the Back button (On Android) will by default trigger app exit.
 
-```dart
-behavior: BackButtonBehavior.rememberHistory,
-```
-will switch the navbar current index to the last selected NavbarItem from the navbarHistory.
+For instance:
 
+Your app has three tabs and you navigate from Tab1 -> Tab2 -> Tab3
 
-<img src="https://user-images.githubusercontent.com/31410839/184479993-01c85b2d-4453-4137-93b2-5242d1ed0e7e.gif" width ="300"> 
+- `BackButtonBehavior.exit` (default)
+ when you press Back Button (on Tab3) your app will exit
+
+- `behavior: BackButtonBehavior.rememberHistory`,
+ This will switch the navbar current index to the last selected NavbarItem (Tab 2) from the navbarHistory.
+
+<img src="https://user-images.githubusercontent.com/31410839/184479993-01c85b2d-4453-4137-93b2-5242d1ed0e7e.gif" width ="300">
+
+You can read [more about this feature here.](https://github.com/maheshmnj/navbar_router/issues/9#issuecomment-1211569478)
 
 ## Fading between NavbarDestinations
 
@@ -120,6 +129,19 @@ defaults to
 <img src="https://miro.medium.com/max/600/1*08wCOOPCe1C1l_2uqIYEEg.gif">
 
 
+## Choose between different NavbarTypes
+
+You can choose between different NavbarTypes using the `NavbarDecoration.navbarType` property. This allows you to choose between the default `NavbarType.standard` and `NavbarType.notched` NavbarTypes.
+
+### NavbarType.standard (default)
+
+![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/31410839/209458339-d66524c4-2897-4136-a70f-275d5b6f786e.gif)
+
+
+### NavbarType.notched
+
+![ezgif com-gif-maker (2)](https://user-images.githubusercontent.com/31410839/209575300-8bafdae7-5465-4dd1-85bc-15065201ff37.gif)
+
 
 ## Hide or show bottomNavigationBar
 
@@ -129,54 +151,53 @@ You can hide or show bottom navigationBar with a single line of code from anywhe
  NavbarNotifier.hideBottomNavBar = true;
 ```
 
-Hide/show navbar on scroll             |  Hide/show navbar on drawer open/close
+Hide/show navbar on scroll     |     Hide/show navbar on drawer open/close
 :-------------------------:|:-------------------------:
 ![](https://miro.medium.com/max/800/1*NaYdY1FfsPFCNBdx3wg_og.gif)  | <img src="https://user-images.githubusercontent.com/31410839/173987446-c8c79bb0-d24c-46c1-bc4a-582508a4e187.gif" width ="200">
 
 
-## Notify onBackButtonPress
+##  Intercept BackButton press events (Android)
 
-*navbar_router* provides a `onBackButtonPressed` callback to intercept events from android back button. Giving you the ability to handle app exits (e.g you might want to implement double press back button to exit).
+*navbar_router* provides a `onBackButtonPressed` callback to intercept events from android back button, giving you the ability to handle app exits so as to prevent abrupt app exits without users consent. (or you might want to implement double press back button to exit).
+This callback method must return `true` to exit the app and false other wise.
 
 *sample code implementing double press back button to exit*
 
 ```dart
-      onBackButtonPressed: (isExitingApp) {
-        if (isExitingApp) {
-          newTime = DateTime.now();
-          int difference = newTime.difference(oldTime).inMilliseconds;
-          oldTime = newTime;
-          if (difference < 1000) {
-            hideSnackBar();
-            return isExitingApp;
-          } else {
-            showSnackBar();
-            return false;
-          }
-        } else {
-          return isExitingApp;
-        }
-      },
+onBackButtonPressed: (isExitingApp) {
+  if (isExitingApp) {
+    newTime = DateTime.now();
+    int difference = newTime.difference(oldTime).inMilliseconds;
+    oldTime = newTime;
+    if (difference < 1000) {
+      hideSnackBar();
+      return isExitingApp;
+    } else {
+      showSnackBar();
+      return false;
+    }
+  } else {
+    return isExitingApp;
+    }
+  },
 ```
 
 <img src="https://miro.medium.com/max/600/1*NRszUNzsN-HDlDmeJP1IDQ.gif">
-
-
 
 ## Adapatable to different device Sizes
 
 
 ```dart
  NavbarRouter(
-        errorBuilder: (context) {
-          return const Center(child: Text('Error 404'));
-        },
-        isDesktop: size.width > 600 ? true : false,
-        decoration: NavbarDecoration(
-            isExtended: size.width > 800 ? true : false,
-            navbarType: BottomNavigationBarType.shifting),
-        ...
-        ...
+   errorBuilder: (context) {
+     return const Center(child: Text('Error 404'));
+   },
+   isDesktop: size.width > 600 ? true : false,
+   decoration: NavbarDecoration(
+     isExtended: size.width > 800 ? true : false,
+     navbarType: BottomNavigationBarType.shifting),
+   ...
+   ...
 );
 ```
 
@@ -189,6 +210,8 @@ Hide/show navbar on scroll             |  Hide/show navbar on drawer open/close
 
   ***destinations***: A List of `DestinationRouter` to show when the user taps the [NavbarItem].
   Each DestinationRouter specifies a List of Destinations, initialRoute, and the navbarItem corresponding to that destination.
+
+  **type**: The type of NavigationBar to be passed to NavbarRouter defaults to `NavbarType.standard`. This allows you to choose between the default `NavbarType.standard` and `NavbarType.notched`.
 
   ***decoration*** : The decoraton for Navbar has all the properties you would expect in a [BottomNavigationBar] to adjust the style of the Navbar.
 
@@ -212,6 +235,7 @@ Hide/show navbar on scroll             |  Hide/show navbar on drawer open/close
 
 Read more in a [medium blog post](https://maheshmnj.medium.com/everything-about-the-bottomnavigationbar-in-flutter-e99e5470dddb) for detailed explanation.
 
+Youtube: [Heres a discussion](https://www.youtube.com/watch?v=IhlikgW8OY8&t=614s) I had with Allen Wyma from Flying high with Fluter regarding this package. 
 
 ## **Contribution**
 

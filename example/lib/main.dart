@@ -36,6 +36,7 @@ class _HomePageState extends State<HomePage> {
     NavbarItem(Icons.home, 'Home', backgroundColor: colors[0]),
     NavbarItem(Icons.shopping_bag, 'Products', backgroundColor: colors[1]),
     NavbarItem(Icons.person, 'Me', backgroundColor: colors[2]),
+    NavbarItem(Icons.settings, 'Settings', backgroundColor: colors[0]),
   ];
 
   final Map<int, Map<String, Widget>> _routes = const {
@@ -51,6 +52,9 @@ class _HomePageState extends State<HomePage> {
     2: {
       '/': UserProfile(),
       ProfileEdit.route: ProfileEdit(),
+    },
+    3: {
+      '/': Settings(),
     },
   };
 
@@ -73,23 +77,43 @@ class _HomePageState extends State<HomePage> {
   DateTime oldTime = DateTime.now();
   DateTime newTime = DateTime.now();
 
+  /// This is only for demo purposes
+  void simulateTabChange() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      for (int i = 0; i < items.length * 2; i++) {
+        NavbarNotifier.index = i % items.length;
+        await Future.delayed(const Duration(milliseconds: 1000));
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // simulateTabChange();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-            NavbarNotifier.isNavbarHidden ? Icons.toggle_off : Icons.toggle_on),
-        onPressed: () {
-          // Programmatically toggle the Navbar visibility
-          if (NavbarNotifier.isNavbarHidden) {
-            NavbarNotifier.hideBottomNavBar = false;
-          } else {
-            NavbarNotifier.hideBottomNavBar = true;
-          }
-          setState(() {});
-        },
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 24.0),
+        child: FloatingActionButton(
+          child: Icon(NavbarNotifier.isNavbarHidden
+              ? Icons.toggle_off
+              : Icons.toggle_on),
+          onPressed: () {
+            // Programmatically toggle the Navbar visibility
+            if (NavbarNotifier.isNavbarHidden) {
+              NavbarNotifier.hideBottomNavBar = false;
+            } else {
+              NavbarNotifier.hideBottomNavBar = true;
+            }
+            setState(() {});
+          },
+        ),
       ),
       body: NavbarRouter(
         errorBuilder: (context) {
@@ -112,19 +136,22 @@ class _HomePageState extends State<HomePage> {
             return isExitingApp;
           }
         },
+        initialIndex: 2,
+        type: NavbarType.notched,
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 600,
-        decoration: NavbarDecoration(
-            selectedLabelTextStyle: const TextStyle(color: Colors.red),
+        decoration: NotchedDecoration(
+            // selectedLabelTextStyle: const TextStyle(color: Colors.red),
             showUnselectedLabels: true,
-            unselectedLabelTextStyle:
-                const TextStyle(color: Colors.black, fontSize: 10),
-            selectedIconTheme: const IconThemeData(color: Colors.red),
-            isExtended: size.width > 800 ? true : false,
-            navbarType: BottomNavigationBarType.fixed),
-        onChanged: (x) {
-          debugPrint('index changed $x');
-        },
+            unselectedIconColor: Colors.white54,
+            unselectedItemColor: Colors.white54
+            // unselectedLabelTextStyle:
+            //     const TextStyle(color: Colors.white, fontSize: 12),
+            // selectedIconTheme: const IconThemeData(color: Colors.red),
+            // isExtended: size.width > 800 ? true : false,
+            // navbarType: BottomNavigationBarType.shifting
+            ),
+        onChanged: (x) {},
         backButtonBehavior: BackButtonBehavior.rememberHistory,
         destinations: [
           for (int i = 0; i < items.length; i++)
@@ -499,6 +526,31 @@ class UserProfile extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class Settings extends StatefulWidget {
+  const Settings({super.key});
+
+  @override
+  State<Settings> createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+      ),
+      body: ListView.builder(
+          itemCount: 10,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text('Setting $index'),
+            );
+          }),
     );
   }
 }

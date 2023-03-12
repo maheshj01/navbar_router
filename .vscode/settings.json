@@ -1,3 +1,16 @@
 {
-    "dart.flutterSdkPath": "/Users/mahesh/Development/flutter"
+    "dart.flutterSdkPath": "/Users/mahesh/Development/flutter",
+    "dart.autoImportCompletions": true,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    },
+    "[dart]": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false,
+        "editor.suggest.insertMode": "replace",
+        "editor.defaultFormatter": "Dart-Code.dart-code",
+        "editor.inlayHints.enabled": "offUnlessPressed",
+    }
 }
