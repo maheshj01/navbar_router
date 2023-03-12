@@ -367,6 +367,31 @@ class NotchedNavBarState extends State<NotchedNavBar>
     }
   }
 
+  Widget circularButton() {
+    return Container(
+        height: 60,
+        width: 60,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: widget.decoration.backgroundColor,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Icon(
+          widget.menuItems[NavbarNotifier.currentIndex].iconData,
+          color: widget.decoration.selectedIconTheme?.color,
+          size: (widget.decoration.selectedIconTheme?.size ?? 24.0) *
+              scaleAnimation.value,
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedWidget = AnimatedBuilder(
@@ -377,24 +402,9 @@ class NotchedNavBarState extends State<NotchedNavBar>
             child: Opacity(
               opacity: opacityAnimation.value,
               child: SizedBox(
-                  height: 60.0,
-                  width: 60.0,
-                  child: FittedBox(
-                    child: FloatingActionButton(
-                        heroTag: "notchedNavBar",
-                        backgroundColor: widget.decoration.backgroundColor,
-                        onPressed: () {
-                          widget.onItemTapped!(NavbarNotifier.currentIndex);
-                        },
-                        child: Icon(
-                          widget
-                              .menuItems[NavbarNotifier.currentIndex].iconData,
-                          color: widget.decoration.selectedIconTheme?.color,
-                          size: (widget.decoration.selectedIconTheme?.size ??
-                                  24.0) *
-                              scaleAnimation.value,
-                        )),
-                  )),
+                  height: 58.0,
+                  width: 58.0,
+                  child: FittedBox(child: circularButton())),
             ),
           );
         });
@@ -421,7 +431,7 @@ class NotchedNavBarState extends State<NotchedNavBar>
                         ),
                       ],
                     ),
-                    height: kBottomNavigationBarHeight * 1.6,
+                    height: kBottomNavigationBarHeight * 1.4,
                     alignment: Alignment.center,
                   ),
                 );
@@ -517,7 +527,6 @@ class NotchedClipper extends CustomClipper<Path> {
     path.lineTo(width, height);
     path.lineTo(0, height);
     path.close();
-
     // rectangle clip
     return path;
   }

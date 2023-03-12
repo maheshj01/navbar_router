@@ -141,16 +141,16 @@ class _HomePageState extends State<HomePage> {
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 600,
         decoration: NotchedDecoration(
-            // selectedLabelTextStyle: const TextStyle(color: Colors.red),
-            showUnselectedLabels: true,
-            unselectedIconColor: Colors.white54,
-            unselectedItemColor: Colors.white54
-            // unselectedLabelTextStyle:
-            //     const TextStyle(color: Colors.white, fontSize: 12),
-            // selectedIconTheme: const IconThemeData(color: Colors.red),
-            // isExtended: size.width > 800 ? true : false,
-            // navbarType: BottomNavigationBarType.shifting
-            ),
+          // selectedLabelTextStyle: const TextStyle(color: Colors.red),
+          showUnselectedLabels: true,
+          unselectedIconColor: Colors.white54,
+          unselectedItemColor: Colors.white54,
+          unselectedLabelTextStyle:
+              const TextStyle(color: Colors.white, fontSize: 12),
+          // selectedIconTheme: const IconThemeData(color: Colors.red),
+          // isExtended: size.width > 800 ? true : false,
+          // navbarType: BottomNavigationBarType.shifting
+        ),
         onChanged: (x) {},
         backButtonBehavior: BackButtonBehavior.rememberHistory,
         destinations: [
