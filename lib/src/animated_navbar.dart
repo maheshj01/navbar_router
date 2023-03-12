@@ -1,6 +1,6 @@
 part of 'navbar_router.dart';
 
-enum NavbarType { standard, notched }
+enum NavbarType { standard, notched, material3 }
 
 class _AnimatedNavBar extends StatefulWidget {
   const _AnimatedNavBar(
@@ -130,6 +130,15 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
             navBarElevation: widget.decoration!.elevation,
             index: NavbarNotifier.currentIndex,
           );
+        case NavbarType.material3:
+          return M3NavBar(
+            index: NavbarNotifier.currentIndex,
+            navBarDecoration: widget.decoration ?? defaultDecoration,
+            items: widget.menuItems,
+            onTap: widget.onItemTapped,
+            navBarElevation: widget.decoration!.elevation,
+          );
+
         default:
           return StandardNavbar(
             navBarDecoration: widget.decoration!,
@@ -557,5 +566,80 @@ class WaveClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) {
     return true;
+  }
+}
+
+class M3NavBar extends NavbarBase {
+  const M3NavBar({
+    Key? key,
+    required this.items,
+    required this.onTap,
+    required this.navBarDecoration,
+    this.navBarElevation,
+    required this.index,
+  }) : super(key: key);
+
+  final List<NavbarItem> items;
+  final Function(int) onTap;
+  final NavbarDecoration navBarDecoration;
+  final double? navBarElevation;
+  final int index;
+
+  @override
+  M3NavBarState createState() => M3NavBarState();
+
+  @override
+  NavbarDecoration get decoration => navBarDecoration;
+
+  @override
+  double? get elevation => navBarElevation;
+
+  @override
+  List<NavbarItem> get menuItems => items;
+
+  @override
+  Function(int p1)? get onItemTapped => onTap;
+}
+
+class M3NavBarState extends State<M3NavBar>
+    with SingleTickerProviderStateMixin {
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+          navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: widget.decoration.backgroundColor,
+        elevation: widget.elevation,
+        labelTextStyle:
+            MaterialStateProperty.all(widget.decoration.selectedLabelTextStyle),
+        surfaceTintColor: widget.decoration.selectedIconTheme?.color,
+        iconTheme:
+            MaterialStateProperty.all(widget.decoration.unselectedIconTheme),
+        labelBehavior: widget.decoration.showUnselectedLabels
+            ? NavigationDestinationLabelBehavior.alwaysShow
+            : NavigationDestinationLabelBehavior.onlyShowSelected,
+        indicatorColor: widget.decoration.selectedLabelColor,
+        height: 80.0,
+        // indicatorShape:
+      )),
+      child: NavigationBar(
+          backgroundColor: widget.decoration.backgroundColor,
+          animationDuration: const Duration(milliseconds: 300),
+          elevation: widget.elevation,
+          surfaceTintColor: widget.decoration.selectedIconTheme?.color,
+          destinations: widget.items
+              .map((e) => Padding(
+                    padding: const EdgeInsets.only(bottom: 50.0),
+                    child: NavigationDestination(
+                      tooltip: e.text,
+                      icon: Icon(e.iconData),
+                      label: e.text,
+                      selectedIcon: Icon(e.iconData),
+                    ),
+                  ))
+              .toList(),
+          selectedIndex: NavbarNotifier.currentIndex,
+          onDestinationSelected: (int index) => widget.onItemTapped!(index)),
+    );
   }
 }
