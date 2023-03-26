@@ -1,16 +1,36 @@
 {
-    "name": "docs.page",
-    "theme": "#36B9B9",
-    "sidebar": [
-      ["Home", "/"],
-      ["Another Page", "/another-page"],
+  "name": "docs.page",
+  "theme": "#36B9B9",
+  "twitter": "maheshmnj",
+  "anchors": [
+    {
+      "title": "pub.dev",
+      "icon": "cube",
+      "link": "https://pub.dev/packages/navbar_router"
+    },
+    {
+      "title": "GitHub source",
+      "icon": "github",
+      "link": "https://github.com/maheshmnj/navbar_router"
+    }
+  ],
+  "sidebar": [
+    [
+      "Overview",
+      "/"
+    ],
+    [
+      "Getting Started",
+      "/getting-started"
+    ],
+    [
+      "Features",
       [
-        "Features",
-        [
-          "features/adaptable-to-device-size",
-          "features/listen-to-index-change-events",
-          "features/intercept-back-button",
-          "features/navbar-notifier"
-        ]]
+        "features/adaptable-to-device-size",
+        "features/listen-to-index-change-events",
+        "features/intercept-back-button",
+        "features/navbar-notifier"
+      ]
     ]
-  }
+  ]
+}
