@@ -1,3 +1,25 @@
 ### This page will explain responsiveness of navbar_router based on the screen size.
 
 
+Now that flutter has gone beyond mobile and supports multiple plaforms and devices of different form factor. NavbarRouter adds support for responsive navbar. It will adjust the navbar based on the screen size. To switch to desktop mode we have to set `isDesktop: true`.
+
+The below code snippet shows Navbar switching to desktop mode when screen wdith goes beyond 600.
+
+
+```dart
+ NavbarRouter(
+   errorBuilder: (context) {
+     return const Center(child: Text('Error 404'));
+   },
+   isDesktop: size.width > 600 ? true : false,
+   decoration: NavbarDecoration(
+     isExtended: size.width > 800 ? true : false,
+     navbarType: BottomNavigationBarType.shifting),
+   ...
+   ...
+);
+```
+
+**Output of above code snippet.**
+
+![Navbar responsiveness](/assets/responsive.gif)
