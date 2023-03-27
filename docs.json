@@ -17,10 +17,10 @@
     [
       "Features",
       [
-        "features/adaptable-to-device-size",
-        "features/listen-to-index-change-events",
-        "features/intercept-back-button",
-        "features/navbar-notifier"
+        "/features/adaptable-to-device-size",
+        "/features/listen-to-index-change-events",
+        "/features/intercept-back-button",
+        "/features/navbar-notifier"
       ]
     ],
     [
