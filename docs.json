@@ -1,5 +1,5 @@
 {
-  "name": "docs.page",
+  "name": "navbar_router",
   "theme": "#36B9B9",
   "twitter": "maheshmnj",
   "anchors": [
@@ -7,21 +7,12 @@
       "title": "pub.dev",
       "icon": "cube",
       "link": "https://pub.dev/packages/navbar_router"
-    },
-    {
-      "title": "GitHub source",
-      "icon": "github",
-      "link": "https://github.com/maheshmnj/navbar_router"
     }
   ],
   "sidebar": [
     [
       "Overview",
       "/"
-    ],
-    [
-      "Getting Started",
-      "/getting-started"
     ],
     [
       "Features",
@@ -31,6 +22,10 @@
         "features/intercept-back-button",
         "features/navbar-notifier"
       ]
+    ],
+    [
+      "Contributing",
+      "/contributing"
     ]
   ]
 }

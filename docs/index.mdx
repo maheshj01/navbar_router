@@ -1,18 +1,41 @@
 # NavbarRouter
 
+This is a NavigationBar widget created by considering the advanced use cases in real world flutter applications.This widget handles the boilerplate code required to handle some of the most common features with minimal code and hassle. All you need to do is specify the navbar menu items, routes and destinations and the rest will be taken care by the navbar_router.
 
-This is a NavigationBar widget created by considering the advanced use cases in real world flutter applications.
-This widget handles the boilerplate code required to handle some of the most common features
-with minimal code and hassle. All you need to do is specify the navbar menu items, routes and
-destinations and the rest will be taken care by the navbar_router.
+## Background
 
-## Installation
+> Curious how the navbar_router works?
+
+Read more in a [medium blog post](https://maheshmnj.medium.com/everything-about-the-bottomnavigationbar-in-flutter-e99e5470dddb) for detailed explanation.
+
+Youtube: [Heres a discussion](https://www.youtube.com/watch?v=IhlikgW8OY8&t=614s) I had with Allen Wyma from Flying high with Fluter regarding this package.
+
+### Features
+
+- Choose between different NavigationBar types.
+- Remembers navigation history of Navbar (Android).
+- Ability to push routes in the nested or root navigator
+- Intercept back button press to handle app exits (Android).
+- Fading between NavbarDestinations
+- Programmatically control state of bottom navbar from any part of widget tree e.g change index, - - hide/show bottom navbar, pop routes of a specific tab etc
+- persist state across bottom navbar tabs.
+- Jump to base route from a deep nested route with a single tap(same as instagram).
+- Adapatable to different device Sizes.
+
+
+This package will help you save atleast 50% lines of code in half the time required to implement the above features. Heres the same sample app without the package which requires around 800 lines of code.
+
+
+
+## Getting Started
+
+### Installation
 
 ```bash
 flutter pub add navbar_router
 ```
 
-## Usage
+### Usage
 
 ```dart
 
@@ -20,7 +43,7 @@ import 'package:flutter/material.dart';
 import 'package:navbar_router/navbar_router.dart';
 ```
 
-### NavbarRouter
+### Specify routes
 
 ```dart
 class MyApp extends StatelessWidget {
@@ -71,3 +94,4 @@ NavbarItem(
 ```dart
 NavbarRouter.of(context).pushNamed('/second');
 ```
+
