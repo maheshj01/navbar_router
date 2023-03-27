@@ -7,21 +7,12 @@
       "title": "pub.dev",
       "icon": "cube",
       "link": "https://pub.dev/packages/navbar_router"
-    },
-    {
-      "title": "GitHub source",
-      "icon": "github",
-      "link": "https://github.com/maheshmnj/navbar_router"
     }
   ],
   "sidebar": [
     [
       "Overview",
       "/"
-    ],
-    [
-      "Getting Started",
-      "/getting-started"
     ],
     [
       "Features",
