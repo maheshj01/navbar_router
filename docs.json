@@ -22,6 +22,10 @@
         "features/intercept-back-button",
         "features/navbar-notifier"
       ]
+    ],
+    [
+      "Contributing",
+      "contributing/contributing"
     ]
   ]
 }
