@@ -18,10 +18,14 @@
       "Features",
       [
         "/features/adaptable-to-device-size",
-        "/features/listen-to-index-change-events",
+        "/features/index-change-listener",
         "/features/intercept-back-button",
         "/features/navbar-notifier"
       ]
+    ],
+    [
+      "Routes in NavbarRouter",
+      "/routes"
     ],
     [
       "Contributing",

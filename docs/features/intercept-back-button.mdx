@@ -1,1 +1,26 @@
-### Listen to back button press events to control the navigation stack
+##  Intercept BackButton press events (Android)
+
+*navbar_router* provides a `onBackButtonPressed` callback to intercept events from android back button, giving you the ability to handle app exits so as to prevent abrupt app exits without users consent. or you might want to do some chore work before exiting the route.
+
+This callback method must return `true` to exit the app and false other wise.
+
+*sample code implementing double press back button to exit*
+
+```dart
+onBackButtonPressed: (isExitingApp) {
+  if (isExitingApp) {
+    newTime = DateTime.now();
+    int difference = newTime.difference(oldTime).inMilliseconds;
+    oldTime = newTime;
+    if (difference < 1000) {
+      hideSnackBar();
+      return isExitingApp;
+    } else {
+      showSnackBar();
+      return false;
+    }
+  } else {
+    return isExitingApp;
+    }
+  },
+```
