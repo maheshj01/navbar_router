@@ -40,10 +40,12 @@
       "/navbar-notifier"
     ],
     [
-      "Contributing.",
+      "Contributing",
       [
-        "Contributing",
-        "/contributing"
+        [
+          "Contributing",
+          "/contributing"
+        ]
       ]
     ]
   ]
