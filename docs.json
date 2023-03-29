@@ -16,16 +16,19 @@
     ],
     [
       "Features",
-      [
-        "/features/adaptable-to-device-size",
-        "/features/index-change-listener",
-        "/features/intercept-back-button",
-        "/features/navbar-notifier"
-      ]
+      "/features"
     ],
     [
-      "Routes in NavbarRouter",
-      "/routes"
+      "Navigation",
+      "/navigation"
+    ],
+    [
+      "Customization",
+      "/customization"
+    ],
+    [
+      "Navbar Notifier",
+      "/navbar-notifier"
     ],
     [
       "Contributing",

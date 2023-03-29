@@ -4,9 +4,9 @@ This is a NavigationBar widget created by considering the advanced use cases in 
 
 ## Background
 
-The inspiration to build this package came from my triage work for flutter. Someone raised an issue saying the backbutton on Android does not pop the nested route. Googling around this issue I realized theres not much resources around this and its a very common usecase to have in any mobile app. So I digged deeper around this and wrote a sample app and then published a blog post with some few common features.
+The inspiration to build this package came from my triage work for flutter. Someone raised an issue saying the backbutton on Android does not pop the nested route. Googling around this issue I realized theres not much resources around this and its a very common usecase to have in any mobile app. So I digged deeper around this and wrote a sample app and then published a blog post with some additional features which I needed in one of my projects.
 
-> Curious how the navbar_router works?
+> Curious how the navbar_router was built?
 
 Read more in a [medium blog post](https://maheshmnj.medium.com/everything-about-the-bottomnavigationbar-in-flutter-e99e5470dddb) for detailed explanation.
 
@@ -26,18 +26,20 @@ Youtube: [Heres a discussion](https://www.youtube.com/watch?v=IhlikgW8OY8&t=614s
 - Jump to base route from a deep nested route with a single tap(same as instagram).
 - Adapatable to different device Sizes.
 
+**For more detailed explanation see [features section](./features)**
 
-This package will help you save atleast 50% lines of code in half the time required to implement the above features. Heres the same sample app without the package which requires around 800 lines of code.
+> This package can effortlessly trim down your codebase by a remarkable 50% and expedite the implementation of the aforementioned features by half the time.
+ Heres the same sample app without the package which requires around 800 lines of code.
 
 ## Getting Started
 
-### Installation
+### Add the package
 
 ```bash
 flutter pub add navbar_router
 ```
 
-### Usage
+### Import the package
 
 ```dart
 
@@ -45,7 +47,7 @@ import 'package:flutter/material.dart';
 import 'package:navbar_router/navbar_router.dart';
 ```
 
-### Specify routes
+### Use NavbarRouter
 
 ```dart
 class MyApp extends StatelessWidget {
@@ -78,13 +80,14 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
+Some of the common terms to understand in this package
 
 ### NavbarItem
-It is a single item in the navbar. It takes in the following parameters.
+
+It is a single item in the NavigationBar. It takes in the following parameters.
+
 **icon**: The icon to be shown in the navbar.
-
 **label**: The label to be shown in the navbar.
-
 **route**: The route to be pushed when the NavbarItem is selected.
 
 ```dart
@@ -94,10 +97,33 @@ NavbarItem(
   label: 'Home',
   route: '/',
 ),
+```
+### DestinationRouter
 
+```dart
+DestinationRouter(
+  navbarItem: items[i],
+  destinations: [
+    for (int j = 0; j < _routes[i]!.keys.length; j++)
+      Destination(
+        route: _routes[i]!.keys.elementAt(j),
+        widget: _routes[i]!.values.elementAt(j),
+      ),
+  ],
+  initialRoute: _routes[i]!.keys.first,
+),
 ```
 
-Heres how the output of the abovce code sample will look.
+### Destination
+
+```dart
+Destination(
+  route: _routes[i]!.keys.elementAt(j),
+  widget: _routes[i]!.values.elementAt(j),
+),
+```
+
+Heres how the output of the above code sample will look.
 
 ![demo](https://user-images.githubusercontent.com/31410839/228031434-0e35737d-83cf-4b33-afe2-4b0f77f0cc5c.gif)
 

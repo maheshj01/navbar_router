@@ -1,0 +1,56 @@
+### Main Features
+
+###  Intercept BackButton press events (Android)
+
+*navbar_router* provides a `onBackButtonPressed` callback to intercept events from android back button, giving you the ability to handle app exits so as to prevent abrupt app exits without users consent. or you might want to do some chore work before exiting the route.
+
+This callback method must return `true` to exit the app and false other wise.
+
+*sample code implementing double press back button to exit*
+
+```dart
+onBackButtonPressed: (isExitingApp) {
+  if (isExitingApp) {
+    newTime = DateTime.now();
+    int difference = newTime.difference(oldTime).inMilliseconds;
+    oldTime = newTime;
+    if (difference < 1000) {
+      hideSnackBar();
+      return isExitingApp;
+    } else {
+      showSnackBar();
+      return false;
+    }
+  } else {
+    return isExitingApp;
+    }
+  },
+```
+
+### Pop to Base route (Similar to Instagram)
+
+
+
+### Adaptable to different device sizes.
+
+Now that flutter has gone beyond mobile and supports multiple plaforms and devices of different form factor. NavbarRouter adds support for responsive navbar. It will adjust the navbar based on the screen size. To switch to desktop mode we have to set `isDesktop: true`.
+
+The below code snippet shows Navbar switching to desktop mode when screen width goes beyond 600px.
+
+```dart
+ NavbarRouter(
+   errorBuilder: (context) {
+     return const Center(child: Text('Error 404'));
+   },
+   isDesktop: size.width > 600 ? true : false,
+   decoration: NavbarDecoration(
+     isExtended: size.width > 800 ? true : false,
+     navbarType: BottomNavigationBarType.shifting),
+   ...
+   ...
+);
+```
+
+**Output of above code snippet.**
+
+![Navbar responsiveness](/assets/responsive.gif)
