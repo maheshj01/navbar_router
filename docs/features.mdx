@@ -1,8 +1,21 @@
-### Main Features
+## Main Features
+
+### Hide/Show Navbar
+
+You can hide or show bottom navigationBar with a single line of code from anywhere in the widget tree. This allows you to handle useCases like scroll down to hide the navbar or hide the navbar on opening the drawer.
+
+```dart
+NavbarNotifier.hideBottomNavBar = true;
+```
+
+Hide/show navbar on scroll     |     Hide/show navbar on drawer open/close
+:-------------------------:|:-------------------------:
+![](https://miro.medium.com/max/800/1*NaYdY1FfsPFCNBdx3wg_og.gif)  | <img src="https://user-images.githubusercontent.com/31410839/173987446-c8c79bb0-d24c-46c1-bc4a-582508a4e187.gif" width ="200">
 
 ###  Intercept BackButton press events (Android)
+When the selected NavbarItem is at the root of the navigation stack (initial route), pressing the Back button (On Android) will by default trigger app exit which is correct. But sometimes you might want to intercept this event and do some chore work before exiting the app.
 
-*navbar_router* provides a `onBackButtonPressed` callback to intercept events from android back button, giving you the ability to handle app exits so as to prevent abrupt app exits without users consent. or you might want to do some chore work before exiting the route.
+*navbar_router* provides a `onBackButtonPressed` callback to intercept events from android back button, giving you the ability to handle app exits so as to prevent abrupt app exits without users consent.
 
 This callback method must return `true` to exit the app and false other wise.
 
@@ -29,6 +42,14 @@ onBackButtonPressed: (isExitingApp) {
 
 ### Pop to Base route (Similar to Instagram)
 
+When your NavbarItems have multiple nested routes in the stack, tapping the same tab twice will pop to the base route of the NavbarItem. This is similar behaviour to Instagram where tapping the same tab twice pops to the base route.
+
+For instance if you have a List of products on tab 2 and you navigate deep within that tab
+Product List->Product Details->Product Reviews->Product Review Details and then you tap the same tab again, it will pop to the base route of the tab (Product List).
+
+See [Navigation](/navigation) for more details.
+
+*Output: Tapping the same tab twice pops to base route.*
 
 
 ### Adaptable to different device sizes.
@@ -51,6 +72,6 @@ The below code snippet shows Navbar switching to desktop mode when screen width 
 );
 ```
 
-**Output of above code snippet.**
+*Output: Switches to desktop mode on resizing the window.*
 
 ![Navbar responsiveness](/assets/responsive.gif)
