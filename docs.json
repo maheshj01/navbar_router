@@ -13,12 +13,14 @@
     [
       "Getting Started",
       [
-        "Overview",
-        "/"
-      ],
-      [
-        "Properties",
-        "/properties"
+        [
+          "Overview",
+          "/"
+        ],
+        [
+          "Properties",
+          "/properties"
+        ]
       ]
     ],
     [
