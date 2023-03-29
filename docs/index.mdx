@@ -2,18 +2,6 @@
 
 This is a NavigationBar widget created by considering the advanced use cases in real world flutter applications.This widget handles the boilerplate code required to handle some of the most common features with minimal code and hassle. All you need to do is specify the navbar menu items, routes and destinations and the rest will be taken care by the navbar_router.
 
-### Background
-
-The inspiration to build this package came from my triage work for flutter. Someone raised an issue saying the backbutton on Android does not pop the nested route. Googling around this issue I realized theres not much resources around this and its a very common usecase to have in any mobile app. So I digged deeper around this and wrote a sample app and then published a blog post with some additional features which I needed in one of my projects.
-
-> Curious how the navbar_router was built?
-
-Read more in a [medium blog post](https://maheshmnj.medium.com/everything-about-the-bottomnavigationbar-in-flutter-e99e5470dddb) for detailed explanation.
-
-Triage discussion here https://github.com/flutter/flutter/issues/103028
-
-Youtube: [Heres a discussion](https://www.youtube.com/watch?v=IhlikgW8OY8&t=614s) I had with Allen Wyma from Flying high with Fluter regarding this package.
-
 ### Features
 
 - Choose between different NavigationBar types.
@@ -21,7 +9,7 @@ Youtube: [Heres a discussion](https://www.youtube.com/watch?v=IhlikgW8OY8&t=614s
 - Ability to push routes in the nested or root navigator
 - Intercept back button press to handle app exits (Android).
 - Fading between NavbarDestinations
-- Programmatically control state of bottom navbar from any part of widget tree e.g change index, - - hide/show bottom navbar, pop routes of a specific tab etc
+- Programmatically control state of bottom navbar from any part of widget tree e.g change index hide/show bottom navbar, pop routes of a specific tab etc
 - persist state across bottom navbar tabs.
 - Jump to base route from a deep nested route with a single tap(same as instagram).
 - Adapatable to different device Sizes.
@@ -47,7 +35,57 @@ import 'package:flutter/material.dart';
 import 'package:navbar_router/navbar_router.dart';
 ```
 
-### Use NavbarRouter
+### Using navbar_router
+
+1. Declare your routes
+
+```dart
+  final Map<int, Map<String, Widget>> _routes = const {
+    0: {
+      '/': HomeFeeds(),
+      FeedDetail.route: FeedDetail(),
+    },
+    1: {
+      '/': ProductList(),
+      ProductDetail.route: ProductDetail(),
+      ProductComments.route: ProductComments(),
+    },
+    2: {
+      '/': UserProfile(),
+      ProfileEdit.route: ProfileEdit(),
+    },
+    3: {
+      '/': Settings(),
+    },
+  };
+```
+
+2. Declare `NavbarItem`s
+
+```dart
+  List<NavbarItem> items = [
+    NavbarItem(Icons.home, 'Home', backgroundColor: colors[0]),
+    NavbarItem(Icons.shopping_bag, 'Products', backgroundColor: colors[1]),
+    NavbarItem(Icons.person, 'Me', backgroundColor: colors[2]),
+    NavbarItem(Icons.settings, 'Settings', backgroundColor: colors[0]),
+  ];
+```
+
+3. Add NavbarRouter Widget to your app
+
+Which requires `List<DestinationRouter> destination` and `List<NavbarItem> destinations` and `Widget Function(BuildContext) errorBuilder` as required parameters. And since we are aiming for large number of routes and destinations, the possibility of error is high. So we need to also specify an `errorBuilder` to gracefully handle an invalid route.
+
+```dart
+NavbarRouter(
+  ...
+  ...
+  errorBuilder: (context) {
+    return const Center(child: Text('Error 404 Page Not Found'));
+  },
+)
+```
+
+And that is all with this setup your NavbarRouter should be up and running.
 
 ```dart
 class MyApp extends StatelessWidget {
@@ -59,27 +97,26 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: NavbarRouter(
-        routes: {
-          '/': (context) => MyHomePage(title: 'NavbarRouter Demo Home Page'),
-          '/second': (context) => SecondPage(),
-        },
-        items: [
-          NavbarItem(
-            icon: Icons.home,
-            label: 'Home',
-            route: '/',
-          ),
-          NavbarItem(
-            icon: Icons.settings,
-            label: 'Settings',
-            route: '/second',
-          ),
+        destinations: [
+          for (int i = 0; i < items.length; i++)
+            DestinationRouter(
+              navbarItem: items[i],
+              destinations: [
+                for (int j = 0; j < _routes[i]!.keys.length; j++)
+                  Destination(
+                    route: _routes[i]!.keys.elementAt(j),
+                    widget: _routes[i]!.values.elementAt(j),
+                  ),
+              ],
+              initialRoute: _routes[i]!.keys.first,
+            ),
         ],
       ),
     );
   }
 }
 ```
+
 Some of the common terms to understand in this package
 
 ### NavbarItem
@@ -98,7 +135,28 @@ NavbarItem(
   route: '/',
 ),
 ```
+
+### Destination
+
+It is a single destination to be pushed on the Navigator associated with the NavbarItem. It takes in the following parameters.
+
+**route**: The route to be pushed on the Navigator associated with the destination.
+**widget**: The widget to be pushed on the Navigator associated with the path.
+
+```dart
+Destination(
+  route: _routes[i]!.keys.elementAt(j),
+  widget: _routes[i]!.values.elementAt(j),
+),
+```
+
 ### DestinationRouter
+
+It is a wrapper class to bind `NavbarItem` and `Destination` widgets. It takes in the following parameters.
+
+**navbarItem**: The NavbarItem to be shown in the navbar.
+**destinations**: The list of destinations to be pushed on the Navigator associated with that NavbarItem, when the NavbarItem is selected.
+
 
 ```dart
 DestinationRouter(
@@ -114,15 +172,21 @@ DestinationRouter(
 ),
 ```
 
-### Destination
-
-```dart
-Destination(
-  route: _routes[i]!.keys.elementAt(j),
-  widget: _routes[i]!.values.elementAt(j),
-),
-```
+Want to understand how routing and Navigation works under the hood see the the [Routing and Navigation](/navigation) section.
 
 Heres how the output of the above code sample will look.
 
 ![demo](https://user-images.githubusercontent.com/31410839/228031434-0e35737d-83cf-4b33-afe2-4b0f77f0cc5c.gif)
+
+### Background
+
+> Curious how the navbar_router was built?
+
+Read more in a [medium blog post](https://maheshmnj.medium.com/everything-about-the-bottomnavigationbar-in-flutter-e99e5470dddb) for detailed explanation.
+
+The Inspiration for this package came from my triage work for flutter
+Triage discussion here https://github.com/flutter/flutter/issues/103028
+
+Youtube: [Heres a discussion](https://www.youtube.com/watch?v=IhlikgW8OY8&t=614s) I had with Allen Wyma from Flying high with Fluter regarding this package.
+
+

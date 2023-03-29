@@ -9,9 +9,10 @@ class NavbarItem {
   /// label for the navbar item
   final String text;
 
-  /// background color for the navbar item whnen type is [NavbarType.shifting]
+  /// background color for the navbar item when type is [NavbarType.shifting]
   final Color? backgroundColor;
 }
+
 /// Decoration class for the navbar [NavbarType.standard]
 /// if you are using Navbartype.notched then use [NotchedDecoration] instead.
 class NavbarDecoration {
