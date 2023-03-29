@@ -8,5 +8,25 @@ Consider a rough diagram of a sample app with 3 Navbar items and each item has a
 
 ![Nested routes example](assets/nested-routes.png)
 
+So we need to declare a Map of routes as follows
+
+  final Map<int, Map<String, Widget>> _routes = const {
+    0: {
+      '/': HomeFeeds(),
+      FeedDetail.route: FeedDetail(),
+    },
+    1: {
+      '/': ProductList(),
+      ProductDetail.route: ProductDetail(),
+      ProductComments.route: ProductComments(),
+    },
+    2: {
+      '/': UserProfile(),
+      ProfileEdit.route: ProfileEdit(),
+    },
+    3: {
+      '/': Settings(),
+    },
+  };
 
 
