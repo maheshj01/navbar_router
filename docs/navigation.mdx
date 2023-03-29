@@ -1,4 +1,4 @@
-### Navigation
+### Routes And Navigation
 
 When it comes to routing from a widget which has a Navbar setup it is important to decide whether the Navbar should persist on pushing a route or not. If the Navbar needs to be hidden then the route should be pushed onto the Flutter's Navigation stack (on top of NavbarRouter). But if we want the Navbar to persist then we should push the route ontop of the existing route (Within NavbarRouter).
 
@@ -7,4 +7,6 @@ Navbar adds its own [Navigator](https://api.flutter.dev/flutter/widgets/Navigato
 Consider a rough diagram of a sample app with 3 Navbar items and each item has a nested routes.
 
 ![Nested routes example](assets/nested-routes.png)
+
+
 
