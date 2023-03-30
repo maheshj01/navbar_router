@@ -1,0 +1,52 @@
+{
+  "name": "navbar_router",
+  "theme": "#36B9B9",
+  "twitter": "maheshmnj",
+  "anchors": [
+    {
+      "title": "pub.dev",
+      "icon": "cube",
+      "link": "https://pub.dev/packages/navbar_router"
+    }
+  ],
+  "sidebar": [
+    [
+      "Getting Started",
+      [
+        [
+          "Overview",
+          "/"
+        ],
+        [
+          "Properties",
+          "/properties"
+        ]
+      ]
+    ],
+    [
+      "Features",
+      "/features"
+    ],
+    [
+      "Routes And Navigation",
+      "/navigation"
+    ],
+    [
+      "Customization",
+      "/customization"
+    ],
+    [
+      "Navbar Notifier",
+      "/notifier"
+    ],
+    [
+      "Contributing",
+      [
+        [
+          "Contributing",
+          "/contributing"
+        ]
+      ]
+    ]
+  ]
+}

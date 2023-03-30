@@ -7,6 +7,9 @@
  - [ ] refactor to abstract out irrelevant properties for decoration.
 -  [ ] The shape of notch on the left end has a grey bump, notice the gif in readme.
 -  [ ] Add Material3 Decoration with relevant properties.
+ - [ ] Update docs
+ - [ ] Release material 3
+ - [ ] Don't expose `onBackButtonPressed` to outside world.
 
   Add tests
  - [X] Change navigation bar type in runtime

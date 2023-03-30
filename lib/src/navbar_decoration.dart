@@ -9,7 +9,7 @@ class NavbarItem {
   /// label for the navbar item
   final String text;
 
-  /// background color for the navbar item whnen type is [NavbarType.shifting]
+  /// background color for the navbar item when type is [NavbarType.shifting]
   final Color? backgroundColor;
 }
 
