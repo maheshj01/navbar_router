@@ -1,6 +1,6 @@
 part of 'navbar_router.dart';
 
-enum NavbarType { standard, notched }
+enum NavbarType { standard, notched, material3 }
 
 class _AnimatedNavBar extends StatefulWidget {
   const _AnimatedNavBar(
@@ -69,31 +69,33 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final defaultDecoration = NavbarDecoration(
-      backgroundColor:
-          Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+      backgroundColor: theme.bottomNavigationBarTheme.backgroundColor ??
+          theme.colorScheme.primary,
       elevation: 8,
       showUnselectedLabels: true,
-      unselectedIconColor:
-          Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
+      unselectedIconColor: theme.bottomNavigationBarTheme.unselectedItemColor,
       unselectedLabelColor:
-          Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
-      unselectedItemColor:
-          Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
+          theme.bottomNavigationBarTheme.unselectedItemColor ??
+              theme.primaryColor,
+      unselectedItemColor: theme.bottomNavigationBarTheme.unselectedItemColor,
       unselectedLabelTextStyle:
-          Theme.of(context).bottomNavigationBarTheme.unselectedLabelStyle ??
+          theme.bottomNavigationBarTheme.unselectedLabelStyle ??
               const TextStyle(color: Colors.black),
-      unselectedIconTheme: Theme.of(context).iconTheme,
-      selectedIconTheme: Theme.of(context).iconTheme,
-      selectedLabelTextStyle:
-          Theme.of(context).bottomNavigationBarTheme.selectedLabelStyle,
+      unselectedIconTheme: theme.iconTheme.copyWith(color: Colors.black),
+      selectedIconTheme: theme.iconTheme,
+      selectedLabelTextStyle: theme.bottomNavigationBarTheme.selectedLabelStyle,
       enableFeedback: true,
       isExtended: true,
       navbarType: BottomNavigationBarType.fixed,
-      selectedLabelColor:
-          Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
+      selectedLabelColor: theme.bottomNavigationBarTheme.selectedItemColor,
       showSelectedLabels: true,
     );
+    final foregroundColor =
+        defaultDecoration.backgroundColor!.computeLuminance() > 0.5
+            ? Colors.black
+            : Colors.white;
 
     NavbarBase _buildNavBar() {
       switch (widget.navbarType) {
@@ -117,7 +119,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
                   widget.decoration!.unselectedLabelTextStyle,
               unselectedIconTheme: widget.decoration!.unselectedIconTheme,
               selectedIconTheme: widget.decoration!.selectedIconTheme ??
-                  const IconThemeData(color: Colors.white, size: 24),
+                  theme.iconTheme.copyWith(color: foregroundColor),
               enableFeedback: widget.decoration!.enableFeedback,
               showSelectedLabels: false);
           return NotchedNavBar(
@@ -128,6 +130,15 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
             navBarElevation: widget.decoration!.elevation,
             index: NavbarNotifier.currentIndex,
           );
+        case NavbarType.material3:
+          return M3NavBar(
+            index: NavbarNotifier.currentIndex,
+            navBarDecoration: widget.decoration ?? defaultDecoration,
+            items: widget.menuItems,
+            onTap: widget.onItemTapped,
+            navBarElevation: widget.decoration!.elevation,
+          );
+
         default:
           return StandardNavbar(
             navBarDecoration: widget.decoration!,
@@ -339,6 +350,15 @@ class NotchedNavBarState extends State<NotchedNavBar>
       curve: Curves.easeIn,
     ),
   ));
+  late Animation<double> scaleAnimation =
+      Tween<double>(begin: 1.0, end: 1.4).animate(CurvedAnimation(
+    parent: _controller!,
+    curve: const Interval(
+      0.6,
+      1.0,
+      curve: Curves.easeIn,
+    ),
+  ));
 
   void _startAnimation() async {
     _controller!.reset();
@@ -356,6 +376,31 @@ class NotchedNavBarState extends State<NotchedNavBar>
     }
   }
 
+  Widget circularButton() {
+    return Container(
+        height: 60,
+        width: 60,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: widget.decoration.backgroundColor,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Icon(
+          widget.menuItems[NavbarNotifier.currentIndex].iconData,
+          color: widget.decoration.selectedIconTheme?.color,
+          size: (widget.decoration.selectedIconTheme?.size ?? 24.0) *
+              scaleAnimation.value,
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedWidget = AnimatedBuilder(
@@ -363,23 +408,12 @@ class NotchedNavBarState extends State<NotchedNavBar>
         builder: (context, snapshot) {
           return Transform.translate(
             offset: Offset(0, -iconAnimation.value),
-            // scale: animation.value,
             child: Opacity(
               opacity: opacityAnimation.value,
               child: SizedBox(
-                  height: 60.0,
-                  width: 60.0,
-                  child: FittedBox(
-                    child: FloatingActionButton(
-                        backgroundColor: widget.decoration.backgroundColor,
-                        onPressed: () {
-                          widget.onItemTapped!(NavbarNotifier.currentIndex);
-                        },
-                        child: Icon(
-                            widget.menuItems[NavbarNotifier.currentIndex]
-                                .iconData,
-                            color: widget.decoration.selectedIconTheme?.color)),
-                  )),
+                  height: 58.0,
+                  width: 58.0,
+                  child: FittedBox(child: circularButton())),
             ),
           );
         });
@@ -406,7 +440,7 @@ class NotchedNavBarState extends State<NotchedNavBar>
                         ),
                       ],
                     ),
-                    height: kBottomNavigationBarHeight * 1.6,
+                    height: kBottomNavigationBarHeight * 1.4,
                     alignment: Alignment.center,
                   ),
                 );
@@ -502,7 +536,6 @@ class NotchedClipper extends CustomClipper<Path> {
     path.lineTo(width, height);
     path.lineTo(0, height);
     path.close();
-
     // rectangle clip
     return path;
   }
@@ -533,5 +566,80 @@ class WaveClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) {
     return true;
+  }
+}
+
+class M3NavBar extends NavbarBase {
+  const M3NavBar({
+    Key? key,
+    required this.items,
+    required this.onTap,
+    required this.navBarDecoration,
+    this.navBarElevation,
+    required this.index,
+  }) : super(key: key);
+
+  final List<NavbarItem> items;
+  final Function(int) onTap;
+  final NavbarDecoration navBarDecoration;
+  final double? navBarElevation;
+  final int index;
+
+  @override
+  M3NavBarState createState() => M3NavBarState();
+
+  @override
+  NavbarDecoration get decoration => navBarDecoration;
+
+  @override
+  double? get elevation => navBarElevation;
+
+  @override
+  List<NavbarItem> get menuItems => items;
+
+  @override
+  Function(int p1)? get onItemTapped => onTap;
+}
+
+class M3NavBarState extends State<M3NavBar>
+    with SingleTickerProviderStateMixin {
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+          navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: widget.decoration.backgroundColor,
+        elevation: widget.elevation,
+        labelTextStyle:
+            MaterialStateProperty.all(widget.decoration.selectedLabelTextStyle),
+        surfaceTintColor: widget.decoration.selectedIconTheme?.color,
+        iconTheme:
+            MaterialStateProperty.all(widget.decoration.unselectedIconTheme),
+        labelBehavior: widget.decoration.showUnselectedLabels
+            ? NavigationDestinationLabelBehavior.alwaysShow
+            : NavigationDestinationLabelBehavior.onlyShowSelected,
+        indicatorColor: widget.decoration.selectedLabelColor,
+        height: 80.0,
+        // indicatorShape:
+      )),
+      child: NavigationBar(
+          backgroundColor: widget.decoration.backgroundColor,
+          animationDuration: const Duration(milliseconds: 300),
+          elevation: widget.elevation,
+          surfaceTintColor: widget.decoration.selectedIconTheme?.color,
+          destinations: widget.items
+              .map((e) => Padding(
+                    padding: const EdgeInsets.only(bottom: 50.0),
+                    child: NavigationDestination(
+                      tooltip: e.text,
+                      icon: Icon(e.iconData),
+                      label: e.text,
+                      selectedIcon: Icon(e.iconData),
+                    ),
+                  ))
+              .toList(),
+          selectedIndex: NavbarNotifier.currentIndex,
+          onDestinationSelected: (int index) => widget.onItemTapped!(index)),
+    );
   }
 }

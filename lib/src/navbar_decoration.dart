@@ -24,7 +24,7 @@ class NavbarDecoration {
   final Color? backgroundColor;
 
   /// Defines whether the Navbar is extended in Desktop mode
-  /// defaultst to false
+  /// defaults to false
   final bool isExtended;
 
   /// The color of the unselected item
@@ -124,7 +124,7 @@ class NotchedDecoration extends NavbarDecoration {
   NotchedDecoration({
     Color? backgroundColor,
     double? elevation,
-    bool? showUnselectedLabels,
+    bool? showUnselectedLabels = true,
     TextStyle? unselectedLabelTextStyle,
     Color? unselectedIconColor,
     Color? unselectedItemColor,

@@ -297,7 +297,7 @@ class _NavbarRouterState extends State<NavbarRouter>
                 Positioned(
                   left: 0,
                   top: widget.isDesktop ? 0 : null,
-                  bottom: 0,
+                  bottom: widget.type == NavbarType.material3 ? -24 : 0,
                   right: widget.isDesktop ? null : 0,
                   child: _AnimatedNavBar(
                       model: _navbarNotifier,

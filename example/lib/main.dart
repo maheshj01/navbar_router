@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 24.0),
+        padding: const EdgeInsets.only(bottom: 60.0),
         child: FloatingActionButton(
           child: Icon(NavbarNotifier.isNavbarHidden
               ? Icons.toggle_off
@@ -141,20 +141,20 @@ class _HomePageState extends State<HomePage> {
           }
         },
         initialIndex: 2,
-        type: NavbarType.notched,
+        type: NavbarType.material3,
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 600,
-        decoration: NotchedDecoration(
-            // selectedLabelTextStyle: const TextStyle(color: Colors.red),
-            showUnselectedLabels: true,
-            unselectedIconColor: Colors.white54,
-            unselectedItemColor: Colors.white54
-            // unselectedLabelTextStyle:
-            //     const TextStyle(color: Colors.white, fontSize: 12),
-            // selectedIconTheme: const IconThemeData(color: Colors.red),
-            // isExtended: size.width > 800 ? true : false,
-            // navbarType: BottomNavigationBarType.shifting
-            ),
+        decoration: NavbarDecoration(
+          selectedLabelTextStyle: const TextStyle(color: Colors.black),
+          showUnselectedLabels: true,
+          unselectedIconColor: Colors.white54,
+          unselectedItemColor: Colors.white54,
+          // unselectedLabelTextStyle:
+          //     const TextStyle(color: Colors.white, fontSize: ),
+          // selectedIconTheme: const IconThemeData(color: Colors.red),
+          // isExtended: size.width > 800 ? true : false,
+          // navbarType: BottomNavigationBarType.shifting
+        ),
         onChanged: (x) {},
         backButtonBehavior: BackButtonBehavior.rememberHistory,
         destinations: [
