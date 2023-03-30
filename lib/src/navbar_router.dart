@@ -172,6 +172,8 @@ class _NavbarRouterState extends State<NavbarRouter>
     initialize();
   }
 
+  final NavbarNotifier _navbarNotifier = NavbarNotifier.instance;
+
   void initialize() {
     NavbarNotifier.length = widget.destinations.length;
     for (int i = 0; i < NavbarNotifier.length; i++) {
@@ -182,7 +184,7 @@ class _NavbarRouterState extends State<NavbarRouter>
 
     NavbarNotifier.setKeys(keys);
 
-    NavbarNotifier.index = widget.initialIndex;
+    NavbarNotifier.instance.index = widget.initialIndex;
     _controller.forward();
   }
 
@@ -190,6 +192,7 @@ class _NavbarRouterState extends State<NavbarRouter>
     _controller.reset();
     keys.clear();
     items.clear();
+    NavbarNotifier.clear();
   }
 
   @override
@@ -243,7 +246,7 @@ class _NavbarRouterState extends State<NavbarRouter>
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        final bool isExitingApp = await NavbarNotifier.onBackButtonPressed(
+        final bool isExitingApp = await _navbarNotifier.onBackButtonPressed(
             behavior: widget.backButtonBehavior);
         final bool value = widget.onBackButtonPressed!(isExitingApp);
         return value;
@@ -308,7 +311,7 @@ class _NavbarRouterState extends State<NavbarRouter>
                             NavbarNotifier.popAllRoutes(x);
                           }
                         } else {
-                          NavbarNotifier.index = x;
+                          _navbarNotifier.index = x;
                           _animateDestinations();
                           if (widget.onChanged != null) {
                             widget.onChanged!(x);
@@ -331,6 +334,5 @@ Future<void> navigate(BuildContext context, String route,
     Navigator.of(context, rootNavigator: isRootNavigator)
         .pushNamed(route, arguments: arguments);
 
-final NavbarNotifier _navbarNotifier = NavbarNotifier();
 List<Color> colors = [mediumPurple, Colors.orange, Colors.teal];
 const Color mediumPurple = Color.fromRGBO(79, 0, 241, 1.0);

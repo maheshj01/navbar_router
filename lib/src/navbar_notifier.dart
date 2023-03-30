@@ -6,9 +6,7 @@ import 'package:navbar_router/src/navbar_router.dart';
 class NavbarNotifier extends ChangeNotifier {
   static final NavbarNotifier _singleton = NavbarNotifier._internal();
 
-  factory NavbarNotifier() {
-    return _singleton;
-  }
+  static NavbarNotifier get instance => _singleton;
 
   NavbarNotifier._internal();
 
@@ -26,7 +24,7 @@ class NavbarNotifier extends ChangeNotifier {
 
   static bool _hideBottomNavBar = false;
 
-  static List<int> _navbarStackHistory = [];
+  static final List<int> _navbarStackHistory = [];
 
   static List<GlobalKey<NavigatorState>> _keys = [];
 
@@ -36,12 +34,13 @@ class NavbarNotifier extends ChangeNotifier {
 
   static List<GlobalKey<NavigatorState>> get keys => _keys;
 
-  static set index(int x) {
+  set index(int x) {
     _index = x;
     if (_navbarStackHistory.contains(x)) {
       _navbarStackHistory.remove(x);
     }
     _navbarStackHistory.add(x);
+    notifyIndexChangeListeners(x);
     _singleton.notify();
   }
 
@@ -49,20 +48,33 @@ class NavbarNotifier extends ChangeNotifier {
 
   static bool get isNavbarHidden => _hideBottomNavBar;
 
-  static set hideBottomNavBar(bool x) {
+  set hideBottomNavBar(bool x) {
     _hideBottomNavBar = x;
     _singleton.notify();
   }
 
-  static set setStackHistory(List<int> x) {
-    if (x.isEmpty) return;
-    _navbarStackHistory = x;
+  // adds a listener to the list of listeners
+  void addIndexChangeListener(Function(int) listener) {
+    _indexChangeListeners.add(listener);
+  }
+
+  // removes the last listener that was added
+  static void removeLastListener() {
+    _indexChangeListeners.removeLast();
+  }
+
+  static final List<Function(int)> _indexChangeListeners = [];
+
+  static void notifyIndexChangeListeners(int index) {
+    for (Function(int) listener in _indexChangeListeners) {
+      listener(index);
+    }
   }
 
   // pop routes from the nested navigator stack and not the main stack
   // this is done based on the currentIndex of the bottom navbar
   // if the backButton is pressed on the initial route the app will be terminated
-  static FutureOr<bool> onBackButtonPressed(
+  FutureOr<bool> onBackButtonPressed(
       {BackButtonBehavior behavior =
           BackButtonBehavior.rememberHistory}) async {
     bool exitingApp = true;
@@ -110,5 +122,13 @@ class NavbarNotifier extends ChangeNotifier {
 
   void notify() {
     notifyListeners();
+  }
+
+  static void clear() {
+    _indexChangeListeners.clear();
+    _navbarStackHistory.clear();
+    _keys.clear();
+    _index = null;
+    _length = null;
   }
 }

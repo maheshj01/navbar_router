@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
   void simulateTabChange() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       for (int i = 0; i < items.length * 2; i++) {
-        NavbarNotifier.index = i % items.length;
+        NavbarNotifier.instance.index = i % items.length;
         await Future.delayed(const Duration(milliseconds: 1000));
       }
     });
@@ -90,6 +90,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
+    NavbarNotifier.instance.addIndexChangeListener((x) {
+      print('NavbarNotifier.indexChangeListener: $x');
+    });
     // simulateTabChange();
   }
 
@@ -107,9 +111,9 @@ class _HomePageState extends State<HomePage> {
           onPressed: () {
             // Programmatically toggle the Navbar visibility
             if (NavbarNotifier.isNavbarHidden) {
-              NavbarNotifier.hideBottomNavBar = false;
+              NavbarNotifier.instance.hideBottomNavBar = false;
             } else {
-              NavbarNotifier.hideBottomNavBar = true;
+              NavbarNotifier.instance.hideBottomNavBar = true;
             }
             setState(() {});
           },
@@ -208,11 +212,11 @@ class _HomeFeedsState extends State<HomeFeeds> {
     if (_scrollController.position.userScrollDirection ==
         ScrollDirection.forward) {
       if (NavbarNotifier.isNavbarHidden) {
-        NavbarNotifier.hideBottomNavBar = false;
+        NavbarNotifier.instance.hideBottomNavBar = false;
       }
     } else {
       if (!NavbarNotifier.isNavbarHidden) {
-        NavbarNotifier.hideBottomNavBar = true;
+        NavbarNotifier.instance.hideBottomNavBar = true;
       }
     }
   }
@@ -240,7 +244,7 @@ class _HomeFeedsState extends State<HomeFeeds> {
         itemBuilder: (context, index) {
           return InkWell(
               onTap: () {
-                NavbarNotifier.hideBottomNavBar = false;
+                NavbarNotifier.instance.hideBottomNavBar = false;
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (contex) => FeedDetail(
                           feedId: index.toString(),
@@ -344,11 +348,11 @@ class _ProductListState extends State<ProductList> {
     if (_scrollController.position.userScrollDirection ==
         ScrollDirection.forward) {
       if (NavbarNotifier.isNavbarHidden) {
-        NavbarNotifier.hideBottomNavBar = false;
+        _navbarNotifier.hideBottomNavBar = false;
       }
     } else {
       if (!NavbarNotifier.isNavbarHidden) {
-        NavbarNotifier.hideBottomNavBar = true;
+        _navbarNotifier.hideBottomNavBar = true;
       }
     }
   }
@@ -365,6 +369,7 @@ class _ProductListState extends State<ProductList> {
     super.dispose();
   }
 
+  final NavbarNotifier _navbarNotifier = NavbarNotifier.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -378,7 +383,7 @@ class _ProductListState extends State<ProductList> {
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                   onTap: () {
-                    NavbarNotifier.hideBottomNavBar = false;
+                    _navbarNotifier.hideBottomNavBar = false;
                     navigate(context, ProductDetail.route,
                         isRootNavigator: false,
                         arguments: {'id': index.toString()});
@@ -423,6 +428,10 @@ class ProductDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Map;
     final argsId = args['id'];
+    // TODO: How this listener can be removed automatically
+    // NavbarNotifier.instance.addIndexChangeListener((x) {
+    //   print('NavbarNotifier.indexChangeListener: $x');
+    // });
     return Scaffold(
       appBar: AppBar(
         title: Text('Product $argsId'),
@@ -439,7 +448,7 @@ class ProductDetail extends StatelessWidget {
           ),
           TextButton(
               onPressed: () {
-                NavbarNotifier.hideBottomNavBar = false;
+                NavbarNotifier.instance.hideBottomNavBar = false;
                 navigate(context, ProductComments.route,
                     isRootNavigator: false,
                     arguments: {'id': argsId.toString()});
