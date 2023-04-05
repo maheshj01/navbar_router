@@ -1,6 +1,6 @@
 ### Customizing the NavbarRouter
 
-NavbarRouter supports two types of Navbar as of today `standard` which is basically material design 2 BottomNavigationBar (default for this package) and `notched` a customized NavigationBar with a notch. User can choose to use either of them by setting the `type` property of the `NavbarRouter` widget to either `NavbarType.standard` or `NavbarType.notched`.
+NavbarRouter supports three types of Navbar as of today `standard` which is basically material design 2 BottomNavigationBar (default for this package) and `notched` a customized NavigationBar with a notch and a material3 Navbar. User can choose to use either of them by setting the `type` property of the `NavbarRouter` widget to either `NavbarType.standard`, `NavbarType.notched` or `NavbarType.material3`.
 
 #### Standard Navbar
 
@@ -10,8 +10,13 @@ NavbarRouter supports two types of Navbar as of today `standard` which is basica
 
 ![Notched Navbar](/assets/navbar-type2.gif)
 
+### Material 3 Navbar
+
+![Material3 Navbar](/assets/M3navbar.gif)
+
 
 ### Decorating the Navbar
 
-Each of the NavbarType can be decorated with its respective decoration class `NavbarDecoration` and `NotchedDecoration` respectively. These decoration classes are used to customize the respective Navbar type, the customization includes background color,labels etcetra.
+The `NavbarDecoration` class is used to customize the standard Navbar, the `NotchedDecoration` class is used to customize the notched Navbar and the `M3NavbarDecoration` class is used to customize the material3 Navbar.
+
 

@@ -149,7 +149,7 @@ class _HomePageState extends State<HomePage> {
             indicatorColor: const Color.fromARGB(255, 176, 207, 233),
             // iconTheme: const IconThemeData(color: Colors.indigo),
             labelTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysHide),
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow),
         onChanged: (x) {},
         backButtonBehavior: BackButtonBehavior.rememberHistory,
         destinations: [
