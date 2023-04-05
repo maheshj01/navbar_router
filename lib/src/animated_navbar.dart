@@ -89,7 +89,6 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
       enableFeedback: true,
       isExtended: true,
       navbarType: BottomNavigationBarType.fixed,
-      selectedLabelColor: theme.bottomNavigationBarTheme.selectedItemColor,
       showSelectedLabels: true,
     );
     final foregroundColor =
@@ -133,9 +132,13 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
         case NavbarType.material3:
           return M3NavBar(
             index: NavbarNotifier.currentIndex,
-            navBarDecoration: widget.decoration ?? defaultDecoration,
+            m3Decoration: M3NavbarDecoration.fromNavbarDecoration(
+              widget.decoration ?? defaultDecoration,
+            ),
             items: widget.menuItems,
             onTap: widget.onItemTapped,
+            indicatorColor: widget.decoration?.indicatorColor,
+            labelBehavior: widget.decoration!.labelBehavior!,
             navBarElevation: widget.decoration!.elevation,
           );
 
@@ -242,7 +245,7 @@ class StandardNavbarState extends State<StandardNavbar> {
       elevation: widget.decoration.elevation,
       iconSize: Theme.of(context).iconTheme.size ?? 24.0,
       unselectedItemColor: widget.decoration.unselectedItemColor,
-      selectedItemColor: widget.decoration.selectedLabelColor,
+      selectedItemColor: widget.decoration.selectedLabelTextStyle?.color,
       unselectedLabelStyle: widget.decoration.unselectedLabelTextStyle,
       selectedLabelStyle: widget.decoration.selectedLabelTextStyle,
       selectedIconTheme: widget.decoration.selectedIconTheme,
@@ -574,22 +577,26 @@ class M3NavBar extends NavbarBase {
     Key? key,
     required this.items,
     required this.onTap,
-    required this.navBarDecoration,
+    required this.m3Decoration,
+    this.labelBehavior = NavigationDestinationLabelBehavior.alwaysShow,
     this.navBarElevation,
+    this.indicatorColor,
     required this.index,
   }) : super(key: key);
 
   final List<NavbarItem> items;
   final Function(int) onTap;
-  final NavbarDecoration navBarDecoration;
+  final M3NavbarDecoration m3Decoration;
+  final NavigationDestinationLabelBehavior labelBehavior;
   final double? navBarElevation;
   final int index;
+  final Color? indicatorColor;
 
   @override
   M3NavBarState createState() => M3NavBarState();
 
   @override
-  NavbarDecoration get decoration => navBarDecoration;
+  NavbarDecoration get decoration => m3Decoration;
 
   @override
   double? get elevation => navBarElevation;
@@ -612,21 +619,22 @@ class M3NavBarState extends State<M3NavBar>
         elevation: widget.elevation,
         labelTextStyle:
             MaterialStateProperty.all(widget.decoration.selectedLabelTextStyle),
-        surfaceTintColor: widget.decoration.selectedIconTheme?.color,
         iconTheme:
-            MaterialStateProperty.all(widget.decoration.unselectedIconTheme),
+            MaterialStateProperty.all(widget.decoration.selectedIconTheme),
         labelBehavior: widget.decoration.showUnselectedLabels
             ? NavigationDestinationLabelBehavior.alwaysShow
             : NavigationDestinationLabelBehavior.onlyShowSelected,
-        indicatorColor: widget.decoration.selectedLabelColor,
+        indicatorColor:
+            widget.indicatorColor ?? widget.decoration.selectedIconTheme?.color,
         height: 80.0,
         // indicatorShape:
       )),
       child: NavigationBar(
+          height: 80,
           backgroundColor: widget.decoration.backgroundColor,
           animationDuration: const Duration(milliseconds: 300),
           elevation: widget.elevation,
-          surfaceTintColor: widget.decoration.selectedIconTheme?.color,
+          labelBehavior: widget.labelBehavior,
           destinations: widget.items
               .map((e) => Padding(
                     padding: const EdgeInsets.only(bottom: 50.0),

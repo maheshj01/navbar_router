@@ -140,17 +140,13 @@ class _HomePageState extends State<HomePage> {
         type: NavbarType.material3,
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 600,
-        decoration: NavbarDecoration(
-          selectedLabelTextStyle: const TextStyle(color: Colors.black),
-          showUnselectedLabels: true,
-          unselectedIconColor: Colors.white54,
-          unselectedItemColor: Colors.white54,
-          // unselectedLabelTextStyle:
-          //     const TextStyle(color: Colors.white, fontSize: ),
-          // selectedIconTheme: const IconThemeData(color: Colors.red),
-          // isExtended: size.width > 800 ? true : false,
-          // navbarType: BottomNavigationBarType.shifting
-        ),
+        decoration: M3NavbarDecoration(
+            elevation: 3.0,
+            backgroundColor: Colors.indigo,
+            indicatorColor: Colors.white,
+            // iconTheme: const IconThemeData(color: Colors.yellow),
+            labelTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysHide),
         onChanged: (x) {},
         backButtonBehavior: BackButtonBehavior.rememberHistory,
         destinations: [

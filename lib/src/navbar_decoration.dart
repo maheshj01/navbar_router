@@ -42,9 +42,6 @@ class NavbarDecoration {
   /// The color of the unselected label text
   final Color? unselectedLabelColor;
 
-  /// The color of the label text
-  final Color? selectedLabelColor;
-
   /// whether or not to show the selected label text
   final bool? showSelectedLabels;
 
@@ -63,16 +60,21 @@ class NavbarDecoration {
   /// iconTheme for the unselected icon
   final IconThemeData? unselectedIconTheme;
 
+  final Color? indicatorColor;
+
+  NavigationDestinationLabelBehavior? labelBehavior;
+
   NavbarDecoration({
     this.backgroundColor,
     this.elevation,
     this.enableFeedback,
     this.isExtended = false,
+    this.indicatorColor,
     this.navbarType,
+    this.labelBehavior,
     this.showSelectedLabels,
     this.showUnselectedLabels = true,
     this.selectedIconTheme,
-    this.selectedLabelColor,
     this.selectedLabelTextStyle,
     this.unselectedIconTheme,
     this.unselectedLabelTextStyle,
@@ -91,9 +93,10 @@ class NavbarDecoration {
     Color? unselectedIconColor,
     bool? showUnselectedLabels,
     Color? unselectedLabelColor,
-    Color? selectedLabelColor,
     bool? showSelectedLabels,
     bool? enableFeedback,
+    Color? indicatorColor,
+    NavigationDestinationLabelBehavior? labelBehavior,
     TextStyle? selectedLabelTextStyle,
     TextStyle? unselectedLabelTextStyle,
     IconThemeData? selectedIconTheme,
@@ -108,9 +111,10 @@ class NavbarDecoration {
         unselectedIconColor: unselectedIconColor ?? this.unselectedIconColor,
         showUnselectedLabels: showUnselectedLabels ?? this.showUnselectedLabels,
         unselectedLabelColor: unselectedLabelColor ?? this.unselectedLabelColor,
-        selectedLabelColor: selectedLabelColor ?? this.selectedLabelColor,
         showSelectedLabels: showSelectedLabels ?? this.showSelectedLabels,
         enableFeedback: enableFeedback ?? this.enableFeedback,
+        indicatorColor: indicatorColor ?? this.indicatorColor,
+        labelBehavior: labelBehavior ?? this.labelBehavior,
         selectedLabelTextStyle:
             selectedLabelTextStyle ?? this.selectedLabelTextStyle,
         unselectedLabelTextStyle:
@@ -164,5 +168,57 @@ class NotchedDecoration extends NavbarDecoration {
         showUnselectedLabels: showUnselectedLabels,
         unselectedLabelColor: unselectedLabelColor,
         unselectedLabelTextStyle: unselectedLabelTextStyle,
+      );
+}
+
+class M3NavbarDecoration extends NavbarDecoration {
+  M3NavbarDecoration({
+    /// The backgroundColor of the Navbar
+    Color? backgroundColor,
+
+    /// Defines whether to show/hide labels
+    NavigationDestinationLabelBehavior labelBehavior =
+        NavigationDestinationLabelBehavior.alwaysShow,
+
+    /// Color for the indicator shown around the seleccted item
+    Color? indicatorColor,
+
+    /// Textstyle of the labels
+    TextStyle? labelTextStyle,
+    double? elevation,
+
+    /// iconTheme for the icons
+    IconThemeData? iconTheme,
+  }) : super(
+          backgroundColor: backgroundColor,
+          elevation: elevation,
+          indicatorColor: indicatorColor,
+          labelBehavior: labelBehavior,
+          selectedLabelTextStyle: labelTextStyle,
+          selectedIconTheme: iconTheme,
+        );
+
+  factory M3NavbarDecoration.fromNavbarDecoration(
+          NavbarDecoration navbarDecoration) =>
+      M3NavbarDecoration(
+          backgroundColor: navbarDecoration.backgroundColor,
+          elevation: navbarDecoration.elevation,
+          labelTextStyle: navbarDecoration.selectedLabelTextStyle,
+          iconTheme: navbarDecoration.selectedIconTheme,
+          indicatorColor: navbarDecoration.selectedIconTheme?.color,
+          labelBehavior: navbarDecoration.labelBehavior ??
+              NavigationDestinationLabelBehavior.alwaysShow);
+
+  /// to navb bar decoration
+
+  NavbarDecoration toNavbarDecoration() => NavbarDecoration(
+        backgroundColor: backgroundColor,
+        elevation: elevation,
+        unselectedItemColor: unselectedItemColor,
+        unselectedIconColor: unselectedIconColor,
+        showUnselectedLabels: showUnselectedLabels,
+        unselectedLabelColor: unselectedLabelColor,
+        unselectedLabelTextStyle: unselectedLabelTextStyle,
+        labelBehavior: labelBehavior,
       );
 }
