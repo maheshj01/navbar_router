@@ -581,6 +581,7 @@ class M3NavBar extends NavbarBase {
     this.labelBehavior = NavigationDestinationLabelBehavior.alwaysShow,
     this.navBarElevation,
     this.indicatorColor,
+    this.indicatorShape,
     required this.index,
   }) : super(key: key);
 
@@ -591,6 +592,7 @@ class M3NavBar extends NavbarBase {
   final double? navBarElevation;
   final int index;
   final Color? indicatorColor;
+  final ShapeBorder? indicatorShape;
 
   @override
   M3NavBarState createState() => M3NavBarState();
@@ -619,6 +621,8 @@ class M3NavBarState extends State<M3NavBar>
         elevation: widget.elevation,
         labelTextStyle:
             MaterialStateProperty.all(widget.decoration.selectedLabelTextStyle),
+        indicatorShape: widget.decoration.indicatorShape ??
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
         iconTheme:
             MaterialStateProperty.all(widget.decoration.selectedIconTheme),
         labelBehavior: widget.decoration.showUnselectedLabels
@@ -627,7 +631,6 @@ class M3NavBarState extends State<M3NavBar>
         indicatorColor:
             widget.indicatorColor ?? widget.decoration.selectedIconTheme?.color,
         height: 80.0,
-        // indicatorShape:
       )),
       child: NavigationBar(
           height: 80,

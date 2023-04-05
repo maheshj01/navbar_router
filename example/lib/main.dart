@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // simulateTabChange();
+    simulateTabChange();
   }
 
   @override
@@ -143,8 +143,11 @@ class _HomePageState extends State<HomePage> {
         decoration: M3NavbarDecoration(
             elevation: 3.0,
             backgroundColor: Colors.indigo,
-            indicatorColor: Colors.white,
-            // iconTheme: const IconThemeData(color: Colors.yellow),
+            indicatorShape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+            ),
+            indicatorColor: const Color.fromARGB(255, 176, 207, 233),
+            // iconTheme: const IconThemeData(color: Colors.indigo),
             labelTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
             labelBehavior: NavigationDestinationLabelBehavior.alwaysHide),
         onChanged: (x) {},

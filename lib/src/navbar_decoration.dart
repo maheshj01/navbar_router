@@ -62,7 +62,9 @@ class NavbarDecoration {
 
   final Color? indicatorColor;
 
-  NavigationDestinationLabelBehavior? labelBehavior;
+  final NavigationDestinationLabelBehavior? labelBehavior;
+
+  final ShapeBorder? indicatorShape;
 
   NavbarDecoration({
     this.backgroundColor,
@@ -72,6 +74,7 @@ class NavbarDecoration {
     this.indicatorColor,
     this.navbarType,
     this.labelBehavior,
+    this.indicatorShape,
     this.showSelectedLabels,
     this.showUnselectedLabels = true,
     this.selectedIconTheme,
@@ -96,6 +99,7 @@ class NavbarDecoration {
     bool? showSelectedLabels,
     bool? enableFeedback,
     Color? indicatorColor,
+    ShapeBorder? indicatorShape,
     NavigationDestinationLabelBehavior? labelBehavior,
     TextStyle? selectedLabelTextStyle,
     TextStyle? unselectedLabelTextStyle,
@@ -115,6 +119,7 @@ class NavbarDecoration {
         enableFeedback: enableFeedback ?? this.enableFeedback,
         indicatorColor: indicatorColor ?? this.indicatorColor,
         labelBehavior: labelBehavior ?? this.labelBehavior,
+        indicatorShape: indicatorShape ?? this.indicatorShape,
         selectedLabelTextStyle:
             selectedLabelTextStyle ?? this.selectedLabelTextStyle,
         unselectedLabelTextStyle:
@@ -189,12 +194,14 @@ class M3NavbarDecoration extends NavbarDecoration {
 
     /// iconTheme for the icons
     IconThemeData? iconTheme,
+    ShapeBorder? indicatorShape,
   }) : super(
           backgroundColor: backgroundColor,
           elevation: elevation,
           indicatorColor: indicatorColor,
           labelBehavior: labelBehavior,
           selectedLabelTextStyle: labelTextStyle,
+          indicatorShape: indicatorShape,
           selectedIconTheme: iconTheme,
         );
 
@@ -206,6 +213,7 @@ class M3NavbarDecoration extends NavbarDecoration {
           labelTextStyle: navbarDecoration.selectedLabelTextStyle,
           iconTheme: navbarDecoration.selectedIconTheme,
           indicatorColor: navbarDecoration.selectedIconTheme?.color,
+          indicatorShape: navbarDecoration.indicatorShape,
           labelBehavior: navbarDecoration.labelBehavior ??
               NavigationDestinationLabelBehavior.alwaysShow);
 
