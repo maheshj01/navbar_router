@@ -73,7 +73,7 @@ class NavbarDecoration {
     this.isExtended = false,
     this.indicatorColor,
     this.navbarType,
-    this.labelBehavior,
+    this.labelBehavior = NavigationDestinationLabelBehavior.alwaysShow,
     this.indicatorShape,
     this.showSelectedLabels,
     this.showUnselectedLabels = true,
@@ -212,7 +212,7 @@ class M3NavbarDecoration extends NavbarDecoration {
           elevation: navbarDecoration.elevation,
           labelTextStyle: navbarDecoration.selectedLabelTextStyle,
           iconTheme: navbarDecoration.selectedIconTheme,
-          indicatorColor: navbarDecoration.selectedIconTheme?.color,
+          indicatorColor: navbarDecoration.indicatorColor,
           indicatorShape: navbarDecoration.indicatorShape,
           labelBehavior: navbarDecoration.labelBehavior ??
               NavigationDestinationLabelBehavior.alwaysShow);

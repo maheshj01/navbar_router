@@ -71,26 +71,28 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final defaultDecoration = NavbarDecoration(
-      backgroundColor: theme.bottomNavigationBarTheme.backgroundColor ??
-          theme.colorScheme.primary,
-      elevation: 8,
-      showUnselectedLabels: true,
-      unselectedIconColor: theme.bottomNavigationBarTheme.unselectedItemColor,
-      unselectedLabelColor:
-          theme.bottomNavigationBarTheme.unselectedItemColor ??
-              theme.primaryColor,
-      unselectedItemColor: theme.bottomNavigationBarTheme.unselectedItemColor,
-      unselectedLabelTextStyle:
-          theme.bottomNavigationBarTheme.unselectedLabelStyle ??
-              const TextStyle(color: Colors.black),
-      unselectedIconTheme: theme.iconTheme.copyWith(color: Colors.black),
-      selectedIconTheme: theme.iconTheme,
-      selectedLabelTextStyle: theme.bottomNavigationBarTheme.selectedLabelStyle,
-      enableFeedback: true,
-      isExtended: true,
-      navbarType: BottomNavigationBarType.fixed,
-      showSelectedLabels: true,
-    );
+        backgroundColor: theme.bottomNavigationBarTheme.backgroundColor ??
+            theme.colorScheme.primary,
+        elevation: 8,
+        showUnselectedLabels: true,
+        unselectedIconColor: theme.bottomNavigationBarTheme.unselectedItemColor,
+        unselectedLabelColor:
+            theme.bottomNavigationBarTheme.unselectedItemColor ??
+                theme.primaryColor,
+        unselectedItemColor: theme.bottomNavigationBarTheme.unselectedItemColor,
+        unselectedLabelTextStyle:
+            theme.bottomNavigationBarTheme.unselectedLabelStyle ??
+                const TextStyle(color: Colors.black),
+        unselectedIconTheme: theme.iconTheme.copyWith(color: Colors.black),
+        selectedIconTheme: theme.iconTheme,
+        selectedLabelTextStyle:
+            theme.bottomNavigationBarTheme.selectedLabelStyle,
+        enableFeedback: true,
+        isExtended: true,
+        navbarType: BottomNavigationBarType.fixed,
+        showSelectedLabels: true,
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        indicatorColor: theme.colorScheme.onBackground);
     final foregroundColor =
         defaultDecoration.backgroundColor!.computeLuminance() > 0.5
             ? Colors.black
@@ -103,44 +105,83 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
             navBarDecoration: widget.decoration ?? defaultDecoration,
             items: widget.menuItems,
             onTap: widget.onItemTapped,
-            navBarElevation: widget.decoration!.elevation,
+            navBarElevation: widget.decoration?.elevation,
           );
         case NavbarType.notched:
-          final decoration = defaultDecoration.copyWith(
-              backgroundColor: widget.decoration!.backgroundColor ??
-                  Theme.of(context).primaryColor,
-              elevation: widget.decoration!.elevation,
-              showUnselectedLabels: widget.decoration!.showUnselectedLabels,
-              unselectedIconColor: widget.decoration!.unselectedIconColor,
-              unselectedLabelColor: widget.decoration!.unselectedLabelColor,
-              unselectedItemColor: widget.decoration!.unselectedItemColor,
-              unselectedLabelTextStyle:
-                  widget.decoration!.unselectedLabelTextStyle,
-              unselectedIconTheme: widget.decoration!.unselectedIconTheme,
-              selectedIconTheme: widget.decoration!.selectedIconTheme ??
-                  theme.iconTheme.copyWith(color: foregroundColor),
-              enableFeedback: widget.decoration!.enableFeedback,
-              showSelectedLabels: false);
-          return NotchedNavBar(
-            notchDecoration: NotchedDecoration.fromNavbarDecoration(decoration),
-            items: widget.menuItems,
-            onTap: widget.onItemTapped,
-            color: widget.decoration!.backgroundColor,
-            navBarElevation: widget.decoration!.elevation,
-            index: NavbarNotifier.currentIndex,
-          );
+          if (widget.decoration != null) {
+            final decoration = defaultDecoration.copyWith(
+                backgroundColor: widget.decoration!.backgroundColor ??
+                    Theme.of(context).primaryColor,
+                elevation: widget.decoration!.elevation,
+                showUnselectedLabels: widget.decoration!.showUnselectedLabels,
+                unselectedIconColor: widget.decoration!.unselectedIconColor,
+                unselectedLabelColor: widget.decoration!.unselectedLabelColor,
+                unselectedItemColor: widget.decoration!.unselectedItemColor,
+                unselectedLabelTextStyle:
+                    widget.decoration!.unselectedLabelTextStyle,
+                unselectedIconTheme: widget.decoration!.unselectedIconTheme,
+                selectedIconTheme: widget.decoration!.selectedIconTheme ??
+                    theme.iconTheme.copyWith(color: foregroundColor),
+                enableFeedback: widget.decoration!.enableFeedback,
+                showSelectedLabels: false);
+            return NotchedNavBar(
+              notchDecoration:
+                  NotchedDecoration.fromNavbarDecoration(decoration),
+              items: widget.menuItems,
+              onTap: widget.onItemTapped,
+              color: widget.decoration!.backgroundColor,
+              navBarElevation: widget.decoration!.elevation,
+              index: NavbarNotifier.currentIndex,
+            );
+          } else {
+            return NotchedNavBar(
+              notchDecoration:
+                  NotchedDecoration.fromNavbarDecoration(defaultDecoration),
+              items: widget.menuItems,
+              onTap: widget.onItemTapped,
+              color: defaultDecoration.backgroundColor,
+              navBarElevation: defaultDecoration.elevation,
+              index: NavbarNotifier.currentIndex,
+            );
+          }
         case NavbarType.material3:
-          return M3NavBar(
-            index: NavbarNotifier.currentIndex,
-            m3Decoration: M3NavbarDecoration.fromNavbarDecoration(
-              widget.decoration ?? defaultDecoration,
-            ),
-            items: widget.menuItems,
-            onTap: widget.onItemTapped,
-            indicatorColor: widget.decoration?.indicatorColor,
-            labelBehavior: widget.decoration!.labelBehavior!,
-            navBarElevation: widget.decoration!.elevation,
-          );
+          if (widget.decoration != null) {
+            final _decoration = defaultDecoration.copyWith(
+                backgroundColor: widget.decoration!.backgroundColor ??
+                    Theme.of(context).primaryColor,
+                elevation: widget.decoration!.elevation,
+                showUnselectedLabels: widget.decoration!.showUnselectedLabels,
+                unselectedIconColor: widget.decoration!.unselectedIconColor,
+                unselectedLabelColor: widget.decoration!.unselectedLabelColor,
+                unselectedItemColor: widget.decoration!.unselectedItemColor,
+                unselectedLabelTextStyle:
+                    widget.decoration!.unselectedLabelTextStyle,
+                unselectedIconTheme: widget.decoration!.unselectedIconTheme,
+                selectedIconTheme: widget.decoration!.selectedIconTheme ??
+                    theme.iconTheme.copyWith(color: foregroundColor),
+                enableFeedback: widget.decoration!.enableFeedback,
+                indicatorColor: widget.decoration!.indicatorColor,
+                labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+                showSelectedLabels: false);
+            return M3NavBar(
+              index: NavbarNotifier.currentIndex,
+              m3Decoration:
+                  M3NavbarDecoration.fromNavbarDecoration(_decoration),
+              items: widget.menuItems,
+              onTap: widget.onItemTapped,
+              navBarElevation: widget.decoration!.elevation,
+              labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+            );
+          } else {
+            return M3NavBar(
+              index: NavbarNotifier.currentIndex,
+              m3Decoration:
+                  M3NavbarDecoration.fromNavbarDecoration(defaultDecoration),
+              items: widget.menuItems,
+              onTap: widget.onItemTapped,
+              navBarElevation: defaultDecoration.elevation,
+            );
+          }
 
         default:
           return StandardNavbar(
@@ -580,8 +621,6 @@ class M3NavBar extends NavbarBase {
     required this.m3Decoration,
     this.labelBehavior = NavigationDestinationLabelBehavior.alwaysShow,
     this.navBarElevation,
-    this.indicatorColor,
-    this.indicatorShape,
     required this.index,
   }) : super(key: key);
 
@@ -591,8 +630,6 @@ class M3NavBar extends NavbarBase {
   final NavigationDestinationLabelBehavior labelBehavior;
   final double? navBarElevation;
   final int index;
-  final Color? indicatorColor;
-  final ShapeBorder? indicatorShape;
 
   @override
   M3NavBarState createState() => M3NavBarState();
@@ -628,8 +665,7 @@ class M3NavBarState extends State<M3NavBar>
         labelBehavior: widget.decoration.showUnselectedLabels
             ? NavigationDestinationLabelBehavior.alwaysShow
             : NavigationDestinationLabelBehavior.onlyShowSelected,
-        indicatorColor:
-            widget.indicatorColor ?? widget.decoration.selectedIconTheme?.color,
+        indicatorColor: widget.decoration.indicatorColor,
         height: 80.0,
       )),
       child: NavigationBar(

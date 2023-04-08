@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    simulateTabChange();
+    // simulateTabChange();
   }
 
   @override
@@ -137,10 +137,11 @@ class _HomePageState extends State<HomePage> {
           }
         },
         initialIndex: 2,
-        type: NavbarType.material3,
+        type: NavbarType.standard,
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 600,
-        decoration: M3NavbarDecoration(
+        decoration: NavbarDecoration(
+            navbarType: BottomNavigationBarType.shifting,
             elevation: 3.0,
             backgroundColor: Colors.indigo,
             indicatorShape: const RoundedRectangleBorder(
@@ -148,7 +149,7 @@ class _HomePageState extends State<HomePage> {
             ),
             indicatorColor: const Color.fromARGB(255, 176, 207, 233),
             // iconTheme: const IconThemeData(color: Colors.indigo),
-            labelTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
+            /// labelTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
             labelBehavior: NavigationDestinationLabelBehavior.alwaysShow),
         onChanged: (x) {},
         backButtonBehavior: BackButtonBehavior.rememberHistory,

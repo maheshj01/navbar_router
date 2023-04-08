@@ -2,7 +2,7 @@
 
  <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
-Checkout the newly published docs at https://docs.page/maheshmnj/navbar_router/
+Checkout the newly published docs for more details on using this package https://docs.page/maheshmnj/navbar_router/
 
 This is a custom BottomNavigationBar created by considering most of the common use cases of BottomNavigationBar in real world applications. This widget handles the boilerplate code required to handle some of the most common features (specified below) with minimal code and hassle. All you need to do is specify the navbar menu items, routes and destinations and the rest will be taken care by the navbar_router.
 
