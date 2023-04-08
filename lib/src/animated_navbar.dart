@@ -162,7 +162,11 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
                 enableFeedback: widget.decoration!.enableFeedback,
                 indicatorColor: widget.decoration!.indicatorColor,
                 labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-                showSelectedLabels: false);
+                navbarType: BottomNavigationBarType.shifting,
+                selectedLabelTextStyle:
+                    widget.decoration!.selectedLabelTextStyle,
+                showSelectedLabels:
+                    widget.decoration!.showSelectedLabels ?? true);
             return M3NavBar(
               index: NavbarNotifier.currentIndex,
               m3Decoration:
@@ -170,7 +174,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
               items: widget.menuItems,
               onTap: widget.onItemTapped,
               navBarElevation: widget.decoration!.elevation,
-              labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+              labelBehavior: widget.decoration!.labelBehavior!,
             );
           } else {
             return M3NavBar(

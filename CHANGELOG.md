@@ -1,3 +1,8 @@
+## [0.5.0]
+- Adds material 3 Navbar
+- Removes selectedLabelColor Property
+- Adds indexChangeListener to NavbarRouter
+
 ## [0.4.2]  Jan 25, 2023
 - Update default decoration values
 

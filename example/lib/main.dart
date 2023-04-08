@@ -137,11 +137,12 @@ class _HomePageState extends State<HomePage> {
           }
         },
         initialIndex: 2,
-        type: NavbarType.standard,
+        type: NavbarType.material3,
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 600,
-        decoration: NavbarDecoration(
-            navbarType: BottomNavigationBarType.shifting,
+        decoration: M3NavbarDecoration(
+            labelTextStyle: const TextStyle(
+                color: Color.fromARGB(255, 176, 207, 233), fontSize: 14),
             elevation: 3.0,
             backgroundColor: Colors.indigo,
             indicatorShape: const RoundedRectangleBorder(
