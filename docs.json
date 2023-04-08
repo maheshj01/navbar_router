@@ -47,6 +47,10 @@
           "/contributing"
         ]
       ]
+    ],
+    [
+      "Release Notes",
+      "/release-notes"
     ]
   ]
 }
