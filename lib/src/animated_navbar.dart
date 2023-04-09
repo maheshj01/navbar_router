@@ -98,7 +98,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
             ? Colors.black
             : Colors.white;
 
-    NavbarBase _buildNavBar() {
+    NavbarBase buildNavBar() {
       switch (widget.navbarType) {
         case NavbarType.standard:
           return StandardNavbar(
@@ -226,7 +226,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
                         );
                       }).toList(),
                       selectedIndex: NavbarNotifier.currentIndex)
-                  : _buildNavBar());
+                  : buildNavBar());
         });
   }
 }
