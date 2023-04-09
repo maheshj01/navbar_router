@@ -1,5 +1,5 @@
-## [0.5.0]
-- Adds material 3 Navbar
+## [0.5.0] Apr 08, 2023
+- Adds support for material3 navbar
 - Removes selectedLabelColor Property
 - Adds indexChangeListener to NavbarRouter
 
