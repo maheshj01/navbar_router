@@ -190,6 +190,7 @@ class _NavbarRouterState extends State<NavbarRouter>
     _controller.reset();
     keys.clear();
     items.clear();
+    NavbarNotifier.clear();
   }
 
   @override

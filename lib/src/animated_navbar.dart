@@ -146,7 +146,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
           }
         case NavbarType.material3:
           if (widget.decoration != null) {
-            final _decoration = defaultDecoration.copyWith(
+            final decoration0 = defaultDecoration.copyWith(
                 backgroundColor: widget.decoration!.backgroundColor ??
                     Theme.of(context).primaryColor,
                 elevation: widget.decoration!.elevation,
@@ -170,7 +170,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
             return M3NavBar(
               index: NavbarNotifier.currentIndex,
               m3Decoration:
-                  M3NavbarDecoration.fromNavbarDecoration(_decoration),
+                  M3NavbarDecoration.fromNavbarDecoration(decoration0),
               items: widget.menuItems,
               onTap: widget.onItemTapped,
               navBarElevation: widget.decoration!.elevation,

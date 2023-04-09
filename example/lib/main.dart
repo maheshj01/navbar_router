@@ -91,6 +91,15 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     // simulateTabChange();
+    NavbarNotifier.addIndexChangeListener((x) {
+      print('NavbarNotifier.indexChangeListener: $x');
+    });
+  }
+
+  @override
+  void dispose() {
+    NavbarNotifier.clear();
+    super.dispose();
   }
 
   @override

@@ -9,12 +9,12 @@ NavbarRouter gives you the control to manage the routes in any tab. You can pop 
 #### Pop the current route from a tab
 
 ```dart
-    NavbarNotifier.popRoute(index);
+   await NavbarNotifier.popRoute(index);
 ```
 
 #### Pop all routes from a tab
 ```dart
-    NavbarNotifier.popAllRoutes(index);
+   await NavbarNotifier.popAllRoutes(index);
 ```
 
 ### Hide/Show Bottom Navbar
@@ -43,6 +43,23 @@ NavbarRouter gives you the control to change the current index of the bottom nav
 
 ### Navbar index change Listener
 
+You can listen to the index change events of the bottom navbar using the `addIndexChangeListener` method of the `NavbarNotifier` class.
+
+```dart
+    NavbarNotifier.addIndexChangeListener((x) {
+      print('NavbarNotifier.indexChangeListener: $x');
+    });
+```
+
+The Notifier is capable of handling multiple listeners. You can add as many listeners as you want.
+
+> Note: You should ensure that you remove the listener when you are done with it.
+
+You can remove the listener using the `removeLastListener` or using `removeAllListeners` method of the `NavbarNotifier` class.
+
+```dart
+NavbarNotifier.removeAllListeners();
+```
 
 
 

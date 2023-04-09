@@ -34,6 +34,8 @@ class NavbarNotifier extends ChangeNotifier {
     _keys = value;
   }
 
+  static final List<Function(int)> _indexChangeListeners = [];
+
   static List<GlobalKey<NavigatorState>> get keys => _keys;
 
   static set index(int x) {
@@ -42,6 +44,7 @@ class NavbarNotifier extends ChangeNotifier {
       _navbarStackHistory.remove(x);
     }
     _navbarStackHistory.add(x);
+    _notifyIndexChangeListeners(x);
     _singleton.notify();
   }
 
@@ -108,7 +111,39 @@ class NavbarNotifier extends ChangeNotifier {
     }
   }
 
+  // adds a listener to the list of listeners
+  static void addIndexChangeListener(Function(int) listener) {
+    _indexChangeListeners.add(listener);
+  }
+
+  // removes the last listener that was added
+  static void removeLastListener() {
+    if (_indexChangeListeners.isEmpty) return;
+    _indexChangeListeners.removeLast();
+  }
+
+  // removes all listeners
+  static void removeAllListeners() {
+    if (_indexChangeListeners.isEmpty) return;
+    _indexChangeListeners.clear();
+  }
+
+  static void _notifyIndexChangeListeners(int index) {
+    if (_indexChangeListeners.isEmpty) return;
+    for (Function(int) listener in _indexChangeListeners) {
+      listener(index);
+    }
+  }
+
   void notify() {
     notifyListeners();
+  }
+
+  static void clear() {
+    _indexChangeListeners.clear();
+    _navbarStackHistory.clear();
+    _keys.clear();
+    _index = null;
+    _length = null;
   }
 }
