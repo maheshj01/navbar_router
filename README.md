@@ -144,6 +144,9 @@ You can choose between different NavbarTypes using the `NavbarDecoration.navbarT
 
 ![ezgif com-gif-maker (2)](https://user-images.githubusercontent.com/31410839/209575300-8bafdae7-5465-4dd1-85bc-15065201ff37.gif)
 
+### NavbarType.material3
+
+![m3navbar](https://user-images.githubusercontent.com/31410839/230755662-fb5110b0-e0da-4580-ae0b-73dcf4bc8587.gif)
 
 ## Hide or show bottomNavigationBar
 
