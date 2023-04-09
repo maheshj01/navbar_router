@@ -1,4 +1,4 @@
-### Navbar Notifier
+## Navbar Notifier
 
 Navbar Notifier is a magical class where the package does a lot of magic for you from popping routes in tabs, hide/unhide bottom navbar to intercepting back button press events on android and much more. And more importantly you can have access to the `NavbarNotifier` from any part of your application.
 
@@ -6,13 +6,13 @@ Navbar Notifier is a magical class where the package does a lot of magic for you
 
 NavbarRouter gives you the control to manage the routes in any tab. You can pop route(s) from any tab using the `NavbarNotifier` class.
 
-#### Pop the current route from a tab
+### Pop the current route from a tab
 
 ```dart
    await NavbarNotifier.popRoute(index);
 ```
 
-#### Pop all routes from a tab
+### Pop all routes from a tab
 ```dart
    await NavbarNotifier.popAllRoutes(index);
 ```
@@ -21,12 +21,12 @@ NavbarRouter gives you the control to manage the routes in any tab. You can pop 
 
 NavbarRouter gives you the ability to hide or show the bottom navbar. You can hide or show the bottom navbar using the `hideBottomNavBar` setter.
 
-#### Hide Bottom Navbar
+### Hide Bottom Navbar
 ```dart
     NavbarNotifier.hideBottomNavBar = true;
 ```
 
-#### Show Bottom Navbar
+### Show Bottom Navbar
 ```dart
     NavbarNotifier.hideBottomNavBar = false;
 ```
