@@ -20,6 +20,10 @@
         [
           "Properties",
           "/properties"
+        ],
+        [
+          "Background",
+          "/background"
         ]
       ]
     ],
