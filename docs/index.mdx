@@ -97,6 +97,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: NavbarRouter(
+        errorBuilder: (context) {
+          return const Center(child: Text('Error 404 Page Not Found'));
+        },
         destinations: [
           for (int i = 0; i < items.length; i++)
             DestinationRouter(
@@ -117,7 +120,9 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-Some of the common terms to understand in this package
+#### Termininology
+
+Some of the terms you should be familiar with before using the package.
 
 ### NavbarItem
 
