@@ -31,7 +31,19 @@ So we need to declare a Map of routes as follows
   };
 ```
 
-The key of the outer Map is the index of the NavbarItem. The key of the inner Map is the route name and the value is the Widget to be displayed.
+The key of the outer Map is the index of the NavbarItem. The key of the inner Map is the route name and the value is the Widget to be displayed. Each key in the outer map must have a key `/` which is the initial route (default) for that NavbarItem. 
+
+For instance `HomeFeeds()` is the initial route for the first NavbarItem. if you want to change the initial route for a NavbarItem, then you need to specify that in `DestinationRouter` when specifying list of destinations.
+
+```dart
+  destinations: [
+    for (int i = 0; i < items.length; i++)
+      DestinationRouter(
+        ...
+        initialRoute: _routes[i]!.keys.first, // specify the initial route for each tab here
+      ),
+  ]
+```
 
 ### Pushing Routes within NavbarItem (Persists Navbar by default)
 
