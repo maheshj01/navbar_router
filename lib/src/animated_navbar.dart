@@ -2,6 +2,10 @@ part of 'navbar_router.dart';
 
 enum NavbarType { standard, notched, material3 }
 
+const double kM3NavbarHeight = 80.0;
+const double kStandardNavbarHeight = kBottomNavigationBarHeight;
+const double kNotchedNavbarHeight = kBottomNavigationBarHeight * 1.4;
+
 class _AnimatedNavBar extends StatefulWidget {
   const _AnimatedNavBar(
       {Key? key,
@@ -240,6 +244,8 @@ abstract class NavbarBase extends StatefulWidget {
   Function(int)? get onItemTapped;
 
   List<NavbarItem> get menuItems;
+
+  double get height;
 }
 
 class StandardNavbar extends NavbarBase {
@@ -248,6 +254,7 @@ class StandardNavbar extends NavbarBase {
       required this.navBarDecoration,
       required this.navBarElevation,
       required this.onTap,
+      this.navbarHeight = kStandardNavbarHeight,
       this.index = 0,
       required this.items})
       : super(key: key);
@@ -257,6 +264,7 @@ class StandardNavbar extends NavbarBase {
   final NavbarDecoration navBarDecoration;
   final double? navBarElevation;
   final int index;
+  final double navbarHeight;
 
   @override
   StandardNavbarState createState() => StandardNavbarState();
@@ -272,38 +280,49 @@ class StandardNavbar extends NavbarBase {
 
   @override
   Function(int p1)? get onItemTapped => onTap;
+
+  @override
+  double get height => navbarHeight;
 }
 
 class StandardNavbarState extends State<StandardNavbar> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      type: widget.decoration.navbarType,
-      currentIndex: NavbarNotifier.currentIndex,
-      onTap: (x) {
-        widget.onItemTapped!(x);
-      },
-      backgroundColor: widget.decoration.backgroundColor,
-      showSelectedLabels: widget.decoration.showSelectedLabels,
-      enableFeedback: widget.decoration.enableFeedback,
-      showUnselectedLabels: widget.decoration.showUnselectedLabels,
-      elevation: widget.decoration.elevation,
-      iconSize: Theme.of(context).iconTheme.size ?? 24.0,
-      unselectedItemColor: widget.decoration.unselectedItemColor,
-      selectedItemColor: widget.decoration.selectedLabelTextStyle?.color,
-      unselectedLabelStyle: widget.decoration.unselectedLabelTextStyle,
-      selectedLabelStyle: widget.decoration.selectedLabelTextStyle,
-      selectedIconTheme: widget.decoration.selectedIconTheme,
-      unselectedIconTheme: widget.decoration.unselectedIconTheme,
-      items: widget.menuItems
-          .map((NavbarItem menuItem) => BottomNavigationBarItem(
-                backgroundColor: menuItem.backgroundColor,
-                icon: Icon(
-                  menuItem.iconData,
-                ),
-                label: menuItem.text,
-              ))
-          .toList(),
+    return SizedBox(
+      height: widget.height,
+      child: BottomNavigationBar(
+        type: widget.decoration.navbarType,
+        currentIndex: NavbarNotifier.currentIndex,
+        onTap: (x) {
+          widget.onItemTapped!(x);
+        },
+        backgroundColor: widget.decoration.backgroundColor,
+        showSelectedLabels: widget.decoration.showSelectedLabels,
+        enableFeedback: widget.decoration.enableFeedback,
+        showUnselectedLabels: widget.decoration.showUnselectedLabels,
+        elevation: widget.decoration.elevation,
+        iconSize: Theme.of(context).iconTheme.size ?? 24.0,
+        unselectedItemColor: widget.decoration.unselectedItemColor,
+        selectedItemColor: widget.decoration.selectedLabelTextStyle?.color,
+        unselectedLabelStyle: widget.decoration.unselectedLabelTextStyle,
+        selectedLabelStyle: widget.decoration.selectedLabelTextStyle,
+        selectedIconTheme: widget.decoration.selectedIconTheme,
+        unselectedIconTheme: widget.decoration.unselectedIconTheme,
+        items: widget.menuItems
+            .map((NavbarItem menuItem) => BottomNavigationBarItem(
+                  backgroundColor: menuItem.backgroundColor,
+                  icon: Icon(
+                    menuItem.iconData,
+                  ),
+                  label: menuItem.text,
+                ))
+            .toList(),
+      ),
     );
   }
 }
@@ -315,6 +334,7 @@ class NotchedNavBar extends NavbarBase {
       required this.color,
       required this.navBarElevation,
       required this.onTap,
+      this.navbarHeight = kNotchedNavbarHeight,
       this.index = 0,
       required this.items})
       : assert(items.length > 2,
@@ -331,6 +351,7 @@ class NotchedNavBar extends NavbarBase {
   final Color? color;
   final double? navBarElevation;
   final int index;
+  final double navbarHeight;
 
   @override
   NotchedNavBarState createState() => NotchedNavBarState();
@@ -348,6 +369,9 @@ class NotchedNavBar extends NavbarBase {
 
   @override
   Function(int p1)? get onItemTapped => onTap;
+
+  @override
+  double get height => navbarHeight;
 }
 
 class NotchedNavBarState extends State<NotchedNavBar>
@@ -488,7 +512,7 @@ class NotchedNavBarState extends State<NotchedNavBar>
                         ),
                       ],
                     ),
-                    height: kBottomNavigationBarHeight * 1.4,
+                    height: widget.navbarHeight,
                     alignment: Alignment.center,
                   ),
                 );
@@ -625,6 +649,7 @@ class M3NavBar extends NavbarBase {
     required this.m3Decoration,
     this.labelBehavior = NavigationDestinationLabelBehavior.alwaysShow,
     this.navBarElevation,
+    this.navbarHeight = kM3NavbarHeight,
     required this.index,
   }) : super(key: key);
 
@@ -634,6 +659,7 @@ class M3NavBar extends NavbarBase {
   final NavigationDestinationLabelBehavior labelBehavior;
   final double? navBarElevation;
   final int index;
+  final double navbarHeight;
 
   @override
   M3NavBarState createState() => M3NavBarState();
@@ -649,10 +675,18 @@ class M3NavBar extends NavbarBase {
 
   @override
   Function(int p1)? get onItemTapped => onTap;
+
+  @override
+  double get height => navbarHeight;
 }
 
 class M3NavBarState extends State<M3NavBar>
     with SingleTickerProviderStateMixin {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -670,10 +704,10 @@ class M3NavBarState extends State<M3NavBar>
             ? NavigationDestinationLabelBehavior.alwaysShow
             : NavigationDestinationLabelBehavior.onlyShowSelected,
         indicatorColor: widget.decoration.indicatorColor,
-        height: 80.0,
+        height: widget.height,
       )),
       child: NavigationBar(
-          height: 80,
+          height: widget.height,
           backgroundColor: widget.decoration.backgroundColor,
           animationDuration: const Duration(milliseconds: 300),
           elevation: widget.elevation,

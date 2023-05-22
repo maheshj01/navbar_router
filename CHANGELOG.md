@@ -1,3 +1,6 @@
+## [0.5.1] May 21, 2023
+- Defines global navbar height constants `kStandardNavbarHeight`, `kM3NavbarHeight`, `kNotchedNavbarHeight`.
+
 ## [0.5.0] Apr 08, 2023
 - Adds support for material3 navbar
 - Removes selectedLabelColor Property
