@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -92,7 +93,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     // simulateTabChange();
     NavbarNotifier.addIndexChangeListener((x) {
-      print('NavbarNotifier.indexChangeListener: $x');
+      log('NavbarNotifier.indexChangeListener: $x');
     });
   }
 

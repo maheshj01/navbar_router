@@ -113,12 +113,12 @@ class FeedDetail extends StatelessWidget {
       appBar: AppBar(
         title: Text('Feed $feedId'),
       ),
-      body: Center(
+      body: const Center(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
+            children: [
               Placeholder(
                 fallbackHeight: 200,
                 fallbackWidth: 300,
@@ -301,13 +301,13 @@ class UserProfile extends StatelessWidget {
             )
           ],
           title: const Text('Hi User')),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Text('Hi My Name is'),
                 SizedBox(
                   width: 10,
