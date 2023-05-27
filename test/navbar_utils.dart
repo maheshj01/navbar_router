@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:navbar_router/navbar_router.dart';
+import 'package:navbar_router/src/navigate.dart';
 
 const String placeHolderText =
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
@@ -184,7 +185,7 @@ class _ProductListState extends State<ProductList> {
               child: InkWell(
                   onTap: () {
                     NavbarNotifier.hideBottomNavBar = false;
-                    navigate(context, ProductDetail.route,
+                    Navigate.pushNamed(context, ProductDetail.route,
                         isRootNavigator: false,
                         arguments: {'id': index.toString()});
                   },
@@ -245,7 +246,7 @@ class ProductDetail extends StatelessWidget {
           TextButton(
               onPressed: () {
                 NavbarNotifier.hideBottomNavBar = false;
-                navigate(context, ProductComments.route,
+                Navigate.pushNamed(context, ProductComments.route,
                     isRootNavigator: false,
                     arguments: {'id': argsId.toString()});
               },
@@ -296,7 +297,8 @@ class UserProfile extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
-                navigate(context, ProfileEdit.route, isRootNavigator: false);
+                Navigate.pushNamed(context, ProfileEdit.route,
+                    isRootNavigator: false);
               },
             )
           ],

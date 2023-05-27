@@ -183,13 +183,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Future<void> navigate(BuildContext context, String route,
-        {bool isDialog = false,
-        bool isRootNavigator = true,
-        Map<String, dynamic>? arguments}) =>
-    Navigator.of(context, rootNavigator: isRootNavigator)
-        .pushNamed(route, arguments: arguments);
-
 const Color mediumPurple = Color.fromRGBO(79, 0, 241, 1.0);
 const String placeHolderText =
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
@@ -252,10 +245,12 @@ class _HomeFeedsState extends State<HomeFeeds> {
           return InkWell(
               onTap: () {
                 NavbarNotifier.hideBottomNavBar = false;
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (contex) => FeedDetail(
-                          feedId: index.toString(),
-                        )));
+                Navigate.push(
+                    context,
+                    FeedDetail(
+                      feedId: index.toString(),
+                    ),
+                    transitionType: TransitionType.fade);
               },
               child: FeedTile(
                 index: index,
@@ -390,7 +385,8 @@ class _ProductListState extends State<ProductList> {
               child: InkWell(
                   onTap: () {
                     NavbarNotifier.hideBottomNavBar = false;
-                    navigate(context, ProductDetail.route,
+                    Navigate.pushNamed(context, ProductDetail.route,
+                        transitionType: TransitionType.scale,
                         isRootNavigator: false,
                         arguments: {'id': index.toString()});
                   },
@@ -451,7 +447,7 @@ class ProductDetail extends StatelessWidget {
           TextButton(
               onPressed: () {
                 NavbarNotifier.hideBottomNavBar = false;
-                navigate(context, ProductComments.route,
+                Navigate.pushNamed(context, ProductComments.route,
                     isRootNavigator: false,
                     arguments: {'id': argsId.toString()});
               },
@@ -502,7 +498,8 @@ class UserProfile extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
-                navigate(context, ProfileEdit.route, isRootNavigator: false);
+                Navigate.pushNamed(context, ProfileEdit.route,
+                    isRootNavigator: false);
               },
             )
           ],

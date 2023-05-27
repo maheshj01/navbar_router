@@ -1,3 +1,6 @@
+## [0.5.2] May 28, 2023
+- Adds `Navigate` class to help with navigation with transitions.
+
 ## [0.5.1] May 21, 2023
 - Defines global navbar height constants `kStandardNavbarHeight`, `kM3NavbarHeight`, `kNotchedNavbarHeight`.
 

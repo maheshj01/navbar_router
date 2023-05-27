@@ -31,7 +31,7 @@ So we need to declare a Map of routes as follows
   };
 ```
 
-The key of the outer Map is the index of the NavbarItem. The key of the inner Map is the route name and the value is the Widget to be displayed. Each key in the outer map must have a key `/` which is the initial route (default) for that NavbarItem. 
+The key of the outer Map is the index of the NavbarItem. The key of the inner Map is the route name and the value is the Widget to be displayed. Each key in the outer map must have a key `/` which is the initial route (default) for that NavbarItem.
 
 For instance `HomeFeeds()` is the initial route for the first NavbarItem. if you want to change the initial route for a NavbarItem, then you need to specify that in `DestinationRouter` when specifying list of destinations.
 
@@ -47,12 +47,14 @@ For instance `HomeFeeds()` is the initial route for the first NavbarItem. if you
 
 ### Pushing Routes within NavbarItem (Persists Navbar by default)
 
-*A helper method `navigate` is built within NavbarRouter to push routes*
+*A helper  class `Navigate` is built within NavbarRouter to push routes*
+This class is a wrapper around Flutter's [Navigator](https://api.flutter.dev/flutter/widgets/Navigator-class.html) and provides a simple API to push routes. It also makes possible to add transitions to routes with a enum `TransitionType`.
 
+```dart
 Setting the `isRootNavigator` to `false` will push the route ontop of the existing route (Within NavbarRouter)
 
 ```dart
- navigate(context, ProductDetail.route,
+ Navigate.pushNamed(context, ProductDetail.route,
   isRootNavigator: false,
   arguments: {'id': index.toString()}
 );
@@ -64,7 +66,7 @@ Setting the `isRootNavigator` to `false` will push the route ontop of the existi
 if you want to push a router on top of NavbarRouter you simply need to set the `isRootNavigator` to `true` (default)
 
 ```dart
- navigate(context, ProductDetail.route,
+ Navigate.pushNamed(context, ProductDetail.route,
   isRootNavigator: true,
   arguments: {'id': index.toString()}
 );
