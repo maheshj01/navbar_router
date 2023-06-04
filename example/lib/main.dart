@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:navbar_router/navbar_router.dart';
@@ -15,13 +16,66 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'BottomNavbar Demo',
-        theme: ThemeData(
-            useMaterial3: true,
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue)),
-        home: const HomePage());
+    return AnimatedBuilder(
+        animation: appSetting,
+        builder: (BuildContext context, Widget? child) {
+          return MaterialApp(
+              title: 'BottomNavbar Demo',
+              themeMode:
+                  appSetting.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+              darkTheme: ThemeData.dark(
+                useMaterial3: true,
+              ).copyWith(
+                  colorScheme: ColorScheme.fromSeed(
+                      seedColor: appSetting.themeSeed,
+                      brightness: Brightness.dark)),
+              theme: ThemeData(
+                  useMaterial3: true,
+                  primaryColorDark: appSetting.themeSeed,
+                  colorScheme:
+                      ColorScheme.fromSeed(seedColor: appSetting.themeSeed)),
+              home: const HomePage());
+        });
     // home: const NavbarSample(title: 'BottomNavbar Demo'));
+  }
+}
+
+AppSetting appSetting = AppSetting();
+final List<Color> themeColorSeed = [
+  Colors.blue,
+  Colors.red,
+  Colors.green,
+  Colors.purple,
+  Colors.orange,
+  Colors.teal,
+  Colors.pink,
+  Colors.indigo,
+  Colors.brown,
+  Colors.cyan,
+  Colors.deepOrange,
+  Colors.deepPurple,
+  Colors.lime,
+  Colors.amber,
+  Colors.lightBlue,
+  Colors.lightGreen,
+  Colors.yellow,
+  Colors.grey,
+];
+
+class AppSetting extends ChangeNotifier {
+  bool isDarkMode;
+  Color themeSeed = Colors.blue;
+
+  AppSetting({this.isDarkMode = false});
+
+  void changeThemeSeed(Color color) {
+    themeSeed = color;
+    notifyListeners();
+  }
+
+  void toggleTheme() {
+    isDarkMode = !isDarkMode;
+    notifyListeners();
   }
 }
 
@@ -90,7 +144,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    simulateTabChange();
+    // simulateTabChange();
     NavbarNotifier.addIndexChangeListener((x) {
       log('NavbarNotifier.indexChangeListener: $x');
     });
@@ -149,18 +203,19 @@ class _HomePageState extends State<HomePage> {
         type: NavbarType.material3,
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 600,
-        decoration: M3NavbarDecoration(
+        decoration: NotchedDecoration(
             // labelTextStyle: const TextStyle(
             //     color: Color.fromARGB(255, 176, 207, 233), fontSize: 14),
             // elevation: 3.0,
-            // backgroundColor: Theme.of(context).colorScheme.surface,
-            indicatorShape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-            ),
+            // backgroundColor: Colors.white,
+            // indicatorShape: const RoundedRectangleBorder(
+            //   borderRadius: BorderRadius.all(Radius.circular(20)),
+            // ),
             // indicatorColor: const Color.fromARGB(255, 176, 207, 233),
-            // iconTheme: const IconThemeData(color: Colors.indigo),
-            /// labelTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow),
+            // // iconTheme: const IconThemeData(color: Colors.indigo),
+            // /// labelTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
+            // labelBehavior: NavigationDestinationLabelBehavior.alwaysShow
+            ),
         onChanged: (x) {},
         backButtonBehavior: BackButtonBehavior.rememberHistory,
         destinations: [
@@ -268,28 +323,31 @@ class FeedTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 300,
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-      color: Colors.grey.withOpacity(0.4),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 4,
-            right: 4,
-            left: 4,
-            child: Container(
-              color: Colors.grey,
-              height: 180,
-              alignment: Alignment.center,
-              child: Text('Feed $index card'),
+      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+      color: Theme.of(context).colorScheme.surface,
+      child: Card(
+        child: Stack(
+          children: [
+            Positioned(
+              top: 4,
+              right: 4,
+              left: 4,
+              child: Container(
+                height: 180,
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+                color: Theme.of(context).colorScheme.secondary,
+                alignment: Alignment.center,
+                child: Text('Feed $index card'),
+              ),
             ),
-          ),
-          Positioned(
-              bottom: 12,
-              right: 12,
-              left: 12,
-              child: Text(placeHolderText.substring(0, 200)))
-        ],
+            Positioned(
+                bottom: 12,
+                right: 12,
+                left: 12,
+                child: Text(placeHolderText.substring(0, 200)))
+          ],
+        ),
       ),
     );
   }
@@ -402,22 +460,23 @@ class ProductTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        color: Colors.grey.withOpacity(0.5),
-        height: 120,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              margin: const EdgeInsets.all(8),
-              height: 75,
-              width: 75,
-              color: Colors.grey,
-            ),
-            Text('Product $index'),
-          ],
-        ));
+    return Card(
+      child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          height: 120,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: const EdgeInsets.all(8),
+                height: 75,
+                width: 75,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              Text('Product $index'),
+            ],
+          )),
+    );
   }
 }
 
@@ -473,7 +532,7 @@ class ProductComments extends StatelessWidget {
           child: SizedBox(
             height: 60,
             child: ListTile(
-              tileColor: Colors.grey.withOpacity(0.5),
+              tileColor: Theme.of(context).colorScheme.secondaryContainer,
               title: Text('Comment $index'),
             ),
           ),
@@ -545,20 +604,44 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  double index = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: ListView.builder(
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text('Setting $index'),
-            );
-          }),
-    );
+        appBar: AppBar(
+          title: const Text('Settings'),
+          actions: [
+            Switch(
+                value: appSetting.isDarkMode,
+                onChanged: (x) {
+                  appSetting.toggleTheme();
+                  setState(() {});
+                })
+          ],
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Slide to change theme color',
+                  style: TextStyle(fontSize: 20, color: appSetting.themeSeed)),
+              const SizedBox(
+                height: 20,
+              ),
+              CupertinoSlider(
+                  value: index,
+                  min: 0,
+                  thumbColor: appSetting.themeSeed,
+                  max: themeColorSeed.length.toDouble() - 1,
+                  onChanged: (x) {
+                    setState(() {
+                      index = x;
+                    });
+                    appSetting.changeThemeSeed(themeColorSeed[index.toInt()]);
+                  })
+            ],
+          ),
+        ));
   }
 }
 
