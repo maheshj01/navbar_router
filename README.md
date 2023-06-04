@@ -108,7 +108,7 @@ Your app has three tabs and you navigate from Tab1 -> Tab2 -> Tab3
 - `BackButtonBehavior.exit` (default)
   when you press Back Button (on Tab3) your app will exit
 
-- `behavior: BackButtonBehavior.rememberHistory`,
+- `BackButtonBehavior.rememberHistory`,
   This will switch the navbar current index to the last selected NavbarItem (Tab 2) from the navbarHistory.
 
 <img src="https://user-images.githubusercontent.com/31410839/184479993-01c85b2d-4453-4137-93b2-5242d1ed0e7e.gif" width ="300">
