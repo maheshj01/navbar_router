@@ -4,7 +4,7 @@ enum NavbarType { standard, notched, material3 }
 
 const double kM3NavbarHeight = 80.0;
 const double kStandardNavbarHeight = kBottomNavigationBarHeight;
-const double kNotchedNavbarHeight = kBottomNavigationBarHeight * 1.4;
+const double kNotchedNavbarHeight = kBottomNavigationBarHeight * 1.45;
 
 class _AnimatedNavBar extends StatefulWidget {
   const _AnimatedNavBar(
@@ -494,24 +494,16 @@ class NotchedNavBarState extends State<NotchedNavBar>
               animation: _controller!,
               builder: (context, snapshot) {
                 return ClipPath(
-                  clipper: NotchedClipper(
-                      index: NavbarNotifier.currentIndex,
-                      animation: notchAnimation.value),
-                  child: Container(
-                    decoration: BoxDecoration(
+                    clipper: NotchedClipper(
+                        index: NavbarNotifier.currentIndex,
+                        animation: notchAnimation.value),
+                    child: Material(
                       color: widget.decoration.backgroundColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 10,
-                          spreadRadius: 5,
-                        ),
-                      ],
-                    ),
-                    height: widget.navbarHeight,
-                    alignment: Alignment.center,
-                  ),
-                );
+                      child: SizedBox(
+                        height: widget.navbarHeight,
+                        width: double.infinity,
+                      ),
+                    ));
               }),
           Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             for (int i = 0; i < widget.menuItems.length; i++)
@@ -590,13 +582,13 @@ class NotchedClipper extends CustomClipper<Path> {
 
     Offset point1 = Offset(centerX - curveRadius - 20, 0);
     path.lineTo(point1.dx - 40, point1.dy);
-    point1 = Offset(point1.dx + 20, -10);
+    point1 = Offset(point1.dx + 20, -8);
     Offset point2 = Offset(point1.dx, 20);
     path.quadraticBezierTo(point1.dx, point1.dy, point2.dx, point2.dy);
     Offset point3 = Offset(centerX + curveRadius, 20);
     path.arcToPoint(point3,
         radius: const Radius.circular(10), clockwise: false);
-    Offset point4 = Offset(point3.dx, -6);
+    Offset point4 = Offset(point3.dx, -8);
     Offset point5 = Offset(point4.dx + 40, 0);
     path.quadraticBezierTo(point4.dx, point4.dy, point5.dx, point5.dy);
     // center point of the notch curve
