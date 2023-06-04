@@ -76,7 +76,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
     final theme = Theme.of(context);
     final defaultDecoration = NavbarDecoration(
         backgroundColor: theme.bottomNavigationBarTheme.backgroundColor ??
-            theme.colorScheme.primary,
+            theme.colorScheme.surface,
         elevation: 8,
         showUnselectedLabels: true,
         unselectedIconColor: theme.bottomNavigationBarTheme.unselectedItemColor,
@@ -151,26 +151,22 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
         case NavbarType.material3:
           if (widget.decoration != null) {
             final decoration0 = defaultDecoration.copyWith(
-                backgroundColor: widget.decoration!.backgroundColor ??
-                    Theme.of(context).primaryColor,
-                elevation: widget.decoration!.elevation,
-                showUnselectedLabels: widget.decoration!.showUnselectedLabels,
-                unselectedIconColor: widget.decoration!.unselectedIconColor,
-                unselectedLabelColor: widget.decoration!.unselectedLabelColor,
-                unselectedItemColor: widget.decoration!.unselectedItemColor,
-                unselectedLabelTextStyle:
-                    widget.decoration!.unselectedLabelTextStyle,
-                unselectedIconTheme: widget.decoration!.unselectedIconTheme,
-                selectedIconTheme: widget.decoration!.selectedIconTheme ??
-                    theme.iconTheme.copyWith(color: foregroundColor),
-                enableFeedback: widget.decoration!.enableFeedback,
-                indicatorColor: widget.decoration!.indicatorColor,
-                labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-                navbarType: BottomNavigationBarType.shifting,
-                selectedLabelTextStyle:
-                    widget.decoration!.selectedLabelTextStyle,
-                showSelectedLabels:
-                    widget.decoration!.showSelectedLabels ?? true);
+              backgroundColor: widget.decoration!.backgroundColor ??
+                  theme.colorScheme.surface,
+              elevation: widget.decoration!.elevation,
+              selectedIconTheme: widget.decoration!.selectedIconTheme ??
+                  theme.iconTheme
+                      .copyWith(color: theme.colorScheme.onSecondaryContainer),
+              indicatorColor: widget.decoration!.indicatorColor ??
+                  theme.colorScheme.secondaryContainer,
+              labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+              indicatorShape: widget.decoration!.indicatorShape,
+              selectedLabelTextStyle:
+                  widget.decoration!.selectedLabelTextStyle ??
+                      theme.textTheme.bodySmall!.copyWith(
+                        color: theme.colorScheme.onSurface,
+                      ),
+            );
             return M3NavBar(
               index: NavbarNotifier.currentIndex,
               m3Decoration:
@@ -691,24 +687,28 @@ class M3NavBarState extends State<M3NavBar>
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
+          useMaterial3: true,
           navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: widget.decoration.backgroundColor,
-        elevation: widget.elevation,
-        labelTextStyle:
-            MaterialStateProperty.all(widget.decoration.selectedLabelTextStyle),
-        indicatorShape: widget.decoration.indicatorShape ??
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        iconTheme:
-            MaterialStateProperty.all(widget.decoration.selectedIconTheme),
-        labelBehavior: widget.decoration.showUnselectedLabels
-            ? NavigationDestinationLabelBehavior.alwaysShow
-            : NavigationDestinationLabelBehavior.onlyShowSelected,
-        indicatorColor: widget.decoration.indicatorColor,
-        height: widget.height,
-      )),
+            backgroundColor: widget.decoration.backgroundColor ??
+                Theme.of(context).colorScheme.surface,
+            elevation: widget.elevation,
+            labelTextStyle: MaterialStateProperty.all(
+                widget.decoration.selectedLabelTextStyle),
+            indicatorShape: widget.decoration.indicatorShape ??
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0)),
+            iconTheme:
+                MaterialStateProperty.all(widget.decoration.selectedIconTheme),
+            labelBehavior: widget.decoration.showUnselectedLabels
+                ? NavigationDestinationLabelBehavior.alwaysShow
+                : NavigationDestinationLabelBehavior.onlyShowSelected,
+            indicatorColor: widget.decoration.indicatorColor,
+            height: widget.height,
+          )),
       child: NavigationBar(
           height: widget.height,
-          backgroundColor: widget.decoration.backgroundColor,
+          backgroundColor: widget.decoration.backgroundColor ??
+              Theme.of(context).colorScheme.surface,
           animationDuration: const Duration(milliseconds: 300),
           elevation: widget.elevation,
           labelBehavior: widget.labelBehavior,

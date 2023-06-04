@@ -18,8 +18,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'BottomNavbar Demo',
         theme: ThemeData(
-          primarySwatch: Colors.indigo,
-        ),
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue)),
         home: const HomePage());
     // home: const NavbarSample(title: 'BottomNavbar Demo'));
   }
@@ -64,8 +64,7 @@ class _HomePageState extends State<HomePage> {
       const SnackBar(
         behavior: SnackBarBehavior.floating,
         duration: Duration(milliseconds: 600),
-        margin: EdgeInsets.only(
-            bottom: kBottomNavigationBarHeight, right: 2, left: 2),
+        margin: EdgeInsets.only(bottom: kM3NavbarHeight, right: 2, left: 2),
         content: Text('Tap back button again to exit'),
       ),
     );
@@ -91,7 +90,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // simulateTabChange();
+    simulateTabChange();
     NavbarNotifier.addIndexChangeListener((x) {
       log('NavbarNotifier.indexChangeListener: $x');
     });
@@ -151,14 +150,14 @@ class _HomePageState extends State<HomePage> {
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 600,
         decoration: M3NavbarDecoration(
-            labelTextStyle: const TextStyle(
-                color: Color.fromARGB(255, 176, 207, 233), fontSize: 14),
-            elevation: 3.0,
-            backgroundColor: Colors.indigo,
+            // labelTextStyle: const TextStyle(
+            //     color: Color.fromARGB(255, 176, 207, 233), fontSize: 14),
+            // elevation: 3.0,
+            // backgroundColor: Theme.of(context).colorScheme.surface,
             indicatorShape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
-            indicatorColor: const Color.fromARGB(255, 176, 207, 233),
+            // indicatorColor: const Color.fromARGB(255, 176, 207, 233),
             // iconTheme: const IconThemeData(color: Colors.indigo),
             /// labelTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
             labelBehavior: NavigationDestinationLabelBehavior.alwaysShow),
@@ -515,12 +514,12 @@ class UserProfile extends StatelessWidget {
                 SizedBox(
                   width: 10,
                 ),
-                SizedBox(
-                  width: 100,
-                  child: TextField(
-                    decoration: InputDecoration(),
-                  ),
-                ),
+                // SizedBox(
+                //   width: 100,
+                //   child: TextField(
+                //     decoration: InputDecoration(),
+                //   ),
+                // ),
               ],
             ),
             const SizedBox(
