@@ -723,7 +723,8 @@ void main() {
   });
 
   group('Test NavbarType: NavbarType.material3 ', () {
-    group('NavbarType.material3: should build destination and navbar items',
+    group(
+        'NavbarType.material3: should build destination and navbar items (Desktop)',
         () {
       testWidgets('navbar_router should build destinations',
           (WidgetTester tester) async {

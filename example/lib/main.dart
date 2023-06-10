@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
               title: 'BottomNavbar Demo',
               routes: {
-                ProfileEdit.route: (context) => ProfileEdit(),
+                ProfileEdit.route: (context) => const ProfileEdit(),
               },
               themeMode:
                   appSetting.isDarkMode ? ThemeMode.dark : ThemeMode.light,
@@ -206,19 +206,20 @@ class _HomePageState extends State<HomePage> {
         type: NavbarType.material3,
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 600,
-        decoration: NotchedDecoration(
-            // labelTextStyle: const TextStyle(
-            //     color: Color.fromARGB(255, 176, 207, 233), fontSize: 14),
-            // elevation: 3.0,
-            // backgroundColor: Colors.white,
-            // indicatorShape: const RoundedRectangleBorder(
-            //   borderRadius: BorderRadius.all(Radius.circular(20)),
-            // ),
-            // indicatorColor: const Color.fromARGB(255, 176, 207, 233),
-            // // iconTheme: const IconThemeData(color: Colors.indigo),
-            // /// labelTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
-            // labelBehavior: NavigationDestinationLabelBehavior.alwaysShow
-            ),
+        decoration: M3NavbarDecoration(
+          isExtended: true,
+
+          // labelTextStyle: const TextStyle(
+          //     color: Color.fromARGB(255, 176, 207, 233), fontSize: 14),
+          elevation: 3.0,
+          // indicatorShape: const RoundedRectangleBorder(
+          //   borderRadius: BorderRadius.all(Radius.circular(20)),
+          // ),
+          // indicatorColor: const Color.fromARGB(255, 176, 207, 233),
+          // // iconTheme: const IconThemeData(color: Colors.indigo),
+          // /// labelTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
+          // labelBehavior: NavigationDestinationLabelBehavior.alwaysShow
+        ),
         onChanged: (x) {},
         backButtonBehavior: BackButtonBehavior.rememberHistory,
         destinations: [

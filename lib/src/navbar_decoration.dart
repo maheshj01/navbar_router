@@ -195,6 +195,7 @@ class M3NavbarDecoration extends NavbarDecoration {
     /// iconTheme for the icons
     IconThemeData? iconTheme,
     ShapeBorder? indicatorShape,
+    bool? isExtended,
   }) : super(
           backgroundColor: backgroundColor,
           elevation: elevation,
@@ -203,6 +204,7 @@ class M3NavbarDecoration extends NavbarDecoration {
           selectedLabelTextStyle: labelTextStyle,
           indicatorShape: indicatorShape,
           selectedIconTheme: iconTheme,
+          isExtended: isExtended ?? false,
         );
 
   factory M3NavbarDecoration.fromNavbarDecoration(
@@ -214,10 +216,9 @@ class M3NavbarDecoration extends NavbarDecoration {
           iconTheme: navbarDecoration.selectedIconTheme,
           indicatorColor: navbarDecoration.indicatorColor,
           indicatorShape: navbarDecoration.indicatorShape,
+          isExtended: navbarDecoration.isExtended,
           labelBehavior: navbarDecoration.labelBehavior ??
               NavigationDestinationLabelBehavior.alwaysShow);
-
-  /// to navb bar decoration
 
   NavbarDecoration toNavbarDecoration() => NavbarDecoration(
         backgroundColor: backgroundColor,
@@ -228,5 +229,6 @@ class M3NavbarDecoration extends NavbarDecoration {
         unselectedLabelColor: unselectedLabelColor,
         unselectedLabelTextStyle: unselectedLabelTextStyle,
         labelBehavior: labelBehavior,
+        isExtended: isExtended,
       );
 }
