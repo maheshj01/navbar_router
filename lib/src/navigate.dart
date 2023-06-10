@@ -80,7 +80,7 @@ class Navigate<T> {
       Navigator.of(context, rootNavigator: isRootNavigator)
           .popUntil((route) => route.isFirst);
 
-  Future<void> popView(BuildContext context,
+  static Future<void> popView<T>(BuildContext context,
           {T? value, bool isRootNavigator = true}) async =>
       Navigator.of(context, rootNavigator: isRootNavigator).pop(value);
 
