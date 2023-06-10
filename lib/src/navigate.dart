@@ -38,7 +38,7 @@ enum TransitionType {
 
 class Navigate<T> {
   /// Replace the top widget with another widget
-  Future<T?> pushReplace(BuildContext context, Widget widget,
+  static Future<T?> pushReplace<T>(BuildContext context, Widget widget,
       {bool isDialog = false,
       bool isRootNavigator = true,
       TransitionType slideTransitionType = TransitionType.scale}) async {
@@ -47,21 +47,31 @@ class Navigate<T> {
     return value;
   }
 
-  static Future<void> push(BuildContext context, Widget widget,
+  static Future<T?> pushReplaceNamed<T>(
+    BuildContext context,
+    String path, {
+    bool isDialog = false,
+    Object? arguments,
+  }) async {
+    final T? value = await Navigator.of(context, rootNavigator: false)
+        .pushReplacementNamed(path, arguments: arguments);
+    return value;
+  }
+
+  static Future<T?> push<T>(BuildContext context, Widget widget,
       {bool isDialog = false,
       bool isRootNavigator = true,
       TransitionType transitionType = TransitionType.scale}) async {
-    await Navigator.of(context, rootNavigator: isRootNavigator)
+    final T value = await Navigator.of(context, rootNavigator: isRootNavigator)
         .push(NavigateRoute(widget, type: transitionType));
-    // return value;
+    return value;
   }
 
   static Future<void> pushNamed(BuildContext context, String path,
       {bool isDialog = false,
       Object? arguments,
-      bool isRootNavigator = true,
       TransitionType transitionType = TransitionType.scale}) async {
-    await Navigator.of(context, rootNavigator: isRootNavigator)
+    await Navigator.of(context, rootNavigator: false)
         .pushNamed(path, arguments: arguments);
   }
 

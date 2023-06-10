@@ -444,7 +444,6 @@ class _ProductListState extends State<ProductList> {
                     NavbarNotifier.hideBottomNavBar = false;
                     Navigate.pushNamed(context, ProductDetail.route,
                         transitionType: TransitionType.scale,
-                        isRootNavigator: false,
                         arguments: {'id': index.toString()});
                   },
                   child: ProductTile(index: index)),
@@ -506,7 +505,6 @@ class ProductDetail extends StatelessWidget {
               onPressed: () {
                 NavbarNotifier.hideBottomNavBar = false;
                 Navigate.pushNamed(context, ProductComments.route,
-                    isRootNavigator: false,
                     arguments: {'id': argsId.toString()});
               },
               child: const Text('show comments'))
@@ -556,8 +554,8 @@ class UserProfile extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
-                Navigate.pushNamed(context, ProfileEdit.route,
-                    isRootNavigator: false);
+                Navigate.push(context, const ProfileEdit(),
+                    isRootNavigator: true);
               },
             )
           ],

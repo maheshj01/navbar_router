@@ -1,4 +1,4 @@
-## **navbar_router v0.5.2**
+## **navbar_router v0.5.3**
 
 <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
@@ -134,15 +134,15 @@ You can choose between different NavbarTypes using the `NavbarDecoration.navbarT
 
 ### NavbarType.standard (default)
 
-![ezgif com-gif-maker (1)](docs/assets/navbar-type1.gif)
+![Standard Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/62d6154f-dcf5-4aa9-a819-e2c84caebad1)
 
 ### NavbarType.notched
 
-![ezgif com-gif-maker (2)](docs/assets/navbar-type2.gif)
+![Notched Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/5378f9cd-a6ac-4c6b-bd2a-a706e87b89eb)
 
 ### NavbarType.material3
 
-![m3navbar](docs/assets/m3navbar.gif)
+![Material3 Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/027adf4f-d527-4dc5-ac22-8fe321734977)
 
 ## Hide or show bottomNavigationBar
 

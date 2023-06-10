@@ -1,3 +1,9 @@
+## [0.5.3] June 10, 2023
+
+- deprecate `navigate` method in favor of `Navigate` class
+- Adds Navigate.pushReplaceNamed method
+- removes `'isRootNavigator` from Named Routes
+
 ## [0.5.2] June 4, 2023
 
 - Adds `Navigate` class to help with navigation with transitions.
