@@ -21,6 +21,9 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext context, Widget? child) {
           return MaterialApp(
               title: 'BottomNavbar Demo',
+              routes: {
+                ProfileEdit.route: (context) => ProfileEdit(),
+              },
               themeMode:
                   appSetting.isDarkMode ? ThemeMode.dark : ThemeMode.light,
               darkTheme: ThemeData.dark(
@@ -554,7 +557,7 @@ class UserProfile extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
-                Navigate.push(context, const ProfileEdit(),
+                Navigate.pushNamed(context, ProfileEdit.route,
                     isRootNavigator: true);
               },
             )

@@ -47,13 +47,11 @@ class Navigate<T> {
     return value;
   }
 
-  static Future<T?> pushReplaceNamed<T>(
-    BuildContext context,
-    String path, {
-    bool isDialog = false,
-    Object? arguments,
-  }) async {
-    final T? value = await Navigator.of(context, rootNavigator: false)
+  static Future<T?> pushReplaceNamed<T>(BuildContext context, String path,
+      {bool isDialog = false,
+      Object? arguments,
+      bool isRootNavigator = false}) async {
+    final T? value = await Navigator.of(context, rootNavigator: isRootNavigator)
         .pushReplacementNamed(path, arguments: arguments);
     return value;
   }
@@ -70,8 +68,9 @@ class Navigate<T> {
   static Future<void> pushNamed(BuildContext context, String path,
       {bool isDialog = false,
       Object? arguments,
-      TransitionType transitionType = TransitionType.scale}) async {
-    await Navigator.of(context, rootNavigator: false)
+      TransitionType transitionType = TransitionType.scale,
+      bool isRootNavigator = false}) async {
+    await Navigator.of(context, rootNavigator: isRootNavigator)
         .pushNamed(path, arguments: arguments);
   }
 

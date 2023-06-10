@@ -1,4 +1,4 @@
-## **navbar_router v0.5.3**
+## **navbar_router v0.5.4**
 
 <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 

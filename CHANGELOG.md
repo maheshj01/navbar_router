@@ -1,3 +1,7 @@
+## [0.5.4] June 10, 2023
+
+- Revert: removes `'isRootNavigator` from Named Routes
+
 ## [0.5.3] June 10, 2023
 
 - deprecate `navigate` method in favor of `Navigate` class
