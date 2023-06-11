@@ -1,4 +1,4 @@
-## [0.5.4] June 10, 2023
+## [0.5.5] June 11, 2023
 
 - Fix theme of NavbarRouter in Desktop mode (Material 3)
 

@@ -207,7 +207,7 @@ class _HomePageState extends State<HomePage> {
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 600,
         decoration: M3NavbarDecoration(
-          isExtended: true,
+          isExtended: size.width > 800 ? true : false,
 
           // labelTextStyle: const TextStyle(
           //     color: Color.fromARGB(255, 176, 207, 233), fontSize: 14),
