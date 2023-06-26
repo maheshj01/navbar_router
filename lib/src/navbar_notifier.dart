@@ -139,6 +139,79 @@ class NavbarNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  static void hideSnackBar(context) {
+    if (ScaffoldMessenger.of(context).mounted) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    }
+  }
+
+  static void _showMessage(BuildContext context, String message,
+      {bool isRoot = false,
+
+      /// margin from bottom
+      double? bottom,
+
+      /// whether the snackbar should persist or not
+      /// the persistence duration
+      Duration duration = const Duration(seconds: 3),
+      bool showCloseIcon = true,
+
+      /// Action label is shown when both [onPressed] and [actionLabel] are not null
+      String? actionLabel,
+      void Function()? onPressed,
+      void Function()? onClosed}) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(
+          SnackBar(
+            dismissDirection: DismissDirection.none,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(4),
+                topRight: Radius.circular(4),
+              ),
+            ),
+            behavior: bottom != null
+                ? SnackBarBehavior.floating
+                : SnackBarBehavior.fixed,
+            content: Text(
+              message,
+            ),
+            duration: duration,
+            margin: bottom != null ? EdgeInsets.only(bottom: bottom) : null,
+            showCloseIcon: showCloseIcon,
+            action: actionLabel == null || onPressed == null
+                ? null
+                : SnackBarAction(
+                    label: actionLabel ?? '',
+                    onPressed: onPressed,
+                  ),
+          ),
+        )
+        .closed
+        .whenComplete(() => onClosed == null ? null : onClosed());
+  }
+
+  static void showSnackBar(BuildContext context, String message,
+      {
+      /// margin from bottom of navbar defaults to [kNavbarHeight]
+      double? bottom,
+      String? actionLabel,
+      bool showCloseIcon = true,
+      Duration duration = const Duration(seconds: 3),
+      Function? onActionPressed}) {
+    _showMessage(
+      context,
+      message,
+      showCloseIcon: showCloseIcon,
+      actionLabel: actionLabel,
+      bottom: bottom ?? kNavbarHeight,
+      duration: duration,
+      onPressed: () => onActionPressed!(),
+      onClosed: () {},
+    );
+  }
+
   static void clear() {
     _indexChangeListeners.clear();
     _navbarStackHistory.clear();

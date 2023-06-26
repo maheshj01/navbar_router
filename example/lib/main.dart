@@ -116,21 +116,6 @@ class _HomePageState extends State<HomePage> {
     },
   };
 
-  void showSnackBar() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        behavior: SnackBarBehavior.floating,
-        duration: Duration(milliseconds: 600),
-        margin: EdgeInsets.only(bottom: kM3NavbarHeight, right: 2, left: 2),
-        content: Text('Tap back button again to exit'),
-      ),
-    );
-  }
-
-  void hideSnackBar() {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-  }
-
   DateTime oldTime = DateTime.now();
   DateTime newTime = DateTime.now();
 
@@ -164,23 +149,50 @@ class _HomePageState extends State<HomePage> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 60.0),
-        child: FloatingActionButton(
-          child: Icon(NavbarNotifier.isNavbarHidden
-              ? Icons.toggle_off
-              : Icons.toggle_on),
-          onPressed: () {
-            // Programmatically toggle the Navbar visibility
-            if (NavbarNotifier.isNavbarHidden) {
-              NavbarNotifier.hideBottomNavBar = false;
-            } else {
-              NavbarNotifier.hideBottomNavBar = true;
+      floatingActionButton: AnimatedBuilder(
+          animation: NavbarNotifier(),
+          builder: (context, child) {
+            if (NavbarNotifier.currentIndex < 1) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: kNavbarHeight),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const SizedBox(
+                      width: 100,
+                    ),
+                    FloatingActionButton.extended(
+                      onPressed: () {
+                        final state = Scaffold.of(context);
+                        NavbarNotifier.showSnackBar(
+                          context,
+                          "This is shown on top of the Floating Action Button",
+                          bottom:
+                              state.hasFloatingActionButton ? 0 : kNavbarHeight,
+                        );
+                      },
+                      label: Text("Show SnackBar"),
+                    ),
+                    FloatingActionButton(
+                      child: Icon(NavbarNotifier.isNavbarHidden
+                          ? Icons.toggle_off
+                          : Icons.toggle_on),
+                      onPressed: () {
+                        // Programmatically toggle the Navbar visibility
+                        if (NavbarNotifier.isNavbarHidden) {
+                          NavbarNotifier.hideBottomNavBar = false;
+                        } else {
+                          NavbarNotifier.hideBottomNavBar = true;
+                        }
+                        setState(() {});
+                      },
+                    ),
+                  ],
+                ),
+              );
             }
-            setState(() {});
-          },
-        ),
-      ),
+            return SizedBox.shrink();
+          }),
       body: NavbarRouter(
         errorBuilder: (context) {
           return const Center(child: Text('Error 404'));
@@ -192,22 +204,27 @@ class _HomePageState extends State<HomePage> {
             int difference = newTime.difference(oldTime).inMilliseconds;
             oldTime = newTime;
             if (difference < 1000) {
-              hideSnackBar();
+              NavbarNotifier.hideSnackBar(context);
               return isExitingApp;
             } else {
-              showSnackBar();
+              final state = Scaffold.of(context);
+              NavbarNotifier.showSnackBar(
+                context,
+                "Tap back button again to exit",
+                bottom: state.hasFloatingActionButton ? 0 : kNavbarHeight,
+              );
               return false;
             }
           } else {
             return isExitingApp;
           }
         },
-        initialIndex: 2,
+        initialIndex: 0,
         type: NavbarType.material3,
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 600,
         decoration: M3NavbarDecoration(
-          isExtended: true,
+          isExtended: size.width > 800 ? true : false,
 
           // labelTextStyle: const TextStyle(
           //     color: Color.fromARGB(255, 176, 207, 233), fontSize: 14),
@@ -571,18 +588,25 @@ class UserProfile extends StatelessWidget {
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Hi My Name is'),
+                Text('Hi! This is your Profile Page'),
                 SizedBox(
                   width: 10,
                 ),
-                // SizedBox(
-                //   width: 100,
-                //   child: TextField(
-                //     decoration: InputDecoration(),
-                //   ),
-                // ),
               ],
             ),
+            ElevatedButton(
+                onPressed: () {
+                  NavbarNotifier.showSnackBar(
+                    context,
+                    "This is a Floating SnackBar",
+                    actionLabel: "Action",
+                    onActionPressed: () {
+                      print("Action Button Pressed");
+                    },
+                    bottom: NavbarNotifier.currentIndex > 1 ? kNavbarHeight : 0,
+                  );
+                },
+                child: Text('Show SnackBar')),
             const SizedBox(
               height: 24,
             ),

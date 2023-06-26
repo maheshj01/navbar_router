@@ -60,6 +60,23 @@ You can remove the listener using the `removeLastListener` or using `removeAllLi
 ```dart
 NavbarNotifier.removeAllListeners();
 ```
+### Show/Hide the SnackBar
+
+NavbarRouter gives you the ability to show or hide the SnackBar. You can show or hide the SnackBar using the `showSnackBar` and `hideSnackBar` methods of the `NavbarNotifier` class.
+
+#### Show the SnackBar
+```dart
+    NavbarNotifier.showSnackBar(
+      context,
+      'This is a SnackBar',
+      duration: Duration(seconds: 2),
+    );
+```
+
+#### Hide the SnackBar
+```dart
+    NavbarNotifier.hideSnackBar(context);
+```
 
 
 

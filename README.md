@@ -1,4 +1,4 @@
-## **navbar_router v0.5.5**
+## **navbar_router v0.5.6**
 
 <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
@@ -8,7 +8,7 @@ This is a custom BottomNavigationBar created by considering most of the common u
 
 Most of the features which this package provides are mainly to improve the user experience by handling the smallest things possible.
 
-## **Features**
+## **Key Features**
 
 - Choose between different NavigationBar types.
 - Remembers navigation history of Navbar (Android).
@@ -16,6 +16,7 @@ Most of the features which this package provides are mainly to improve the user 
 - Intercept back button press to handle app exits (Android).
 - Fading between NavbarDestinations
 - Programmatically control state of bottom navbar from any part of widget tree e.g change index, hide/show bottom navbar, pop routes of a specific tab etc
+- Show Snackbar messages on top of Navbar with a single line of code.
 - persist state across bottom navbar tabs.
 - Jump to base route from a deep nested route with a single tap(same as instagram).
 - Adapatable to different device Sizes.
@@ -155,6 +156,27 @@ You can hide or show bottom navigationBar with a single line of code from anywhe
 |                    Hide/show navbar on scroll                     |                                             Hide/show navbar on drawer open/close                                              |
 | :---------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------: |
 | ![](https://miro.medium.com/max/800/1*NaYdY1FfsPFCNBdx3wg_og.gif) | <img src="https://user-images.githubusercontent.com/31410839/173987446-c8c79bb0-d24c-46c1-bc4a-582508a4e187.gif" width ="200"> |
+
+## Show Snackbar
+
+You can show a snackbar on top of the navbar by using the `NavbarNotifier.showSnackBar` method.
+
+![snackbar](https://github.com/flutter/flutter/assets/31410839/b2c95c3b-45fa-474c-acee-6f48a051f8ef)
+
+```dart
+NavbarNotifier.showSnackBar(
+  context,
+  "This is shown on top of the Floating Action Button",
+  /// offset from bottom of the screen
+  bottom: state.hasFloatingActionButton ? 0 : kNavbarHeight,
+);
+```
+
+And hide it using the `NavbarNotifier.hideSnackBar` method.
+
+```dart
+NavbarNotifier.hideSnackBar(context);
+```
 
 ## Intercept BackButton press events (Android)
 

@@ -1089,4 +1089,79 @@ void main() {
     NavbarNotifier.index = 3;
     expect(index, 2);
   });
+
+  group('Snackbar should be controlled using NavbarNotifier:', () {
+    testWidgets('Snackbar should be shown', (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate());
+      expect(find.byType(SnackBar), findsNothing);
+      final BuildContext context = tester.element(find.byType(NavbarRouter));
+      NavbarNotifier.showSnackBar(context, "This is a Snackbar message");
+      await tester.pumpAndSettle();
+      expect(find.byType(SnackBar), findsOneWidget);
+    });
+
+    testWidgets('Snackbar should be hidden', (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate());
+      expect(find.byType(SnackBar), findsNothing);
+      final BuildContext context = tester.element(find.byType(NavbarRouter));
+      NavbarNotifier.showSnackBar(context, "This is a Snackbar message",
+          duration: const Duration(seconds: 5));
+      await tester.pumpAndSettle();
+      expect(find.byType(SnackBar), findsOneWidget);
+      NavbarNotifier.hideSnackBar(context);
+      await tester.pumpAndSettle();
+      expect(find.byType(SnackBar), findsNothing);
+    });
+
+    testWidgets('Snackbar should hide after duration',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate());
+      expect(find.byType(SnackBar), findsNothing);
+      final BuildContext context = tester.element(find.byType(NavbarRouter));
+      NavbarNotifier.showSnackBar(context, "This is a Snackbar message",
+          duration: const Duration(seconds: 5));
+      await tester.pumpAndSettle();
+      expect(find.byType(SnackBar), findsOneWidget);
+      await tester.pumpAndSettle(const Duration(seconds: 4));
+      expect(find.byType(SnackBar), findsOneWidget);
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+      expect(find.byType(SnackBar), findsNothing);
+    });
+
+    testWidgets("Snackbar should be closed with closeIcon", (tester) async {
+      await tester.pumpWidget(boilerplate());
+      expect(find.byType(SnackBar), findsNothing);
+      final BuildContext context = tester.element(find.byType(NavbarRouter));
+      NavbarNotifier.showSnackBar(
+        context,
+        "This is a Snackbar message",
+        duration: const Duration(seconds: 5),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(SnackBar), findsOneWidget);
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pumpAndSettle();
+      expect(find.byType(SnackBar), findsNothing);
+    });
+
+    testWidgets("Snackbar action label should be tappable", (tester) async {
+      await tester.pumpWidget(boilerplate());
+      expect(find.byType(SnackBar), findsNothing);
+      final BuildContext context = tester.element(find.byType(NavbarRouter));
+      NavbarNotifier.showSnackBar(
+        context,
+        "This is a Snackbar message",
+        actionLabel: "Tap me",
+        onActionPressed: () {
+          NavbarNotifier.hideSnackBar(context);
+        },
+        duration: const Duration(seconds: 5),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(SnackBar), findsOneWidget);
+      await tester.tap(find.text("Tap me"));
+      await tester.pumpAndSettle();
+      expect(find.byType(SnackBar), findsNothing);
+    });
+  });
 }

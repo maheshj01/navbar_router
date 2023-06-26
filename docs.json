@@ -44,8 +44,12 @@
       "/routes-and-navigation"
     ],
     [
-      "Customizing Navbar",
-      "/customization"
+      "Types of Navbar",
+      "/types"
+    ],
+    [
+      "Show Snackbar message",
+      "/snackbar"
     ],
     [
       "Navbar Notifier",
