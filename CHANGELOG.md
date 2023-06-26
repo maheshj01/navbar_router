@@ -1,3 +1,7 @@
+## [0.5.6] June 25, 2023
+
+- Adds support for Floating Snackbar on top of NavbarRouter
+
 ## [0.5.5] June 11, 2023
 
 - Fix theme of NavbarRouter in Desktop mode (Material 3)
