@@ -188,7 +188,11 @@ class NavbarNotifier extends ChangeNotifier {
           ),
         )
         .closed
-        .whenComplete(() => onClosed == null ? null : onClosed());
+        .whenComplete(() {
+      if (onClosed != null) {
+        onClosed();
+      }
+    });
   }
 
   static void showSnackBar(BuildContext context, String message,
@@ -207,8 +211,16 @@ class NavbarNotifier extends ChangeNotifier {
       actionLabel: actionLabel,
       bottom: bottom ?? kNavbarHeight,
       duration: duration,
-      onPressed: () => onActionPressed!(),
-      onClosed: () => onClosed!(),
+      onPressed: () {
+        if (onActionPressed != null) {
+          onActionPressed();
+        }
+      },
+      onClosed: () {
+        if (onClosed != null) {
+          onClosed();
+        }
+      },
     );
   }
 

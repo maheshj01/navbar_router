@@ -1,3 +1,7 @@
+## [0.5.6] June 27, 2023 (Unreleased)
+
+- Expose onClosed property of Snackbar api.
+
 ## [0.5.6] June 25, 2023
 
 - Adds support for Floating Snackbar on top of NavbarRouter
