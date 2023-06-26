@@ -6,6 +6,9 @@ const double kM3NavbarHeight = 80.0;
 const double kStandardNavbarHeight = kBottomNavigationBarHeight;
 const double kNotchedNavbarHeight = kBottomNavigationBarHeight * 1.45;
 
+/// The height of the navbar based on the [NavbarType]
+double kNavbarHeight = 0.0;
+
 class _AnimatedNavBar extends StatefulWidget {
   const _AnimatedNavBar(
       {Key? key,
@@ -125,6 +128,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
     NavbarBase buildNavBar() {
       switch (widget.navbarType) {
         case NavbarType.standard:
+          kNavbarHeight = kBottomNavigationBarHeight;
           return StandardNavbar(
             navBarDecoration: widget.decoration ?? defaultDecoration,
             items: widget.menuItems,
@@ -132,6 +136,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
             navBarElevation: widget.decoration?.elevation,
           );
         case NavbarType.notched:
+          kNavbarHeight = kNotchedNavbarHeight;
           if (widget.decoration != null) {
             final decoration = defaultDecoration.copyWith(
                 backgroundColor: widget.decoration!.backgroundColor ??
@@ -169,6 +174,8 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
             );
           }
         case NavbarType.material3:
+          kNavbarHeight = kM3NavbarHeight;
+
           if (widget.decoration != null) {
             final decoration0 = defaultDecoration.copyWith(
               backgroundColor: widget.decoration!.backgroundColor ??
