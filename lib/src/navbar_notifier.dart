@@ -198,7 +198,8 @@ class NavbarNotifier extends ChangeNotifier {
       String? actionLabel,
       bool showCloseIcon = true,
       Duration duration = const Duration(seconds: 3),
-      Function? onActionPressed}) {
+      Function? onActionPressed,
+      Function? onClosed}) {
     _showMessage(
       context,
       message,
@@ -207,7 +208,7 @@ class NavbarNotifier extends ChangeNotifier {
       bottom: bottom ?? kNavbarHeight,
       duration: duration,
       onPressed: () => onActionPressed!(),
-      onClosed: () {},
+      onClosed: () => onClosed!(),
     );
   }
 
