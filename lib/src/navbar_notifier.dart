@@ -146,8 +146,7 @@ class NavbarNotifier extends ChangeNotifier {
   }
 
   static void _showMessage(BuildContext context, String message,
-      {bool isRoot = false,
-
+      {
       /// margin from bottom
       double? bottom,
 
@@ -183,7 +182,7 @@ class NavbarNotifier extends ChangeNotifier {
             action: actionLabel == null || onPressed == null
                 ? null
                 : SnackBarAction(
-                    label: actionLabel ?? '',
+                    label: actionLabel,
                     onPressed: onPressed,
                   ),
           ),

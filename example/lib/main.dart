@@ -171,7 +171,7 @@ class _HomePageState extends State<HomePage> {
                               state.hasFloatingActionButton ? 0 : kNavbarHeight,
                         );
                       },
-                      label: Text("Show SnackBar"),
+                      label: const Text("Show SnackBar"),
                     ),
                     FloatingActionButton(
                       child: Icon(NavbarNotifier.isNavbarHidden
@@ -191,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
             }
-            return SizedBox.shrink();
+            return const SizedBox.shrink();
           }),
       body: NavbarRouter(
         errorBuilder: (context) {
@@ -599,14 +599,14 @@ class UserProfile extends StatelessWidget {
                   NavbarNotifier.showSnackBar(
                     context,
                     "This is a Floating SnackBar",
-                    actionLabel: "Action",
+                    actionLabel: "Tap to close",
                     onActionPressed: () {
-                      print("Action Button Pressed");
+                      NavbarNotifier.hideSnackBar(context);
                     },
                     bottom: NavbarNotifier.currentIndex > 1 ? kNavbarHeight : 0,
                   );
                 },
-                child: Text('Show SnackBar')),
+                child: const Text('Show SnackBar')),
             const SizedBox(
               height: 24,
             ),
