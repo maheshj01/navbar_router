@@ -24,3 +24,5 @@ Each DestinationRouter specifies a List of Destinations, initialRoute, and the n
 ***onChanged***: A callback that is called when the currentIndex of the navbarchanges.
 
 ***shouldPopToBaseRoute***: A boolean which decides, whether the navbar should pop to the base route (pop all except first) when the current navbar is tapped while the route is deeply nested. This feature is similar to Instagram's navigation bar defaults to true.
+
+***onCurrentTabClicked***: A callback that is called when the selected navbar is tapped again. (This allows you to handle useCases like scroll to top when the navbar is tapped again or Pop to the base route similar to Instagram.)

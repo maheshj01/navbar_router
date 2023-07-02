@@ -4,9 +4,11 @@
 
 _Checkout our [extensive docs](https://docs.page/maheshmnj/navbar_router/) to learn more about this package, the inspiration behind it and how to use it._
 
-This is a custom BottomNavigationBar created by considering most of the common use cases of BottomNavigationBar in real world applications. This widget handles the boilerplate code required to handle some of the most common features (specified below) with minimal code and hassle. All you need to do is specify the navbar menu items, routes and destinations and the rest will be taken care by the navbar_router.
+#### Adding a BottomNavigationBar to your app?
 
-Most of the features which this package provides are mainly to improve the user experience by handling the smallest things possible.
+NavbarRouter is a complete package to handle all your BottomNavigationBar needs. It provides a simplest api to achieve the advanced features of BottomNavigationBar making the user experience of your app much better. You only need to specify the NavbarItems and the routes for each NavbarItem and NavbarRouter will take care of the rest.
+
+_Most of the features which this package provides are mainly to improve the user experience by handling the smallest things possible._
 
 ## **Key Features**
 
@@ -250,6 +252,8 @@ Each DestinationRouter specifies a List of Destinations, initialRoute, and the n
 **_onChanged_**: A callback that is called when the currentIndex of the navbarchanges.
 
 **_shouldPopToBaseRoute_**: A boolean which decides, whether the navbar should pop to the base route (pop all except first) when the current navbar is tapped while the route is deeply nested. This feature is similar to Instagram's navigation bar defaults to true.
+
+**_onCurrentTabClicked_**: A callback that is called when the selected navbar is tapped again. (This allows you to handle useCases like scroll to top when the navbar is tapped again or Pop to the base route similar to Instagram.)
 
 ### Curious how the navbar_router works?
 
