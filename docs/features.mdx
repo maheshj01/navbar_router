@@ -8,23 +8,23 @@ You can hide or show bottom navigationBar with a single line of code from anywhe
 NavbarNotifier.hideBottomNavBar = true;
 ```
 
-*Hide/show navbar on scroll*
+_Hide/show navbar on scroll_
 
 ![](https://miro.medium.com/max/800/1*NaYdY1FfsPFCNBdx3wg_og.gif)
 
-*Hide/show navbar on drawer open/close*
+_Hide/show navbar on drawer open/close_
 
 ![](https://user-images.githubusercontent.com/31410839/173987446-c8c79bb0-d24c-46c1-bc4a-582508a4e187.gif)
 
-###  Intercept BackButton press events (Android)
+### Intercept BackButton press events (Android)
 
 When the selected NavbarItem is at the root of the navigation stack (initial route), pressing the Back button (On Android) will by default trigger app exit which is correct. But sometimes you might want to intercept this event and do some chore work before exiting the app.
 
-*navbar_router* provides a `onBackButtonPressed` callback to intercept events from android back button, giving you the ability to handle app exits so as to prevent abrupt app exits without users consent.
+_navbar_router_ provides a `onBackButtonPressed` callback to intercept events from android back button, giving you the ability to handle app exits so as to prevent abrupt app exits without users consent.
 
 This callback method must return `true` to exit the app and false other wise.
 
-*sample code implementing double press back button to exit*
+_sample code implementing double press back button to exit_
 
 ```dart
 onBackButtonPressed: (isExitingApp) {
@@ -72,9 +72,9 @@ When your NavbarItems have multiple nested routes in the stack, tapping the same
 For instance if you have a List of products on tab 2 and you navigate deep within that tab
 Product List->Product Details->Product Reviews->Product Review Details and then you tap the same tab again, it will pop to the base route of the tab (Product List).
 
-See [Routes and Navigation](/navigation) for more details.
+See [Routes and Navigation](/routes-and-navigation) for more details.
 
-*Output: Tapping the same tab twice pops to base route.*
+_Output: Tapping the same tab twice pops to base route._
 
 ![](https://miro.medium.com/v2/resize:fit:600/1*xNViU_6pUKaP5tsjHcvwEg.gif)
 
@@ -98,6 +98,6 @@ The below code snippet shows Navbar switching to desktop mode when screen width 
 );
 ```
 
-*Output: Switches to desktop mode on resizing the window.*
+_Output: Switches to desktop mode on resizing the window._
 
 ![Navbar responsiveness](/assets/responsive.gif)
