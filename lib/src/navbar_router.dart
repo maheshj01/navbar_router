@@ -96,6 +96,9 @@ class NavbarRouter extends StatefulWidget {
   /// callback when the currentIndex changes
   final Function(int)? onChanged;
 
+  // callback when the same tab is clicked
+  final Function()? onCurrentTabClicked;
+
   /// The type of the [Navbar] that is to be rendered.
   /// defaults to [NavbarType.standard] which is a standard [BottomNavigationBar]
   ///
@@ -138,6 +141,7 @@ class NavbarRouter extends StatefulWidget {
       this.destinationAnimationCurve = Curves.fastOutSlowIn,
       this.destinationAnimationDuration = 700,
       this.backButtonBehavior = BackButtonBehavior.exit,
+      this.onCurrentTabClicked,
       this.onBackButtonPressed})
       : assert(destinations.length >= 2,
             "Destinations length must be greater than or equal to 2"),
@@ -305,6 +309,9 @@ class _NavbarRouterState extends State<NavbarRouter>
                         if (NavbarNotifier.currentIndex == x) {
                           if (widget.shouldPopToBaseRoute) {
                             NavbarNotifier.popAllRoutes(x);
+                          }
+                          if (widget.onCurrentTabClicked != null) {
+                            widget.onCurrentTabClicked!();
                           }
                         } else {
                           NavbarNotifier.index = x;

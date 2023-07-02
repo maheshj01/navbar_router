@@ -56,6 +56,8 @@ void main() {
       NavbarType type = NavbarType.standard,
       NavbarDecoration? decoration,
       int index = 0,
+      Function()? onCurrentTabClicked,
+      Function(int)? onChanged,
       List<NavbarItem> navBarItems = items}) {
     return MaterialApp(
       home: Directionality(
@@ -66,6 +68,8 @@ void main() {
                 errorBuilder: (context) {
                   return const Center(child: Text('Error 404'));
                 },
+                onChanged: onChanged,
+                onCurrentTabClicked: onCurrentTabClicked,
                 onBackButtonPressed: (isExiting) {
                   return isExiting;
                 },
@@ -1090,6 +1094,43 @@ void main() {
     expect(index, 2);
   });
 
+  testWidgets("onCurrentTabClicked should be invoked", (tester) async {
+    int index = 0;
+    await tester.pumpWidget(boilerplate(
+      onCurrentTabClicked: () {
+        index = 1;
+      },
+    ));
+    await tester.pumpAndSettle();
+    final productIcon = find.byIcon(items[1].iconData);
+    expect(productIcon, findsOneWidget);
+    await tester.tap(productIcon);
+    expect(index, 0);
+    await tester.pumpAndSettle();
+    await tester.tap(productIcon);
+    expect(index, 1);
+  });
+
+  testWidgets("onChanged callback should be invoked on Index change",
+      (tester) async {
+    int index = 0;
+    await tester.pumpWidget(boilerplate(
+      onChanged: (x) {
+        index = x;
+      },
+    ));
+    await tester.pumpAndSettle();
+    final productIcon = find.byIcon(items[1].iconData);
+    final homeIcon = find.byIcon(items[0].iconData);
+    expect(productIcon, findsOneWidget);
+    await tester.tap(productIcon);
+    expect(index, 1);
+    await tester.pumpAndSettle();
+    await tester.tap(homeIcon);
+    await tester.pumpAndSettle();
+    expect(index, 0);
+  });
+
   group('Snackbar should be controlled using NavbarNotifier:', () {
     testWidgets('Snackbar should be shown', (WidgetTester tester) async {
       await tester.pumpWidget(boilerplate());
@@ -1142,6 +1183,27 @@ void main() {
       await tester.tap(find.byIcon(Icons.close));
       await tester.pumpAndSettle();
       expect(find.byType(SnackBar), findsNothing);
+    });
+
+    testWidgets("Snackbar onClosed should be invoked", (tester) async {
+      await tester.pumpWidget(boilerplate());
+      expect(find.byType(SnackBar), findsNothing);
+      final BuildContext context = tester.element(find.byType(NavbarRouter));
+      bool isClosed = false;
+      NavbarNotifier.showSnackBar(
+        context,
+        "This is a Snackbar message",
+        duration: const Duration(seconds: 5),
+        onClosed: () {
+          isClosed = true;
+        },
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(SnackBar), findsOneWidget);
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pumpAndSettle();
+      expect(find.byType(SnackBar), findsNothing);
+      expect(isClosed, true);
     });
 
     testWidgets("Snackbar action label should be tappable", (tester) async {

@@ -1,6 +1,7 @@
 ## [0.5.6] June 27, 2023 (Unreleased)
 
 - Expose onClosed property of Snackbar api.
+- Expose `onCurrentTabClicked` property of NavbarRouter
 
 ## [0.5.6] June 25, 2023
 
