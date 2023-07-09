@@ -1,3 +1,7 @@
+## [0.5.8] July 09, 2023 (Unreleased)
+
+- add circular reveal transition animation
+
 ## [0.5.7] July 04, 2023
 
 - Expose onClosed property of Snackbar api.
