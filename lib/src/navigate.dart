@@ -33,7 +33,10 @@ enum TransitionType {
   fade,
 
   /// fade scale
-  fadeScale
+  fadeScale,
+
+  /// circular reveal
+  reveal
 }
 
 class Navigate<T> {
@@ -118,6 +121,46 @@ Offset getTransitionOffset(TransitionType type) {
   }
 }
 
+class CircleClipper extends CustomClipper<Path> {
+  final Offset center;
+  final double radius;
+
+  CircleClipper({required this.center, required this.radius});
+
+  @override
+  Path getClip(Size size) {
+    return Path()..addOval(Rect.fromCircle(radius: radius, center: center));
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return true;
+  }
+}
+
+Route circularRevealRoute(Widget child) {
+  return PageRouteBuilder(
+    transitionDuration: const Duration(milliseconds: 400),
+    reverseTransitionDuration: const Duration(milliseconds: 400),
+    opaque: false,
+    barrierDismissible: false,
+    pageBuilder: (context, animation, secondaryAnimation) => child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      final screenSize = MediaQuery.of(context).size;
+      Offset center = Offset(screenSize.width / 2, screenSize.height / 2);
+      double beginRadius = 0.0;
+      double endRadius = screenSize.height * 1.5;
+      final tween = Tween(begin: beginRadius, end: endRadius);
+      final radiusTweenAnimation = animation.drive(tween);
+      return ClipPath(
+        clipper:
+            CircleClipper(radius: radiusTweenAnimation.value, center: center),
+        child: child,
+      );
+    },
+  );
+}
+
 class NavigateRoute extends PageRouteBuilder {
   final Widget widget;
   final bool? rootNavigator;
@@ -135,8 +178,7 @@ class NavigateRoute extends PageRouteBuilder {
                 ),
                 child: child,
               );
-            }
-            if (type == TransitionType.fade) {
+            } else if (type == TransitionType.fade) {
               return FadeTransition(
                 opacity: animation.drive(
                   Tween(begin: 0.0, end: 1.0).chain(
@@ -145,8 +187,7 @@ class NavigateRoute extends PageRouteBuilder {
                 ),
                 child: child,
               );
-            }
-            if (type == TransitionType.fadeScale) {
+            } else if (type == TransitionType.fadeScale) {
               return ScaleTransition(
                 scale: animation.drive(
                   Tween(begin: 0.8, end: 1.0).chain(
@@ -161,6 +202,19 @@ class NavigateRoute extends PageRouteBuilder {
                   ),
                   child: child,
                 ),
+              );
+            } else if (type == TransitionType.reveal) {
+              final screenSize = MediaQuery.of(context).size;
+              Offset center =
+                  Offset(screenSize.width / 2, screenSize.height / 2);
+              double beginRadius = 0.0;
+              double endRadius = screenSize.height * 1.5;
+              final tween = Tween(begin: beginRadius, end: endRadius);
+              final radiusTweenAnimation = animation.drive(tween);
+              return ClipPath(
+                clipper: CircleClipper(
+                    radius: radiusTweenAnimation.value, center: center),
+                child: child,
               );
             }
 

@@ -162,6 +162,7 @@ class _HomePageState extends State<HomePage> {
                       width: 100,
                     ),
                     FloatingActionButton.extended(
+                      heroTag: 'showSnackBar',
                       onPressed: () {
                         final state = Scaffold.of(context);
                         NavbarNotifier.showSnackBar(
@@ -325,7 +326,7 @@ class _HomeFeedsState extends State<HomeFeeds> {
                     FeedDetail(
                       feedId: index.toString(),
                     ),
-                    transitionType: TransitionType.fade);
+                    transitionType: TransitionType.reveal);
               },
               child: FeedTile(
                 index: index,
