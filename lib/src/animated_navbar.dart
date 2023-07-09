@@ -175,12 +175,12 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
           }
         case NavbarType.material3:
           kNavbarHeight = kM3NavbarHeight;
-
           if (widget.decoration != null) {
             final decoration0 = defaultDecoration.copyWith(
               backgroundColor: widget.decoration!.backgroundColor ??
                   theme.colorScheme.surface,
               elevation: widget.decoration!.elevation,
+              height: widget.decoration!.height,
               selectedIconTheme: widget.decoration!.selectedIconTheme ??
                   theme.iconTheme
                       .copyWith(color: theme.colorScheme.onSecondaryContainer),
@@ -202,6 +202,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
               onTap: widget.onItemTapped,
               navBarElevation: widget.decoration!.elevation,
               labelBehavior: widget.decoration!.labelBehavior!,
+              navbarHeight: widget.decoration!.height!,
             );
           } else {
             return M3NavBar(
@@ -211,6 +212,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
               items: widget.menuItems,
               onTap: widget.onItemTapped,
               navBarElevation: defaultDecoration.elevation,
+              navbarHeight: widget.decoration!.height!,
             );
           }
 

@@ -64,6 +64,8 @@ class NavbarDecoration {
 
   final NavigationDestinationLabelBehavior? labelBehavior;
 
+  final double? height;
+
   final ShapeBorder? indicatorShape;
 
   NavbarDecoration({
@@ -73,6 +75,7 @@ class NavbarDecoration {
     this.isExtended = false,
     this.indicatorColor,
     this.navbarType,
+    this.height = 80,
     this.labelBehavior = NavigationDestinationLabelBehavior.alwaysShow,
     this.indicatorShape,
     this.showSelectedLabels,
@@ -93,6 +96,7 @@ class NavbarDecoration {
     bool? isExtended,
     Color? unselectedItemColor,
     double? elevation,
+    double? height,
     Color? unselectedIconColor,
     bool? showUnselectedLabels,
     Color? unselectedLabelColor,
@@ -108,6 +112,7 @@ class NavbarDecoration {
   }) =>
       NavbarDecoration(
         navbarType: navbarType ?? this.navbarType,
+        height: height ?? this.height,
         backgroundColor: backgroundColor ?? this.backgroundColor,
         isExtended: isExtended ?? this.isExtended,
         unselectedItemColor: unselectedItemColor ?? this.unselectedItemColor,
@@ -190,26 +195,32 @@ class M3NavbarDecoration extends NavbarDecoration {
 
     /// Textstyle of the labels
     TextStyle? labelTextStyle,
+
+    /// The elevation shadown on the edges of bottomnavigationbar
     double? elevation,
+
+    /// height of the navbar
+    final double? height,
 
     /// iconTheme for the icons
     IconThemeData? iconTheme,
     ShapeBorder? indicatorShape,
     bool? isExtended,
   }) : super(
-          backgroundColor: backgroundColor,
-          elevation: elevation,
-          indicatorColor: indicatorColor,
-          labelBehavior: labelBehavior,
-          selectedLabelTextStyle: labelTextStyle,
-          indicatorShape: indicatorShape,
-          selectedIconTheme: iconTheme,
-          isExtended: isExtended ?? false,
-        );
+            backgroundColor: backgroundColor,
+            elevation: elevation,
+            indicatorColor: indicatorColor,
+            labelBehavior: labelBehavior,
+            selectedLabelTextStyle: labelTextStyle,
+            indicatorShape: indicatorShape,
+            selectedIconTheme: iconTheme,
+            isExtended: isExtended ?? false,
+            height: height ?? 80.0);
 
   factory M3NavbarDecoration.fromNavbarDecoration(
           NavbarDecoration navbarDecoration) =>
       M3NavbarDecoration(
+          height: navbarDecoration.height,
           backgroundColor: navbarDecoration.backgroundColor,
           elevation: navbarDecoration.elevation,
           labelTextStyle: navbarDecoration.selectedLabelTextStyle,
@@ -223,6 +234,7 @@ class M3NavbarDecoration extends NavbarDecoration {
   NavbarDecoration toNavbarDecoration() => NavbarDecoration(
         backgroundColor: backgroundColor,
         elevation: elevation,
+        height: height,
         unselectedItemColor: unselectedItemColor,
         unselectedIconColor: unselectedIconColor,
         showUnselectedLabels: showUnselectedLabels,
