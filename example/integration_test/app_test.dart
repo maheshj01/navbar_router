@@ -55,15 +55,31 @@ void main() {
   group('Integration test:', () {
     testWidgets('Test widgets load', (WidgetTester tester) async {
       app.main();
-
+      await Future.delayed(const Duration(seconds: 3));
       await tester.pumpAndSettle();
       expect((app.MyApp).typeX(), findsOneWidget);
       expect((app.HomePage).typeX(), findsOneWidget);
+      await Future.delayed(const Duration(seconds: 1));
       expect((NavbarRouter).typeX(), findsOneWidget);
       for (int i = 0; i < items.length; i++) {
         expect((items[i].iconData).iconX(), findsOneWidget);
         expect((items[0].text).textX(), findsOneWidget);
       }
+      await Future.delayed(const Duration(seconds: 1));
+      await tester.tap(items[1].iconData.iconX());
+      await tester.pumpAndSettle();
+      await Future.delayed(const Duration(seconds: 1));
+      expect((app.ProductList).typeX(), findsOneWidget);
+      await Future.delayed(const Duration(seconds: 1));
+      await tester.tap(items[2].iconData.iconX());
+      await tester.pumpAndSettle();
+      await Future.delayed(const Duration(seconds: 1));
+      expect((app.UserProfile).typeX(), findsOneWidget);
+      await Future.delayed(const Duration(seconds: 1));
+      await tester.tap(items[3].iconData.iconX());
+      await tester.pumpAndSettle();
+      await Future.delayed(const Duration(seconds: 1));
+      expect((app.Settings).typeX(), findsOneWidget);
     });
   });
 }
