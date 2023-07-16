@@ -14,7 +14,7 @@ class NavbarNotifier extends ChangeNotifier {
 
   static int? _index;
 
-  static int get currentIndex => _index!;
+  static int get currentIndex => _index ?? 0;
 
   static int? _length;
 
