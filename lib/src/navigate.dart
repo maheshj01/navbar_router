@@ -44,9 +44,9 @@ class Navigate<T> {
   static Future<T?> pushReplace<T>(BuildContext context, Widget widget,
       {bool isDialog = false,
       bool isRootNavigator = true,
-      TransitionType slideTransitionType = TransitionType.scale}) async {
+      TransitionType transitionType = TransitionType.scale}) async {
     final T value = await Navigator.of(context, rootNavigator: isRootNavigator)
-        .pushReplacement(NavigateRoute(widget, type: slideTransitionType));
+        .pushReplacement(NavigateRoute(widget, type: transitionType));
     return value;
   }
 
