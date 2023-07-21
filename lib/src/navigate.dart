@@ -48,10 +48,13 @@ class Navigate<T> {
       /// Offset for TransitionType.reveal
       /// default is center of screen
       Offset? offset,
-      TransitionType transitionType = TransitionType.scale}) async {
+      TransitionType transitionType = TransitionType.scale,
+      Duration transitionDuration = const Duration(milliseconds: 300)}) async {
     final T value = await Navigator.of(context, rootNavigator: isRootNavigator)
-        .pushReplacement(
-            NavigateRoute(widget, type: transitionType, offset: offset));
+        .pushReplacement(NavigateRoute(widget,
+            type: transitionType,
+            offset: offset,
+            animationDuration: transitionDuration));
     return value;
   }
 
@@ -71,9 +74,13 @@ class Navigate<T> {
       /// Offset for TransitionType.reveal
       /// default is center of screen
       Offset? offset,
-      TransitionType transitionType = TransitionType.scale}) async {
+      TransitionType transitionType = TransitionType.scale,
+      Duration transitionDuration = const Duration(milliseconds: 300)}) async {
     final T value = await Navigator.of(context, rootNavigator: isRootNavigator)
-        .push(NavigateRoute(widget, type: transitionType, offset: offset));
+        .push(NavigateRoute(widget,
+            type: transitionType,
+            offset: offset,
+            animationDuration: transitionDuration));
     return value;
   }
 
@@ -101,10 +108,14 @@ class Navigate<T> {
       /// Offset for TransitionType.reveal
       /// default is center of screen
       Offset? offset,
-      TransitionType transitionType = TransitionType.scale}) async {
+      TransitionType transitionType = TransitionType.scale,
+      Duration transitionDuration = const Duration(milliseconds: 300)}) async {
     final value = await Navigator.of(context, rootNavigator: isRootNavigator)
         .pushAndRemoveUntil(
-            NavigateRoute(widget, type: transitionType, offset: offset),
+            NavigateRoute(widget,
+                type: transitionType,
+                offset: offset,
+                animationDuration: transitionDuration),
             (Route<dynamic> route) => false);
     return value;
   }
@@ -156,14 +167,19 @@ class NavigateRoute extends PageRouteBuilder {
   final Widget widget;
   final bool? rootNavigator;
   final TransitionType type;
+  final Duration animationDuration;
 
   /// Offset for circular reveal transition
   final Offset? offset;
 
   NavigateRoute(this.widget,
-      {this.rootNavigator, required this.type, this.offset})
+      {this.rootNavigator,
+      required this.type,
+      this.offset,
+      this.animationDuration = const Duration(milliseconds: 300)})
       : super(
           pageBuilder: (context, animation, secondaryAnimation) => widget,
+          transitionDuration: animationDuration,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             if (type == TransitionType.scale) {
               return ScaleTransition(

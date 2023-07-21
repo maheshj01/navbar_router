@@ -1,3 +1,7 @@
+## [0.5.9] July 21, 2023 (Unreleased)
+
+- Adds `transitionDuration` property to `Navigate` class
+
 ## [0.5.8] July 21, 2023
 
 - add circular reveal transition animation
