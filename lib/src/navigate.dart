@@ -44,9 +44,14 @@ class Navigate<T> {
   static Future<T?> pushReplace<T>(BuildContext context, Widget widget,
       {bool isDialog = false,
       bool isRootNavigator = true,
+
+      /// Offset for TransitionType.reveal
+      /// default is center of screen
+      Offset? offset,
       TransitionType transitionType = TransitionType.scale}) async {
     final T value = await Navigator.of(context, rootNavigator: isRootNavigator)
-        .pushReplacement(NavigateRoute(widget, type: transitionType));
+        .pushReplacement(
+            NavigateRoute(widget, type: transitionType, offset: offset));
     return value;
   }
 
@@ -62,9 +67,13 @@ class Navigate<T> {
   static Future<T?> push<T>(BuildContext context, Widget widget,
       {bool isDialog = false,
       bool isRootNavigator = true,
+
+      /// Offset for TransitionType.reveal
+      /// default is center of screen
+      Offset? offset,
       TransitionType transitionType = TransitionType.scale}) async {
     final T value = await Navigator.of(context, rootNavigator: isRootNavigator)
-        .push(NavigateRoute(widget, type: transitionType));
+        .push(NavigateRoute(widget, type: transitionType, offset: offset));
     return value;
   }
 
@@ -88,9 +97,14 @@ class Navigate<T> {
 
   static Future<void> pushAndPopAll(BuildContext context, Widget widget,
       {bool isRootNavigator = true,
-      TransitionType slideTransitionType = TransitionType.scale}) async {
+
+      /// Offset for TransitionType.reveal
+      /// default is center of screen
+      Offset? offset,
+      TransitionType transitionType = TransitionType.scale}) async {
     final value = await Navigator.of(context, rootNavigator: isRootNavigator)
-        .pushAndRemoveUntil(NavigateRoute(widget, type: slideTransitionType),
+        .pushAndRemoveUntil(
+            NavigateRoute(widget, type: transitionType, offset: offset),
             (Route<dynamic> route) => false);
     return value;
   }
@@ -165,7 +179,12 @@ class NavigateRoute extends PageRouteBuilder {
   final Widget widget;
   final bool? rootNavigator;
   final TransitionType type;
-  NavigateRoute(this.widget, {this.rootNavigator, required this.type})
+
+  /// Offset for circular reveal transition
+  final Offset? offset;
+
+  NavigateRoute(this.widget,
+      {this.rootNavigator, required this.type, this.offset})
       : super(
           pageBuilder: (context, animation, secondaryAnimation) => widget,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -213,7 +232,8 @@ class NavigateRoute extends PageRouteBuilder {
               final radiusTweenAnimation = animation.drive(tween);
               return ClipPath(
                 clipper: CircleClipper(
-                    radius: radiusTweenAnimation.value, center: center),
+                    radius: radiusTweenAnimation.value,
+                    center: offset ?? center),
                 child: child,
               );
             }
