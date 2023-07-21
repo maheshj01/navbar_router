@@ -1,5 +1,4 @@
 import 'package:example/main.dart' as app;
-import 'package:example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -34,24 +33,24 @@ void main() {
     NavbarItem(Icons.settings, 'Settings', backgroundColor: colors[0]),
   ];
 
-  const Map<int, Map<String, Widget>> _routes = {
-    0: {
-      '/': HomeFeeds(),
-      FeedDetail.route: FeedDetail(),
-    },
-    1: {
-      '/': ProductList(),
-      ProductDetail.route: ProductDetail(),
-      ProductComments.route: ProductComments(),
-    },
-    2: {
-      '/': UserProfile(),
-      ProfileEdit.route: ProfileEdit(),
-    },
-    3: {
-      '/': Settings(),
-    },
-  };
+  // const Map<int, Map<String, Widget>> routes = {
+  //   0: {
+  //     '/': HomeFeeds(),
+  //     FeedDetail.route: FeedDetail(),
+  //   },
+  //   1: {
+  //     '/': ProductList(),
+  //     ProductDetail.route: ProductDetail(),
+  //     ProductComments.route: ProductComments(),
+  //   },
+  //   2: {
+  //     '/': UserProfile(),
+  //     ProfileEdit.route: ProfileEdit(),
+  //   },
+  //   3: {
+  //     '/': Settings(),
+  //   },
+  // };
   group('Integration test:', () {
     testWidgets('Test widgets load', (WidgetTester tester) async {
       app.main();

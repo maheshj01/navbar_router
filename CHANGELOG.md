@@ -1,4 +1,4 @@
-## [0.5.8] July 09, 2023 (Unreleased)
+## [0.5.8] July 21, 2023
 
 - add circular reveal transition animation
 - rename `slideTransitionType` to `transitionType` for `pushReplace` method
