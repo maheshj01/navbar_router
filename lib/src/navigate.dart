@@ -152,29 +152,6 @@ class CircleClipper extends CustomClipper<Path> {
   }
 }
 
-Route circularRevealRoute(Widget child) {
-  return PageRouteBuilder(
-    transitionDuration: const Duration(milliseconds: 400),
-    reverseTransitionDuration: const Duration(milliseconds: 400),
-    opaque: false,
-    barrierDismissible: false,
-    pageBuilder: (context, animation, secondaryAnimation) => child,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      final screenSize = MediaQuery.of(context).size;
-      Offset center = Offset(screenSize.width / 2, screenSize.height / 2);
-      double beginRadius = 0.0;
-      double endRadius = screenSize.height * 1.5;
-      final tween = Tween(begin: beginRadius, end: endRadius);
-      final radiusTweenAnimation = animation.drive(tween);
-      return ClipPath(
-        clipper:
-            CircleClipper(radius: radiusTweenAnimation.value, center: center),
-        child: child,
-      );
-    },
-  );
-}
-
 class NavigateRoute extends PageRouteBuilder {
   final Widget widget;
   final bool? rootNavigator;
