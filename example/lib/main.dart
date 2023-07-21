@@ -562,22 +562,36 @@ class ProductComments extends StatelessWidget {
   }
 }
 
-class UserProfile extends StatelessWidget {
+class UserProfile extends StatefulWidget {
   static const String route = '/';
 
   const UserProfile({Key? key}) : super(key: key);
 
   @override
+  State<UserProfile> createState() => _UserProfileState();
+}
+
+class _UserProfileState extends State<UserProfile> {
+  final GlobalKey iconKey = GlobalKey();
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
       appBar: AppBar(
           centerTitle: false,
           actions: [
             IconButton(
+              key: iconKey,
               icon: const Icon(Icons.edit),
               onPressed: () {
-                Navigate.pushNamed(context, ProfileEdit.route,
-                    isRootNavigator: true);
+                final RenderBox? renderBox =
+                    iconKey.currentContext!.findRenderObject() as RenderBox?;
+                final offset = renderBox!.localToGlobal(Offset.zero);
+                Navigate.push(context, const ProfileEdit(),
+                    isRootNavigator: true,
+                    offset: offset,
+                    transitionType: TransitionType.reveal);
               },
             )
           ],
