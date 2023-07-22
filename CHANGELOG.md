@@ -1,4 +1,4 @@
-## [0.5.9] July 21, 2023 (Unreleased)
+## [0.5.9] July 21, 2023
 
 - Adds `transitionDuration` property to `Navigate` class
 
