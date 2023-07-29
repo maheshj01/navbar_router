@@ -15,6 +15,7 @@ _Most of the features which this package provides are mainly to improve the user
 - Choose between different NavigationBar types.
 - Remembers navigation history of Navbar (Android).
 - Persist Navbar when pushing routes
+- Support for nested navigation.
 - Intercept back button press to handle app exits (Android).
 - Fading between NavbarDestinations
 - Programmatically control state of bottom navbar from any part of widget tree e.g change index, hide/show bottom navbar, pop routes of a specific tab etc
