@@ -251,22 +251,7 @@ class _NavbarRouterState extends State<NavbarRouter>
       case NavbarType.material3:
         return -24;
       case NavbarType.floating:
-        return 30;
-      default:
         return 0;
-    }
-  }
-
-  double horizontalPadding() {
-    switch (widget.type) {
-      case NavbarType.standard:
-        return 0;
-      case NavbarType.notched:
-        return 0;
-      case NavbarType.material3:
-        return 0;
-      case NavbarType.floating:
-        return 8;
       default:
         return 0;
     }
@@ -325,10 +310,10 @@ class _NavbarRouterState extends State<NavbarRouter>
                   ),
                 ),
                 Positioned(
-                  left: horizontalPadding(),
+                  left: 0,
                   top: widget.isDesktop ? 0 : null,
                   bottom: bottomPadding(),
-                  right: widget.isDesktop ? null : horizontalPadding(),
+                  right: widget.isDesktop ? null : 0,
                   child: _AnimatedNavBar(
                       model: _navbarNotifier,
                       isDesktop: widget.isDesktop,

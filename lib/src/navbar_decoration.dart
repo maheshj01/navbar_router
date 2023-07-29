@@ -36,6 +36,8 @@ class NavbarDecoration {
   /// The color of the unselected item icon
   final Color? unselectedIconColor;
 
+  final Color? selectedIconColor;
+
   /// Whether or not to show the unselected label text
   final bool showUnselectedLabels;
 
@@ -45,8 +47,12 @@ class NavbarDecoration {
   /// whether or not to show the selected label text
   final bool? showSelectedLabels;
 
-  /// haptic feedbakc when the item is selected
+  /// haptic feedback when the item is selected
   final bool? enableFeedback;
+
+  /// margin for floating navbar
+  /// defaults to EdgeInsets.symmetric(horizontal: 48.0, vertical: 20),
+  final EdgeInsetsGeometry? margin;
 
   /// the text style of the selected label
   final TextStyle? selectedLabelTextStyle;
@@ -62,6 +68,9 @@ class NavbarDecoration {
 
   final Color? indicatorColor;
 
+  /// BorderRadius for floating navbar
+  final BorderRadius? borderRadius;
+
   final NavigationDestinationLabelBehavior? labelBehavior;
 
   final double? height;
@@ -70,16 +79,19 @@ class NavbarDecoration {
 
   NavbarDecoration({
     this.backgroundColor,
+    this.borderRadius,
     this.elevation,
     this.enableFeedback,
     this.isExtended = false,
     this.indicatorColor,
     this.navbarType,
     this.height = 80,
+    this.margin,
     this.labelBehavior = NavigationDestinationLabelBehavior.alwaysShow,
     this.indicatorShape,
     this.showSelectedLabels,
     this.showUnselectedLabels = true,
+    this.selectedIconColor,
     this.selectedIconTheme,
     this.selectedLabelTextStyle,
     this.unselectedIconTheme,
@@ -93,6 +105,7 @@ class NavbarDecoration {
   NavbarDecoration copyWith({
     BottomNavigationBarType? navbarType,
     Color? backgroundColor,
+    BorderRadius? borderRadius,
     bool? isExtended,
     Color? unselectedItemColor,
     double? elevation,
@@ -104,6 +117,8 @@ class NavbarDecoration {
     bool? enableFeedback,
     Color? indicatorColor,
     ShapeBorder? indicatorShape,
+    Color? selectedIconColor,
+    EdgeInsetsGeometry? margin,
     NavigationDestinationLabelBehavior? labelBehavior,
     TextStyle? selectedLabelTextStyle,
     TextStyle? unselectedLabelTextStyle,
@@ -114,10 +129,13 @@ class NavbarDecoration {
         navbarType: navbarType ?? this.navbarType,
         height: height ?? this.height,
         backgroundColor: backgroundColor ?? this.backgroundColor,
+        borderRadius: borderRadius ?? this.borderRadius,
         isExtended: isExtended ?? this.isExtended,
+        margin: margin ?? this.margin,
         unselectedItemColor: unselectedItemColor ?? this.unselectedItemColor,
         elevation: elevation ?? this.elevation,
         unselectedIconColor: unselectedIconColor ?? this.unselectedIconColor,
+        selectedIconColor: selectedIconColor ?? this.selectedIconColor,
         showUnselectedLabels: showUnselectedLabels ?? this.showUnselectedLabels,
         unselectedLabelColor: unselectedLabelColor ?? this.unselectedLabelColor,
         showSelectedLabels: showSelectedLabels ?? this.showSelectedLabels,
@@ -141,15 +159,15 @@ class NotchedDecoration extends NavbarDecoration {
     bool? showUnselectedLabels = true,
     TextStyle? unselectedLabelTextStyle,
     Color? unselectedIconColor,
-    Color? unselectedItemColor,
+    Color? selectedIconColor,
     Color? unselectedLabelColor,
     IconThemeData? selectedIconTheme,
   }) : super(
           backgroundColor: backgroundColor,
           elevation: elevation,
-          unselectedItemColor: unselectedItemColor,
           unselectedIconColor: unselectedIconColor,
           showUnselectedLabels: showUnselectedLabels!,
+          selectedIconColor: selectedIconColor,
           unselectedLabelColor: unselectedLabelColor,
           unselectedLabelTextStyle: unselectedLabelTextStyle,
           selectedIconTheme: selectedIconTheme,
@@ -160,9 +178,9 @@ class NotchedDecoration extends NavbarDecoration {
       NotchedDecoration(
         backgroundColor: navbarDecoration.backgroundColor,
         elevation: navbarDecoration.elevation,
-        unselectedItemColor: navbarDecoration.unselectedItemColor,
         unselectedIconColor: navbarDecoration.unselectedIconColor,
         showUnselectedLabels: navbarDecoration.showUnselectedLabels,
+        selectedIconColor: navbarDecoration.selectedIconColor,
         unselectedLabelColor: navbarDecoration.unselectedLabelColor,
         unselectedLabelTextStyle: navbarDecoration.unselectedLabelTextStyle,
         selectedIconTheme: navbarDecoration.selectedIconTheme,
@@ -176,6 +194,7 @@ class NotchedDecoration extends NavbarDecoration {
         unselectedItemColor: unselectedItemColor,
         unselectedIconColor: unselectedIconColor,
         showUnselectedLabels: showUnselectedLabels,
+        selectedIconColor: selectedIconColor,
         unselectedLabelColor: unselectedLabelColor,
         unselectedLabelTextStyle: unselectedLabelTextStyle,
       );
@@ -212,6 +231,7 @@ class M3NavbarDecoration extends NavbarDecoration {
             indicatorColor: indicatorColor,
             labelBehavior: labelBehavior,
             selectedLabelTextStyle: labelTextStyle,
+            unselectedLabelTextStyle: labelTextStyle,
             indicatorShape: indicatorShape,
             selectedIconTheme: iconTheme,
             isExtended: isExtended ?? false,
@@ -239,8 +259,52 @@ class M3NavbarDecoration extends NavbarDecoration {
         unselectedIconColor: unselectedIconColor,
         showUnselectedLabels: showUnselectedLabels,
         unselectedLabelColor: unselectedLabelColor,
+        selectedLabelTextStyle: selectedLabelTextStyle,
         unselectedLabelTextStyle: unselectedLabelTextStyle,
         labelBehavior: labelBehavior,
         isExtended: isExtended,
+      );
+}
+
+class FloatingNavbarDecoration extends NavbarDecoration {
+  FloatingNavbarDecoration(
+      {Color? backgroundColor,
+      Color? unselectedIconColor,
+      Color? selectedIconColor,
+      EdgeInsetsGeometry? margin,
+      BorderRadius? borderRadius,
+      bool? isExtended})
+      : super(
+          backgroundColor: backgroundColor,
+          borderRadius: borderRadius,
+
+          /// margin for the floaiting navbar defaults to EdgeInsets.symmetric(horizontal: 48.0, vertical: 20),
+          ///
+          margin: margin,
+          unselectedIconColor: unselectedIconColor,
+          selectedIconColor: selectedIconColor,
+          isExtended: isExtended ?? false,
+        );
+
+  factory FloatingNavbarDecoration.fromNavbarDecoration(
+          NavbarDecoration navbarDecoration) =>
+      FloatingNavbarDecoration(
+        backgroundColor: navbarDecoration.backgroundColor,
+        borderRadius: navbarDecoration.borderRadius,
+        margin: navbarDecoration.margin,
+        unselectedIconColor: navbarDecoration.unselectedIconColor,
+        selectedIconColor: navbarDecoration.selectedIconColor,
+        isExtended: navbarDecoration.isExtended,
+      );
+
+  /// to navb bar decoration
+
+  NavbarDecoration toNavbarDecoration() => NavbarDecoration(
+        backgroundColor: backgroundColor,
+        borderRadius: borderRadius,
+        unselectedIconColor: unselectedIconColor,
+        margin: margin,
+        selectedIconColor: selectedIconColor,
+        elevation: elevation,
       );
 }

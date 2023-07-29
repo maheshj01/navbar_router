@@ -79,6 +79,9 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final defaultDecoration = NavbarDecoration(
+        borderRadius: BorderRadius.circular(20.0),
+        selectedIconColor: theme.bottomNavigationBarTheme.selectedItemColor,
+        margin: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
         backgroundColor: theme.bottomNavigationBarTheme.backgroundColor ??
             theme.colorScheme.surface,
         elevation: 8,
@@ -131,6 +134,8 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
         case NavbarType.standard:
           kNavbarHeight = kBottomNavigationBarHeight;
           return StandardNavbar(
+            index: NavbarNotifier.currentIndex,
+            navbarHeight: kBottomNavigationBarHeight,
             navBarDecoration: widget.decoration ?? defaultDecoration,
             items: widget.menuItems,
             onTap: widget.onItemTapped,
@@ -144,6 +149,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
                     Theme.of(context).primaryColor,
                 elevation: widget.decoration!.elevation,
                 showUnselectedLabels: widget.decoration!.showUnselectedLabels,
+                selectedIconColor: widget.decoration!.selectedIconColor,
                 unselectedIconColor: widget.decoration!.unselectedIconColor,
                 unselectedLabelColor: widget.decoration!.unselectedLabelColor,
                 unselectedItemColor: widget.decoration!.unselectedItemColor,
@@ -178,6 +184,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
           kNavbarHeight = kM3NavbarHeight;
           if (widget.decoration != null) {
             final decoration0 = defaultDecoration.copyWith(
+              isExtended: widget.decoration!.isExtended,
               backgroundColor: widget.decoration!.backgroundColor ??
                   theme.colorScheme.surface,
               elevation: widget.decoration!.elevation,
@@ -210,6 +217,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
               index: NavbarNotifier.currentIndex,
               m3Decoration:
                   M3NavbarDecoration.fromNavbarDecoration(defaultDecoration),
+              labelBehavior: defaultDecoration.labelBehavior!,
               items: widget.menuItems,
               onTap: widget.onItemTapped,
               navBarElevation: defaultDecoration.elevation,
@@ -221,17 +229,20 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
 
           if (widget.decoration != null) {
             final decoration = defaultDecoration.copyWith(
+              borderRadius: widget.decoration!.borderRadius,
               backgroundColor: widget.decoration!.backgroundColor ??
                   theme.colorScheme.surface,
               elevation: widget.decoration!.elevation,
               height: widget.decoration!.height,
+              selectedIconColor: widget.decoration!.selectedIconColor,
+              unselectedIconColor: widget.decoration!.unselectedIconColor,
               selectedIconTheme: widget.decoration!.selectedIconTheme ??
-                  theme.iconTheme
-                      .copyWith(color: theme.colorScheme.onSecondaryContainer),
+                  theme.iconTheme.copyWith(color: theme.colorScheme.primary),
               indicatorColor: widget.decoration!.indicatorColor ??
                   theme.colorScheme.secondaryContainer,
               labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
               indicatorShape: widget.decoration!.indicatorShape,
+              margin: widget.decoration!.margin,
               selectedLabelTextStyle:
                   widget.decoration!.selectedLabelTextStyle ??
                       theme.textTheme.bodySmall!.copyWith(
@@ -239,16 +250,22 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
                       ),
             );
             return FloatingNavbar(
+              index: NavbarNotifier.currentIndex,
               navBarDecoration: decoration,
               items: widget.menuItems,
               onTap: widget.onItemTapped,
+              margin: widget.decoration!.margin,
+              borderRadius: widget.decoration!.borderRadius,
               navBarElevation: widget.decoration!.elevation,
             );
           } else {
             return FloatingNavbar(
+              index: NavbarNotifier.currentIndex,
               navBarDecoration: defaultDecoration,
               items: widget.menuItems,
               onTap: widget.onItemTapped,
+              borderRadius: widget.decoration!.borderRadius,
+              margin: widget.decoration!.margin,
               navBarElevation: defaultDecoration.elevation,
             );
           }
@@ -349,7 +366,7 @@ class StandardNavbar extends NavbarBase {
       required this.navBarDecoration,
       required this.navBarElevation,
       required this.onTap,
-      this.navbarHeight = kStandardNavbarHeight,
+      this.navbarHeight,
       this.index = 0,
       required this.items})
       : super(key: key);
@@ -359,7 +376,7 @@ class StandardNavbar extends NavbarBase {
   final NavbarDecoration navBarDecoration;
   final double? navBarElevation;
   final int index;
-  final double navbarHeight;
+  final double? navbarHeight;
 
   @override
   StandardNavbarState createState() => StandardNavbarState();
@@ -377,7 +394,7 @@ class StandardNavbar extends NavbarBase {
   Function(int p1)? get onItemTapped => onTap;
 
   @override
-  double get height => navbarHeight;
+  double get height => navbarHeight ?? kStandardNavbarHeight;
 }
 
 class StandardNavbarState extends State<StandardNavbar> {
@@ -389,7 +406,7 @@ class StandardNavbarState extends State<StandardNavbar> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: widget.height,
+      height: widget.height + 6,
       child: BottomNavigationBar(
         type: widget.decoration.navbarType,
         currentIndex: NavbarNotifier.currentIndex,
@@ -562,7 +579,7 @@ class NotchedNavBarState extends State<NotchedNavBar>
         ),
         child: Icon(
           widget.menuItems[NavbarNotifier.currentIndex].iconData,
-          color: widget.decoration.selectedIconTheme?.color,
+          color: widget.decoration.selectedIconColor,
           size: (widget.decoration.selectedIconTheme?.size ?? 24.0) *
               scaleAnimation.value,
         ));
@@ -769,11 +786,6 @@ class M3NavBar extends NavbarBase {
 
 class M3NavBarState extends State<M3NavBar> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
@@ -801,6 +813,8 @@ class M3NavBarState extends State<M3NavBar> {
               Theme.of(context).colorScheme.surface,
           animationDuration: const Duration(milliseconds: 300),
           elevation: widget.elevation,
+          indicatorColor: widget.decoration.indicatorColor,
+          indicatorShape: widget.decoration.indicatorShape,
           labelBehavior: widget.labelBehavior,
           destinations: widget.items
               .map((e) => Padding(
@@ -827,6 +841,8 @@ class FloatingNavbar extends NavbarBase {
       required this.onTap,
       this.navbarHeight = kFloatingNavbarHeight,
       this.index = 0,
+      this.margin,
+      this.borderRadius,
       required this.items})
       : super(key: key);
 
@@ -835,7 +851,9 @@ class FloatingNavbar extends NavbarBase {
   final NavbarDecoration navBarDecoration;
   final double? navBarElevation;
   final int index;
+  final EdgeInsetsGeometry? margin;
   final double navbarHeight;
+  final BorderRadius? borderRadius;
 
   @override
   FloatingNavbarState createState() => FloatingNavbarState();
@@ -856,8 +874,7 @@ class FloatingNavbar extends NavbarBase {
   double get height => navbarHeight;
 }
 
-class FloatingNavbarState extends State<FloatingNavbar>
-    with SingleTickerProviderStateMixin {
+class FloatingNavbarState extends State<FloatingNavbar> {
   late int _selectedIndex;
 
   @override
@@ -876,6 +893,7 @@ class FloatingNavbarState extends State<FloatingNavbar>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Theme(
         data: Theme.of(context).copyWith(
             useMaterial3: true,
@@ -887,7 +905,7 @@ class FloatingNavbarState extends State<FloatingNavbar>
                   widget.decoration.selectedLabelTextStyle),
               indicatorShape: widget.decoration.indicatorShape ??
                   RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0)),
+                      borderRadius: BorderRadius.circular(18.0)),
               iconTheme: MaterialStateProperty.all(
                   widget.decoration.selectedIconTheme),
               labelBehavior: widget.decoration.showUnselectedLabels
@@ -898,16 +916,23 @@ class FloatingNavbarState extends State<FloatingNavbar>
             )),
         child: Container(
           height: kFloatingNavbarHeight,
+          margin: widget.margin ??
+              const EdgeInsets.symmetric(horizontal: 40.0, vertical: 18.0),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: widget.borderRadius ??
+                const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20)),
             color: widget.decoration.backgroundColor ??
                 Theme.of(context).colorScheme.surface,
             boxShadow: [
               BoxShadow(
-                color: Colors.white.withOpacity(0.1),
+                color: isDark
+                    ? Colors.black.withOpacity(0.2)
+                    : Colors.grey.withOpacity(0.2),
                 spreadRadius: 2,
                 blurRadius: 6,
-                offset: Offset(3, 4), // hanges position of shadow
+                offset: const Offset(3, 4), // hanges position of shadow
               ),
             ],
           ),
@@ -918,7 +943,9 @@ class FloatingNavbarState extends State<FloatingNavbar>
                     child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                      borderRadius: BorderRadius.circular(20.0),
+                      enableFeedback: widget.decoration.enableFeedback,
+                      borderRadius:
+                          widget.borderRadius ?? BorderRadius.circular(16.0),
                       onTap: () {
                         _selectedIndex = i;
                         widget.onItemTapped!(i);
@@ -929,7 +956,7 @@ class FloatingNavbarState extends State<FloatingNavbar>
                           widget.items[i].iconData,
                           size: 26,
                           color: _selectedIndex == i
-                              ? Theme.of(context).colorScheme.primary
+                              ? widget.decoration.selectedIconColor
                               : widget.decoration.unselectedIconColor,
                         ),
                       )),

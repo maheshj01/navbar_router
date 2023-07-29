@@ -1065,6 +1065,41 @@ void main() {
     expect(finder, findsNothing);
   });
 
+  testWidgets('decoration can be set to M3 Navbar', (tester) async {
+    await tester.pumpWidget(boilerplate(
+        type: NavbarType.material3,
+        decoration: M3NavbarDecoration(
+          elevation: 10,
+          height: 100,
+          indicatorColor: Colors.red,
+          indicatorShape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          isExtended: false,
+          labelTextStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+          ),
+          backgroundColor: Colors.red,
+        )));
+    final finder = find.byType(M3NavBar);
+    expect(finder, findsOneWidget);
+    final M3NavBar navbar = finder.evaluate().first.widget as M3NavBar;
+    expect(navbar.decoration.elevation, 10);
+    expect(navbar.decoration.height, 100);
+    expect(navbar.decoration.indicatorColor, Colors.red);
+    expect(
+        navbar.decoration.indicatorShape.runtimeType, RoundedRectangleBorder);
+    expect(
+        navbar.decoration.labelBehavior,
+
+        /// NavigationDestinationLabelBehavior.alwaysShow is the default
+        NavigationDestinationLabelBehavior.alwaysShow);
+    expect(navbar.decoration.isExtended, false);
+    expect(navbar.decoration.backgroundColor, Colors.red);
+  });
+
   testWidgets('Navbar can be hidden during runtime',
       (WidgetTester tester) async {
     await tester.pumpWidget(boilerplate());
@@ -1224,6 +1259,68 @@ void main() {
       await tester.tap(find.text("Tap me"));
       await tester.pumpAndSettle();
       expect(find.byType(SnackBar), findsNothing);
+    });
+  });
+
+  group('Test NavbarType: NavbarType.floating', () {
+    testWidgets('NavbarType can be changed during runtime', (tester) async {
+      NavbarType type = NavbarType.notched;
+      await tester.pumpWidget(boilerplate(type: type));
+      final finder = find.byType(NotchedNavBar);
+      expect(finder, findsOneWidget);
+      type = NavbarType.floating;
+      await tester.pumpWidget(boilerplate(type: type));
+      final finder2 = find.byType(FloatingNavbar);
+      expect(finder2, findsOneWidget);
+      expect(finder, findsNothing);
+    });
+
+    testWidgets('Navbar can be hidden during runtime',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating));
+      final finder = find.byType(FloatingNavbar);
+      expect(finder, findsOneWidget);
+      NavbarNotifier.hideBottomNavBar = true;
+      await tester.pumpAndSettle();
+      // test if widget is hidden (not visible in view port)
+      expect(finder.hitTestable(), findsNothing);
+      NavbarNotifier.hideBottomNavBar = false;
+      await tester.pumpAndSettle();
+      expect(finder, findsOneWidget);
+    });
+    testWidgets('Notify index Change', (WidgetTester tester) async {
+      int index = 0;
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating));
+      NavbarNotifier.addIndexChangeListener((x) {
+        index = x;
+      });
+      NavbarNotifier.index = 1;
+      expect(index, 1);
+      NavbarNotifier.index = 2;
+      expect(index, 2);
+      NavbarNotifier.removeLastListener();
+      NavbarNotifier.index = 3;
+      expect(index, 2);
+    });
+
+    testWidgets('decoration can be set to Floating Navbar', (tester) async {
+      await tester.pumpWidget(boilerplate(
+          type: NavbarType.floating,
+          decoration: FloatingNavbarDecoration(
+            borderRadius: BorderRadius.circular(20),
+            backgroundColor: Colors.red,
+            selectedIconColor: Colors.green,
+            unselectedIconColor: Colors.blue,
+            margin: EdgeInsets.all(10),
+          )));
+      final finder = find.byType(FloatingNavbar);
+      expect(finder, findsOneWidget);
+      final floatingNavbar = tester.widget<FloatingNavbar>(finder);
+      expect(floatingNavbar.borderRadius, BorderRadius.circular(20));
+      expect(floatingNavbar.decoration.backgroundColor, Colors.red);
+      expect(floatingNavbar.decoration.selectedIconColor, Colors.green);
+      expect(floatingNavbar.decoration.unselectedIconColor, Colors.blue);
+      expect(floatingNavbar.decoration.margin, EdgeInsets.all(10));
     });
   });
 }
