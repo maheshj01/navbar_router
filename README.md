@@ -1,4 +1,4 @@
-## **navbar_router v0.5.9**
+## **navbar_router v0.6.0**
 
 <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
@@ -159,9 +159,9 @@ You can hide or show bottom navigationBar with a single line of code from anywhe
  NavbarNotifier.hideBottomNavBar = true;
 ```
 
-|       Hide/show navbar on scroll     |         Hide/show navbar on drawer open/close      |  Consistent behavior across all Navbars
-| :-----------------------------: | :------------------------------: | :------------------------------: |
-| ![](https://miro.medium.com/max/800/1*NaYdY1FfsPFCNBdx3wg_og.gif) | <img src="https://user-images.githubusercontent.com/31410839/173987446-c8c79bb0-d24c-46c1-bc4a-582508a4e187.gif" width ="200"> | ![ezgif com-video-to-gif](https://github.com/maheshmnj/navbar_router/assets/31410839/4e30d2a6-63c7-427c-953b-f800d1b68fad)
+|                    Hide/show navbar on scroll                     |                                             Hide/show navbar on drawer open/close                                              |                                           Consistent behavior across all Navbars                                           |
+| :---------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------: |
+| ![](https://miro.medium.com/max/800/1*NaYdY1FfsPFCNBdx3wg_og.gif) | <img src="https://user-images.githubusercontent.com/31410839/173987446-c8c79bb0-d24c-46c1-bc4a-582508a4e187.gif" width ="200"> | ![ezgif com-video-to-gif](https://github.com/maheshmnj/navbar_router/assets/31410839/4e30d2a6-63c7-427c-953b-f800d1b68fad) |
 
 ## Show Snackbar
 
