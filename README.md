@@ -39,7 +39,7 @@ _Heres a [sample app](example/lib/main.dart) built using this package to see how
 
 _video demo of the sample app_
 
-<img src="docs/assets/demo.gif" alt="navbar_route demo" width="300"/>
+<img src="https://github.com/maheshmnj/navbar_router/assets/31410839/d7490227-34b5-4954-b43b-f4fdcffdacd3" alt="navbar_route demo" width="300"/>
 
 This package will help you save atleast 50% lines of code in half the time required to implement the above features. Heres the same [sample app](https://dartpad.dev/?id=894922ccb67f5fdc4ffb652e41916fa2) without the package which requires around 800 lines of code.
 
