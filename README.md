@@ -23,6 +23,18 @@ _Most of the features which this package provides are mainly to improve the user
 - Jump to base route from a deep nested route with a single tap(same as instagram).
 - Adapatable to different device Sizes.
 
+## Supports mulitple NavbarTypes
+
+You can choose between different NavbarTypes using the `NavbarDecoration.navbarType` property. This allows you to choose between the default `NavbarType.standard` and `NavbarType.notched` NavbarTypes.
+
+|                                            NavbarType.standard (default)                                            |                                                 NavbarType.notched                                                 |
+| :-----------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------: |
+| ![Standard Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/62d6154f-dcf5-4aa9-a819-e2c84caebad1) | ![Notched Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/5378f9cd-a6ac-4c6b-bd2a-a706e87b89eb) |
+
+|                                                 NavbarType.material3                                                 |                                                 NavbarType.floating                                                 |
+| :------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------: |
+| ![Material3 Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/027adf4f-d527-4dc5-ac22-8fe321734977) | ![Floating Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/b735a016-703a-4fc9-be4a-a8e924a7c645) |
+
 _Heres a [sample app](example/lib/main.dart) built using this package to see how it works._
 
 _video demo of the sample app_
@@ -130,26 +142,6 @@ defaults to
 ```
 
 <img src="https://miro.medium.com/max/600/1*08wCOOPCe1C1l_2uqIYEEg.gif">
-
-## Choose between different NavbarTypes
-
-You can choose between different NavbarTypes using the `NavbarDecoration.navbarType` property. This allows you to choose between the default `NavbarType.standard` and `NavbarType.notched` NavbarTypes.
-
-### NavbarType.standard (default)
-
-![Standard Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/62d6154f-dcf5-4aa9-a819-e2c84caebad1)
-
-### NavbarType.notched
-
-![Notched Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/5378f9cd-a6ac-4c6b-bd2a-a706e87b89eb)
-
-### NavbarType.material3
-
-![Material3 Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/027adf4f-d527-4dc5-ac22-8fe321734977)
-
-### NavbarType.floating
-
-![Floating Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/b735a016-703a-4fc9-be4a-a8e924a7c645)
 
 ## Hide or show bottomNavigationBar
 
