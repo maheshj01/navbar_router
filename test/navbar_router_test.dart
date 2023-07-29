@@ -1311,7 +1311,7 @@ void main() {
             backgroundColor: Colors.red,
             selectedIconColor: Colors.green,
             unselectedIconColor: Colors.blue,
-            margin: EdgeInsets.all(10),
+            margin: const EdgeInsets.all(10),
           )));
       final finder = find.byType(FloatingNavbar);
       expect(finder, findsOneWidget);
@@ -1320,7 +1320,7 @@ void main() {
       expect(floatingNavbar.decoration.backgroundColor, Colors.red);
       expect(floatingNavbar.decoration.selectedIconColor, Colors.green);
       expect(floatingNavbar.decoration.unselectedIconColor, Colors.blue);
-      expect(floatingNavbar.decoration.margin, EdgeInsets.all(10));
+      expect(floatingNavbar.decoration.margin, const EdgeInsets.all(10));
     });
   });
 }
