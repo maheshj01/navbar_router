@@ -189,6 +189,10 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
                   theme.colorScheme.surface,
               elevation: widget.decoration!.elevation,
               height: widget.decoration!.height,
+              selectedIconColor: widget.decoration!.selectedIconColor ??
+                  Theme.of(context).colorScheme.primary,
+              unselectedIconColor: widget.decoration!.unselectedIconColor ??
+                  Theme.of(context).colorScheme.onSurface,
               selectedIconTheme: widget.decoration!.selectedIconTheme ??
                   theme.iconTheme
                       .copyWith(color: theme.colorScheme.onSecondaryContainer),
@@ -234,7 +238,8 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
                   theme.colorScheme.surface,
               elevation: widget.decoration!.elevation,
               height: widget.decoration!.height,
-              selectedIconColor: widget.decoration!.selectedIconColor,
+              selectedIconColor: widget.decoration!.selectedIconColor ??
+                  theme.colorScheme.primary,
               unselectedIconColor: widget.decoration!.unselectedIconColor,
               selectedIconTheme: widget.decoration!.selectedIconTheme ??
                   theme.iconTheme.copyWith(color: theme.colorScheme.primary),

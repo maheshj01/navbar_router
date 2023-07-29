@@ -147,6 +147,10 @@ You can choose between different NavbarTypes using the `NavbarDecoration.navbarT
 
 ![Material3 Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/027adf4f-d527-4dc5-ac22-8fe321734977)
 
+### NavbarType.floating
+
+![Floating Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/b735a016-703a-4fc9-be4a-a8e924a7c645)
+
 ## Hide or show bottomNavigationBar
 
 You can hide or show bottom navigationBar with a single line of code from anywhere in the widget tree. This allows you to handle useCases like scroll down to hide the navbar or hide the navbar on opening the drawer.
@@ -155,9 +159,9 @@ You can hide or show bottom navigationBar with a single line of code from anywhe
  NavbarNotifier.hideBottomNavBar = true;
 ```
 
-|                    Hide/show navbar on scroll                     |                                             Hide/show navbar on drawer open/close                                              |
-| :---------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------------------------: |
-| ![](https://miro.medium.com/max/800/1*NaYdY1FfsPFCNBdx3wg_og.gif) | <img src="https://user-images.githubusercontent.com/31410839/173987446-c8c79bb0-d24c-46c1-bc4a-582508a4e187.gif" width ="200"> |
+|       Hide/show navbar on scroll     |         Hide/show navbar on drawer open/close      |  Consistent behavior across all Navbars
+| :-----------------------------: | :------------------------------: | :------------------------------: |
+| ![](https://miro.medium.com/max/800/1*NaYdY1FfsPFCNBdx3wg_og.gif) | <img src="https://user-images.githubusercontent.com/31410839/173987446-c8c79bb0-d24c-46c1-bc4a-582508a4e187.gif" width ="200"> | ![ezgif com-video-to-gif](https://github.com/maheshmnj/navbar_router/assets/31410839/4e30d2a6-63c7-427c-953b-f800d1b68fad)
 
 ## Show Snackbar
 
