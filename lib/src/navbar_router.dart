@@ -242,6 +242,36 @@ class _NavbarRouterState extends State<NavbarRouter>
     _controller.forward();
   }
 
+  double bottomPadding() {
+    switch (widget.type) {
+      case NavbarType.standard:
+        return 0;
+      case NavbarType.notched:
+        return 0;
+      case NavbarType.material3:
+        return -24;
+      case NavbarType.floating:
+        return 30;
+      default:
+        return 0;
+    }
+  }
+
+  double horizontalPadding() {
+    switch (widget.type) {
+      case NavbarType.standard:
+        return 0;
+      case NavbarType.notched:
+        return 0;
+      case NavbarType.material3:
+        return 0;
+      case NavbarType.floating:
+        return 8;
+      default:
+        return 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -295,10 +325,10 @@ class _NavbarRouterState extends State<NavbarRouter>
                   ),
                 ),
                 Positioned(
-                  left: 0,
+                  left: horizontalPadding(),
                   top: widget.isDesktop ? 0 : null,
-                  bottom: widget.type == NavbarType.material3 ? -24 : 0,
-                  right: widget.isDesktop ? null : 0,
+                  bottom: bottomPadding(),
+                  right: widget.isDesktop ? null : horizontalPadding(),
                   child: _AnimatedNavBar(
                       model: _navbarNotifier,
                       isDesktop: widget.isDesktop,

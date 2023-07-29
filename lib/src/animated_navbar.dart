@@ -1,10 +1,11 @@
 part of 'navbar_router.dart';
 
-enum NavbarType { standard, notched, material3 }
+enum NavbarType { standard, notched, material3, floating }
 
 const double kM3NavbarHeight = 80.0;
 const double kStandardNavbarHeight = kBottomNavigationBarHeight;
 const double kNotchedNavbarHeight = kBottomNavigationBarHeight * 1.45;
+const double kFloatingNavbarHeight = 60.0;
 
 /// The height of the navbar based on the [NavbarType]
 double kNavbarHeight = 0.0;
@@ -213,6 +214,42 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
               onTap: widget.onItemTapped,
               navBarElevation: defaultDecoration.elevation,
               navbarHeight: widget.decoration!.height!,
+            );
+          }
+        case NavbarType.floating:
+          kNavbarHeight = kFloatingNavbarHeight;
+
+          if (widget.decoration != null) {
+            final decoration = defaultDecoration.copyWith(
+              backgroundColor: widget.decoration!.backgroundColor ??
+                  theme.colorScheme.surface,
+              elevation: widget.decoration!.elevation,
+              height: widget.decoration!.height,
+              selectedIconTheme: widget.decoration!.selectedIconTheme ??
+                  theme.iconTheme
+                      .copyWith(color: theme.colorScheme.onSecondaryContainer),
+              indicatorColor: widget.decoration!.indicatorColor ??
+                  theme.colorScheme.secondaryContainer,
+              labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+              indicatorShape: widget.decoration!.indicatorShape,
+              selectedLabelTextStyle:
+                  widget.decoration!.selectedLabelTextStyle ??
+                      theme.textTheme.bodySmall!.copyWith(
+                        color: theme.colorScheme.onSurface,
+                      ),
+            );
+            return FloatingNavbar(
+              navBarDecoration: decoration,
+              items: widget.menuItems,
+              onTap: widget.onItemTapped,
+              navBarElevation: widget.decoration!.elevation,
+            );
+          } else {
+            return FloatingNavbar(
+              navBarDecoration: defaultDecoration,
+              items: widget.menuItems,
+              onTap: widget.onItemTapped,
+              navBarElevation: defaultDecoration.elevation,
             );
           }
 
@@ -730,8 +767,7 @@ class M3NavBar extends NavbarBase {
   double get height => navbarHeight;
 }
 
-class M3NavBarState extends State<M3NavBar>
-    with SingleTickerProviderStateMixin {
+class M3NavBarState extends State<M3NavBar> {
   @override
   void initState() {
     super.initState();
@@ -780,5 +816,126 @@ class M3NavBarState extends State<M3NavBar>
           selectedIndex: NavbarNotifier.currentIndex,
           onDestinationSelected: (int index) => widget.onItemTapped!(index)),
     );
+  }
+}
+
+class FloatingNavbar extends NavbarBase {
+  const FloatingNavbar(
+      {Key? key,
+      required this.navBarDecoration,
+      required this.navBarElevation,
+      required this.onTap,
+      this.navbarHeight = kFloatingNavbarHeight,
+      this.index = 0,
+      required this.items})
+      : super(key: key);
+
+  final List<NavbarItem> items;
+  final Function(int) onTap;
+  final NavbarDecoration navBarDecoration;
+  final double? navBarElevation;
+  final int index;
+  final double navbarHeight;
+
+  @override
+  FloatingNavbarState createState() => FloatingNavbarState();
+
+  @override
+  NavbarDecoration get decoration => navBarDecoration;
+
+  @override
+  double? get elevation => navBarElevation;
+
+  @override
+  List<NavbarItem> get menuItems => items;
+
+  @override
+  Function(int p1)? get onItemTapped => onTap;
+
+  @override
+  double get height => navbarHeight;
+}
+
+class FloatingNavbarState extends State<FloatingNavbar>
+    with SingleTickerProviderStateMixin {
+  late int _selectedIndex;
+
+  @override
+  void initState() {
+    _selectedIndex = widget.index;
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant FloatingNavbar oldWidget) {
+    if (oldWidget.index != widget.index) {
+      _selectedIndex = widget.index;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+        data: Theme.of(context).copyWith(
+            useMaterial3: true,
+            navigationBarTheme: NavigationBarThemeData(
+              backgroundColor: widget.decoration.backgroundColor ??
+                  Theme.of(context).colorScheme.surface,
+              elevation: widget.elevation,
+              labelTextStyle: MaterialStateProperty.all(
+                  widget.decoration.selectedLabelTextStyle),
+              indicatorShape: widget.decoration.indicatorShape ??
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+              iconTheme: MaterialStateProperty.all(
+                  widget.decoration.selectedIconTheme),
+              labelBehavior: widget.decoration.showUnselectedLabels
+                  ? NavigationDestinationLabelBehavior.alwaysShow
+                  : NavigationDestinationLabelBehavior.onlyShowSelected,
+              indicatorColor: widget.decoration.indicatorColor,
+              height: widget.height,
+            )),
+        child: Container(
+          height: kFloatingNavbarHeight,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            color: widget.decoration.backgroundColor ??
+                Theme.of(context).colorScheme.surface,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white.withOpacity(0.1),
+                spreadRadius: 2,
+                blurRadius: 6,
+                offset: Offset(3, 4), // hanges position of shadow
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              for (int i = 0; i < widget.items.length; i++)
+                Expanded(
+                    child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                      borderRadius: BorderRadius.circular(20.0),
+                      onTap: () {
+                        _selectedIndex = i;
+                        widget.onItemTapped!(i);
+                      },
+                      child: SizedBox(
+                        height: kFloatingNavbarHeight,
+                        child: Icon(
+                          widget.items[i].iconData,
+                          size: 26,
+                          color: _selectedIndex == i
+                              ? Theme.of(context).colorScheme.primary
+                              : widget.decoration.unselectedIconColor,
+                        ),
+                      )),
+                ))
+            ],
+          ),
+        ));
   }
 }

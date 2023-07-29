@@ -221,7 +221,7 @@ class _HomePageState extends State<HomePage> {
           }
         },
         initialIndex: 0,
-        type: NavbarType.material3,
+        type: NavbarType.floating,
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 600,
         decoration: M3NavbarDecoration(
