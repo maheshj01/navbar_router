@@ -1,7 +1,6 @@
 ## [0.6.0] July 29, 2023
 
 - Adds support for Floating Navbar with `NavbarType.floating`
-- Deprecate unselectedIconColor use `unselectedLabelColor` instead
 
 ## [0.5.9] July 21, 2023
 
