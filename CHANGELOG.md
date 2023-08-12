@@ -1,3 +1,7 @@
+## [0.6.1] Aug 12, 2023
+
+- Configure `FloatingNavbar` height with `FloatingNavbarDecoration.height` property
+
 ## [0.6.0] July 29, 2023
 
 - Adds support for Floating Navbar with `NavbarType.floating`
