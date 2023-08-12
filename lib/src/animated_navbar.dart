@@ -85,6 +85,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
         backgroundColor: theme.bottomNavigationBarTheme.backgroundColor ??
             theme.colorScheme.surface,
         elevation: 8,
+        height: kBottomNavigationBarHeight,
         showUnselectedLabels: true,
         unselectedIconColor: theme.bottomNavigationBarTheme.unselectedItemColor,
         unselectedLabelColor:
@@ -260,6 +261,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
               items: widget.menuItems,
               onTap: widget.onItemTapped,
               margin: widget.decoration!.margin,
+              navbarHeight: widget.decoration!.height!,
               borderRadius: widget.decoration!.borderRadius,
               navBarElevation: widget.decoration!.elevation,
             );
@@ -267,6 +269,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
             return FloatingNavbar(
               index: NavbarNotifier.currentIndex,
               navBarDecoration: defaultDecoration,
+              navbarHeight: defaultDecoration.height!,
               items: widget.menuItems,
               onTap: widget.onItemTapped,
               borderRadius: widget.decoration!.borderRadius,
@@ -920,7 +923,7 @@ class FloatingNavbarState extends State<FloatingNavbar> {
               height: widget.height,
             )),
         child: Container(
-          height: kFloatingNavbarHeight,
+          height: widget.navbarHeight,
           margin: widget.margin ??
               const EdgeInsets.symmetric(horizontal: 40.0, vertical: 18.0),
           decoration: BoxDecoration(
@@ -956,7 +959,7 @@ class FloatingNavbarState extends State<FloatingNavbar> {
                         widget.onItemTapped!(i);
                       },
                       child: SizedBox(
-                        height: kFloatingNavbarHeight,
+                        height: widget.navbarHeight,
                         child: Icon(
                           widget.items[i].iconData,
                           size: 26,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:navbar_router/navbar_router.dart';
 
 class NavbarItem {
   const NavbarItem(this.iconData, this.text, {this.backgroundColor});
@@ -273,10 +274,12 @@ class FloatingNavbarDecoration extends NavbarDecoration {
       Color? selectedIconColor,
       EdgeInsetsGeometry? margin,
       BorderRadius? borderRadius,
+      double? height,
       bool? isExtended})
       : super(
           backgroundColor: backgroundColor,
           borderRadius: borderRadius,
+          height: height ?? kFloatingNavbarHeight,
 
           /// margin for the floaiting navbar defaults to EdgeInsets.symmetric(horizontal: 48.0, vertical: 20),
           ///
