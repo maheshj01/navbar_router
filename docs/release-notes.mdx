@@ -1,3 +1,7 @@
+## [0.6.2] Nov 04, 2023
+
+- Fix: NavigationBar height is too much [Issue #17](https://github.com/maheshmnj/navbar_router/issues/17)
+
 ## [0.6.1] Aug 12, 2023
 
 - Configure `FloatingNavbar` height with `FloatingNavbarDecoration.height` property
