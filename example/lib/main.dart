@@ -188,6 +188,15 @@ class _HomePageState extends State<HomePage> {
                         setState(() {});
                       },
                     ),
+                    FloatingActionButton(
+                      child: Icon(appSetting.isDarkMode
+                          ? Icons.wb_sunny
+                          : Icons.nightlight_round),
+                      onPressed: () {
+                        appSetting.toggleTheme();
+                        setState(() {});
+                      },
+                    ),
                   ],
                 ),
               );

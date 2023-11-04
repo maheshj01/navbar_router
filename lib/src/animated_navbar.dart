@@ -2,7 +2,7 @@ part of 'navbar_router.dart';
 
 enum NavbarType { standard, notched, material3, floating }
 
-const double kM3NavbarHeight = 80.0;
+const double kM3NavbarHeight = kBottomNavigationBarHeight;
 const double kStandardNavbarHeight = kBottomNavigationBarHeight;
 const double kNotchedNavbarHeight = kBottomNavigationBarHeight * 1.45;
 const double kFloatingNavbarHeight = 60.0;
@@ -413,36 +413,33 @@ class StandardNavbarState extends State<StandardNavbar> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: widget.height + 6,
-      child: BottomNavigationBar(
-        type: widget.decoration.navbarType,
-        currentIndex: NavbarNotifier.currentIndex,
-        onTap: (x) {
-          widget.onItemTapped!(x);
-        },
-        backgroundColor: widget.decoration.backgroundColor,
-        showSelectedLabels: widget.decoration.showSelectedLabels,
-        enableFeedback: widget.decoration.enableFeedback,
-        showUnselectedLabels: widget.decoration.showUnselectedLabels,
-        elevation: widget.decoration.elevation,
-        iconSize: Theme.of(context).iconTheme.size ?? 24.0,
-        unselectedItemColor: widget.decoration.unselectedItemColor,
-        selectedItemColor: widget.decoration.selectedLabelTextStyle?.color,
-        unselectedLabelStyle: widget.decoration.unselectedLabelTextStyle,
-        selectedLabelStyle: widget.decoration.selectedLabelTextStyle,
-        selectedIconTheme: widget.decoration.selectedIconTheme,
-        unselectedIconTheme: widget.decoration.unselectedIconTheme,
-        items: widget.menuItems
-            .map((NavbarItem menuItem) => BottomNavigationBarItem(
-                  backgroundColor: menuItem.backgroundColor,
-                  icon: Icon(
-                    menuItem.iconData,
-                  ),
-                  label: menuItem.text,
-                ))
-            .toList(),
-      ),
+    return BottomNavigationBar(
+      type: widget.decoration.navbarType,
+      currentIndex: NavbarNotifier.currentIndex,
+      onTap: (x) {
+        widget.onItemTapped!(x);
+      },
+      backgroundColor: widget.decoration.backgroundColor,
+      showSelectedLabels: widget.decoration.showSelectedLabels,
+      enableFeedback: widget.decoration.enableFeedback,
+      showUnselectedLabels: widget.decoration.showUnselectedLabels,
+      elevation: widget.decoration.elevation,
+      iconSize: Theme.of(context).iconTheme.size ?? 24.0,
+      unselectedItemColor: widget.decoration.unselectedItemColor,
+      selectedItemColor: widget.decoration.selectedLabelTextStyle?.color,
+      unselectedLabelStyle: widget.decoration.unselectedLabelTextStyle,
+      selectedLabelStyle: widget.decoration.selectedLabelTextStyle,
+      selectedIconTheme: widget.decoration.selectedIconTheme,
+      unselectedIconTheme: widget.decoration.unselectedIconTheme,
+      items: widget.menuItems
+          .map((NavbarItem menuItem) => BottomNavigationBarItem(
+                backgroundColor: menuItem.backgroundColor,
+                icon: Icon(
+                  menuItem.iconData,
+                ),
+                label: menuItem.text,
+              ))
+          .toList(),
     );
   }
 }
@@ -815,28 +812,28 @@ class M3NavBarState extends State<M3NavBar> {
             indicatorColor: widget.decoration.indicatorColor,
             height: widget.height,
           )),
-      child: NavigationBar(
-          height: widget.height,
-          backgroundColor: widget.decoration.backgroundColor ??
-              Theme.of(context).colorScheme.surface,
-          animationDuration: const Duration(milliseconds: 300),
-          elevation: widget.elevation,
-          indicatorColor: widget.decoration.indicatorColor,
-          indicatorShape: widget.decoration.indicatorShape,
-          labelBehavior: widget.labelBehavior,
-          destinations: widget.items
-              .map((e) => Padding(
-                    padding: const EdgeInsets.only(bottom: 50.0),
-                    child: NavigationDestination(
+      child: MediaQuery(
+        data: MediaQuery.of(context).removePadding(removeTop: true),
+        child: NavigationBar(
+            height: widget.height,
+            backgroundColor: widget.decoration.backgroundColor ??
+                Theme.of(context).colorScheme.surface,
+            animationDuration: const Duration(milliseconds: 300),
+            elevation: widget.elevation,
+            indicatorColor: widget.decoration.indicatorColor,
+            indicatorShape: widget.decoration.indicatorShape,
+            labelBehavior: widget.labelBehavior,
+            destinations: widget.items
+                .map((e) => NavigationDestination(
                       tooltip: e.text,
                       icon: Icon(e.iconData),
                       label: e.text,
                       selectedIcon: Icon(e.iconData),
-                    ),
-                  ))
-              .toList(),
-          selectedIndex: NavbarNotifier.currentIndex,
-          onDestinationSelected: (int index) => widget.onItemTapped!(index)),
+                    ))
+                .toList(),
+            selectedIndex: NavbarNotifier.currentIndex,
+            onDestinationSelected: (int index) => widget.onItemTapped!(index)),
+      ),
     );
   }
 }
