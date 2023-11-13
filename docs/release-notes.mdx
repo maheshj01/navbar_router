@@ -1,3 +1,7 @@
+## [0.6.3] Nov 14, 2023
+
+- Add a method to programmatically push a route to the NavigatorStack
+
 ## [0.6.2] Nov 04, 2023
 
 - Fix: NavigationBar height is too much [Issue #17](https://github.com/maheshmnj/navbar_router/issues/17)
