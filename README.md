@@ -1,4 +1,4 @@
-## **navbar_router v0.6.2**
+## **navbar_router v0.6.3**
 
 <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
@@ -18,7 +18,7 @@ _Most of the features which this package provides are mainly to improve the user
 - Support for nested navigation.
 - Intercept back button press to handle app exits (Android).
 - Fading between NavbarDestinations
-- Programmatically control state of bottom navbar from any part of widget tree e.g change index, hide/show bottom navbar, pop routes of a specific tab etc
+- Programmatically control state of bottom navbar from any part of widget tree e.g change index, hide/show bottom navbar,push/pop routes of a specific tab etc
 - Show Snackbar messages on top of Navbar with a single line of code.
 - persist state across bottom navbar tabs.
 - Jump to base route from a deep nested route with a single tap(same as instagram).

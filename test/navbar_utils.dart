@@ -1,9 +1,49 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:navbar_router/navbar_router.dart';
 
 const String placeHolderText =
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+
+class AppSetting extends ChangeNotifier {
+  bool isDarkMode;
+  Color themeSeed = Colors.blue;
+
+  AppSetting({this.isDarkMode = false});
+
+  void changeThemeSeed(Color color) {
+    themeSeed = color;
+    notifyListeners();
+  }
+
+  void toggleTheme() {
+    isDarkMode = !isDarkMode;
+    notifyListeners();
+  }
+}
+
+AppSetting appSetting = AppSetting();
+final List<Color> themeColorSeed = [
+  Colors.blue,
+  Colors.red,
+  Colors.green,
+  Colors.purple,
+  Colors.orange,
+  Colors.teal,
+  Colors.pink,
+  Colors.indigo,
+  Colors.brown,
+  Colors.cyan,
+  Colors.deepOrange,
+  Colors.deepPurple,
+  Colors.lime,
+  Colors.amber,
+  Colors.lightBlue,
+  Colors.lightGreen,
+  Colors.yellow,
+  Colors.grey,
+];
 
 class HomeFeeds extends StatefulWidget {
   const HomeFeeds({Key? key}) : super(key: key);
@@ -17,26 +57,33 @@ class _HomeFeedsState extends State<HomeFeeds> {
   final _scrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
-    _addScrollListener();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    size = MediaQuery.of(context).size;
+    if (size.width < 600) {
+      _addScrollListener();
+    }
+  }
+
+  void handleScroll() {
+    if (size.width > 600) return;
+    if (_scrollController.position.userScrollDirection ==
+        ScrollDirection.forward) {
+      if (NavbarNotifier.isNavbarHidden) {
+        NavbarNotifier.hideBottomNavBar = false;
+      }
+    } else {
+      if (!NavbarNotifier.isNavbarHidden) {
+        NavbarNotifier.hideBottomNavBar = true;
+      }
+    }
   }
 
   void _addScrollListener() {
-    _scrollController.addListener(() {
-      if (_scrollController.position.userScrollDirection ==
-          ScrollDirection.forward) {
-        if (NavbarNotifier.isNavbarHidden) {
-          NavbarNotifier.hideBottomNavBar = false;
-        }
-      } else {
-        if (!NavbarNotifier.isNavbarHidden) {
-          NavbarNotifier.hideBottomNavBar = true;
-        }
-      }
-    });
+    _scrollController.addListener(handleScroll);
   }
 
+  Size size = Size.zero;
   @override
   void dispose() {
     _scrollController.dispose();
@@ -56,12 +103,17 @@ class _HomeFeedsState extends State<HomeFeeds> {
           return InkWell(
               onTap: () {
                 NavbarNotifier.hideBottomNavBar = false;
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (contex) => FeedDetail(
-                          feedId: index.toString(),
-                        )));
+                Navigate.push(
+                    context,
+                    FeedDetail(
+                      feedId: index.toString(),
+                    ),
+                    isRootNavigator: false,
+                    transitionType: TransitionType.reveal);
               },
-              child: FeedTile(index: index));
+              child: FeedTile(
+                index: index,
+              ));
         },
       ),
     );
@@ -76,28 +128,31 @@ class FeedTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 300,
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-      color: Colors.grey.withOpacity(0.4),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 4,
-            right: 4,
-            left: 4,
-            child: Container(
-              color: Colors.grey,
-              height: 180,
-              alignment: Alignment.center,
-              child: Text('Feed $index card'),
+      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+      color: Theme.of(context).colorScheme.surface,
+      child: Card(
+        child: Stack(
+          children: [
+            Positioned(
+              top: 4,
+              right: 4,
+              left: 4,
+              child: Container(
+                height: 180,
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+                color: Theme.of(context).colorScheme.secondary,
+                alignment: Alignment.center,
+                child: Text('Feed $index card'),
+              ),
             ),
-          ),
-          Positioned(
-              bottom: 12,
-              right: 12,
-              left: 12,
-              child: Text(placeHolderText.substring(0, 200)))
-        ],
+            Positioned(
+                bottom: 12,
+                right: 12,
+                left: 12,
+                child: Text(placeHolderText.substring(0, 200)))
+          ],
+        ),
       ),
     );
   }
@@ -144,25 +199,33 @@ class _ProductListState extends State<ProductList> {
   final _scrollController = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
-    _addScrollListener();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    size = MediaQuery.of(context).size;
+    if (size.width < 600) {
+      _addScrollListener();
+    }
+  }
+
+  void handleScroll() {
+    if (size.width > 600) return;
+    if (_scrollController.position.userScrollDirection ==
+        ScrollDirection.forward) {
+      if (NavbarNotifier.isNavbarHidden) {
+        NavbarNotifier.hideBottomNavBar = false;
+      }
+    } else {
+      if (!NavbarNotifier.isNavbarHidden) {
+        NavbarNotifier.hideBottomNavBar = true;
+      }
+    }
   }
 
   void _addScrollListener() {
-    _scrollController.addListener(() {
-      if (_scrollController.position.userScrollDirection ==
-          ScrollDirection.forward) {
-        if (NavbarNotifier.isNavbarHidden) {
-          NavbarNotifier.hideBottomNavBar = false;
-        }
-      } else {
-        if (!NavbarNotifier.isNavbarHidden) {
-          NavbarNotifier.hideBottomNavBar = true;
-        }
-      }
-    });
+    _scrollController.addListener(handleScroll);
   }
+
+  Size size = Size.zero;
 
   @override
   void dispose() {
@@ -183,9 +246,18 @@ class _ProductListState extends State<ProductList> {
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                   onTap: () {
-                    NavbarNotifier.hideBottomNavBar = false;
-                    Navigate.pushNamed(context, ProductDetail.route,
-                        arguments: {'id': index.toString()});
+                    if (index == 0) {
+                      NavbarNotifier.pushNamed(FeedDetail.route, 0);
+                      NavbarNotifier.showSnackBar(context, 'switching to Home',
+                          onClosed: () {
+                        NavbarNotifier.index = 0;
+                      });
+                    } else {
+                      NavbarNotifier.hideBottomNavBar = false;
+                      Navigate.pushNamed(context, ProductDetail.route,
+                          transitionType: TransitionType.scale,
+                          arguments: {'id': index.toString()});
+                    }
                   },
                   child: ProductTile(index: index)),
             );
@@ -200,22 +272,30 @@ class ProductTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        color: Colors.grey.withOpacity(0.5),
-        height: 120,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              margin: const EdgeInsets.all(8),
-              height: 75,
-              width: 75,
-              color: Colors.grey,
-            ),
-            Text('Product $index'),
-          ],
-        ));
+    return Card(
+      child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          height: 120,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: const EdgeInsets.all(8),
+                height: 75,
+                width: 75,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              Flexible(
+                child: Text(
+                  index != 0
+                      ? 'Product $index'
+                      : 'Tap to push a route on HomePage Programmatically',
+                  textAlign: TextAlign.end,
+                ),
+              ),
+            ],
+          )),
+    );
   }
 }
 
@@ -270,7 +350,7 @@ class ProductComments extends StatelessWidget {
           child: SizedBox(
             height: 60,
             child: ListTile(
-              tileColor: Colors.grey.withOpacity(0.5),
+              tileColor: Theme.of(context).colorScheme.secondaryContainer,
               title: Text('Comment $index'),
             ),
           ),
@@ -280,48 +360,127 @@ class ProductComments extends StatelessWidget {
   }
 }
 
-class UserProfile extends StatelessWidget {
+class UserProfile extends StatefulWidget {
   static const String route = '/';
 
   const UserProfile({Key? key}) : super(key: key);
 
   @override
+  State<UserProfile> createState() => _UserProfileState();
+}
+
+class _UserProfileState extends State<UserProfile> {
+  final GlobalKey iconKey = GlobalKey();
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
       appBar: AppBar(
           centerTitle: false,
           actions: [
             IconButton(
+              key: iconKey,
               icon: const Icon(Icons.edit),
               onPressed: () {
-                Navigate.pushNamed(context, ProfileEdit.route);
+                final RenderBox? renderBox =
+                    iconKey.currentContext!.findRenderObject() as RenderBox?;
+                final offset = renderBox!.localToGlobal(Offset.zero);
+                Navigate.push(context, const ProfileEdit(),
+                    isRootNavigator: true,
+                    offset: offset,
+                    transitionType: TransitionType.reveal);
               },
             )
           ],
           title: const Text('Hi User')),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Hi My Name is'),
+                Text('Hi! This is your Profile Page'),
                 SizedBox(
                   width: 10,
                 ),
-                SizedBox(
-                  width: 100,
-                  child: TextField(
-                    decoration: InputDecoration(),
-                  ),
-                ),
               ],
             ),
+            ElevatedButton(
+                onPressed: () {
+                  NavbarNotifier.showSnackBar(
+                    context,
+                    "This is a Floating SnackBar",
+                    actionLabel: "Tap to close",
+                    onActionPressed: () {
+                      NavbarNotifier.hideSnackBar(context);
+                    },
+                    bottom: NavbarNotifier.currentIndex > 1 ? kNavbarHeight : 0,
+                  );
+                },
+                child: const Text('Show SnackBar')),
+            const SizedBox(
+              height: 24,
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  NavbarNotifier.popRoute(1);
+                },
+                child: const Text('Pop Product Route')),
           ],
         ),
       ),
     );
+  }
+}
+
+class Settings extends StatefulWidget {
+  const Settings({super.key});
+
+  @override
+  State<Settings> createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+  double index = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Settings'),
+          actions: [
+            Switch(
+                value: appSetting.isDarkMode,
+                onChanged: (x) {
+                  appSetting.toggleTheme();
+                  setState(() {});
+                })
+          ],
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Slide to change theme color',
+                  style: TextStyle(fontSize: 20, color: appSetting.themeSeed)),
+              const SizedBox(
+                height: 20,
+              ),
+              CupertinoSlider(
+                  value: index,
+                  min: 0,
+                  thumbColor: appSetting.themeSeed,
+                  max: themeColorSeed.length.toDouble() - 1,
+                  onChanged: (x) {
+                    setState(() {
+                      index = x;
+                    });
+                    appSetting.changeThemeSeed(themeColorSeed[index.toInt()]);
+                  })
+            ],
+          ),
+        ));
   }
 }
 

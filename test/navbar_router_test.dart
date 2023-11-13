@@ -267,7 +267,7 @@ void main() {
 
         /// Navigate to ProductDetail
         await navigateToNestedTarget(
-            tester, "Product 0".textX(), routes[1]![ProductDetail.route]!);
+            tester, "Product 2".textX(), routes[1]![ProductDetail.route]!);
 
         /// Navigate to Product comments
         await navigateToNestedTarget(tester, "show comments".textX(),
@@ -312,7 +312,7 @@ void main() {
 
         /// Navigate to ProductDetail
         await navigateToNestedTarget(
-            tester, "Product 0".textX(), routes[1]![ProductDetail.route]!);
+            tester, "Product 2".textX(), routes[1]![ProductDetail.route]!);
 
         /// Navigate to Product comments
         await navigateToNestedTarget(tester, "show comments".textX(),
@@ -340,6 +340,33 @@ void main() {
     });
 
     group('NavbarType.standard: Should Pop routes Programmatically', () {
+      testWidgets('Navbar should push route programmatically',
+          (WidgetTester tester) async {
+        int index = 1;
+        await tester.pumpWidget(boilerplate());
+        await tester.pumpAndSettle();
+        final productIcon = find.byIcon(items[index].iconData);
+        final productDestination = (routes[index]!['/']).runtimeType.typeX();
+        expect(productIcon, findsOneWidget);
+        await tester.tap(productIcon);
+        await tester.pumpAndSettle();
+        expect(productDestination, findsOneWidget);
+        expect('Product 1'.textX(), findsOneWidget);
+        String tapTargetText =
+            'Tap to push a route on HomePage Programmatically';
+        expect(tapTargetText.textX(), findsOneWidget);
+        await tester.tap(tapTargetText.textX());
+        await tester.pumpAndSettle();
+        expect('switching to Home'.textX(), findsOneWidget);
+        expect(find.byType(SnackBar), findsOneWidget);
+        await tester.pumpAndSettle(Duration(seconds: 4));
+        final feedRoute = routes[0]!['/'].runtimeType.typeX();
+        final feedDetailRoute =
+            routes[0]![FeedDetail.route]!.runtimeType.typeX();
+        expect(feedDetailRoute, findsOneWidget);
+        expect(feedRoute, findsNothing);
+      });
+
       testWidgets('Navbar should pop route programmatically',
           (WidgetTester tester) async {
         int index = 1;
@@ -354,7 +381,7 @@ void main() {
 
         /// Navigate to ProductDetail
 
-        await tester.tap("Product 0".textX());
+        await tester.tap("Product 1".textX());
         await tester.pumpAndSettle();
         final productDetail =
             (routes[1]![ProductDetail.route]).runtimeType.typeX();
@@ -379,7 +406,7 @@ void main() {
 
         /// Navigate to ProductDetail
 
-        await tester.tap("Product 0".textX());
+        await tester.tap("Product 2".textX());
         await tester.pumpAndSettle();
         final productDetail =
             (routes[1]![ProductDetail.route]).runtimeType.typeX();
@@ -586,7 +613,7 @@ void main() {
 
         /// Navigate to ProductDetail
         await navigateToNestedTarget(
-            tester, "Product 0".textX(), routes[1]![ProductDetail.route]!);
+            tester, "Product 2".textX(), routes[1]![ProductDetail.route]!);
 
         /// Navigate to Product comments
         await navigateToNestedTarget(tester, "show comments".textX(),
@@ -632,7 +659,7 @@ void main() {
 
         /// Navigate to ProductDetail
         await navigateToNestedTarget(
-            tester, "Product 0".textX(), routes[1]![ProductDetail.route]!);
+            tester, "Product 2".textX(), routes[1]![ProductDetail.route]!);
 
         /// Navigate to Product comments
         await navigateToNestedTarget(tester, "show comments".textX(),
@@ -676,7 +703,7 @@ void main() {
 
         /// Navigate to ProductDetail
 
-        await tester.tap("Product 0".textX());
+        await tester.tap("Product 2".textX());
         await tester.pumpAndSettle();
         final productDetail =
             (routes[1]![ProductDetail.route]).runtimeType.typeX();
@@ -703,7 +730,7 @@ void main() {
 
         /// Navigate to ProductDetail
 
-        await tester.tap("Product 0".textX());
+        await tester.tap("Product 2".textX());
         await tester.pumpAndSettle();
         final productDetail =
             (routes[1]![ProductDetail.route]).runtimeType.typeX();
@@ -912,7 +939,7 @@ void main() {
 
         /// Navigate to ProductDetail
         await navigateToNestedTarget(
-            tester, "Product 0".textX(), routes[1]![ProductDetail.route]!);
+            tester, "Product 2".textX(), routes[1]![ProductDetail.route]!);
 
         /// Navigate to Product comments
         await navigateToNestedTarget(tester, "show comments".textX(),
@@ -958,7 +985,7 @@ void main() {
 
         /// Navigate to ProductDetail
         await navigateToNestedTarget(
-            tester, "Product 0".textX(), routes[1]![ProductDetail.route]!);
+            tester, "Product 2".textX(), routes[1]![ProductDetail.route]!);
 
         /// Navigate to Product comments
         await navigateToNestedTarget(tester, "show comments".textX(),
@@ -1002,7 +1029,7 @@ void main() {
 
         /// Navigate to ProductDetail
 
-        await tester.tap("Product 0".textX());
+        await tester.tap("Product 2".textX());
         await tester.pumpAndSettle();
         final productDetail =
             (routes[1]![ProductDetail.route]).runtimeType.typeX();
@@ -1029,7 +1056,7 @@ void main() {
 
         /// Navigate to ProductDetail
 
-        await tester.tap("Product 0".textX());
+        await tester.tap("Product 2".textX());
         await tester.pumpAndSettle();
         final productDetail =
             (routes[1]![ProductDetail.route]).runtimeType.typeX();

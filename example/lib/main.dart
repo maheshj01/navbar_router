@@ -175,6 +175,7 @@ class _HomePageState extends State<HomePage> {
                       label: const Text("Show SnackBar"),
                     ),
                     FloatingActionButton(
+                      heroTag: 'navbar',
                       child: Icon(NavbarNotifier.isNavbarHidden
                           ? Icons.toggle_off
                           : Icons.toggle_on),
@@ -189,6 +190,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                     FloatingActionButton(
+                      heroTag: 'darkmode',
                       child: Icon(appSetting.isDarkMode
                           ? Icons.wb_sunny
                           : Icons.nightlight_round),
@@ -335,6 +337,7 @@ class _HomeFeedsState extends State<HomeFeeds> {
                     FeedDetail(
                       feedId: index.toString(),
                     ),
+                    isRootNavigator: false,
                     transitionType: TransitionType.reveal);
               },
               child: FeedTile(
@@ -472,10 +475,18 @@ class _ProductListState extends State<ProductList> {
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                   onTap: () {
-                    NavbarNotifier.hideBottomNavBar = false;
-                    Navigate.pushNamed(context, ProductDetail.route,
-                        transitionType: TransitionType.scale,
-                        arguments: {'id': index.toString()});
+                    if (index == 0) {
+                      NavbarNotifier.pushNamed(FeedDetail.route, 0);
+                      NavbarNotifier.showSnackBar(context, 'switching to Home',
+                          onClosed: () {
+                        NavbarNotifier.index = 0;
+                      });
+                    } else {
+                      NavbarNotifier.hideBottomNavBar = false;
+                      Navigate.pushNamed(context, ProductDetail.route,
+                          transitionType: TransitionType.scale,
+                          arguments: {'id': index.toString()});
+                    }
                   },
                   child: ProductTile(index: index)),
             );
@@ -503,7 +514,14 @@ class ProductTile extends StatelessWidget {
                 width: 75,
                 color: Theme.of(context).colorScheme.secondary,
               ),
-              Text('Product $index'),
+              Flexible(
+                child: Text(
+                  index != 0
+                      ? 'Product $index'
+                      : 'Tap to push a route on HomePage Programmatically',
+                  textAlign: TextAlign.end,
+                ),
+              ),
             ],
           )),
     );

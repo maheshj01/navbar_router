@@ -90,6 +90,8 @@ class NavbarNotifier extends ChangeNotifier {
     return exitingApp;
   }
 
+  /// pops the current route from a specific navigator stack
+  /// by passing the index of the navigator stack to pop from.
   static void popRoute(int index) {
     NavigatorState? currentState;
     currentState = _keys[index].currentState;
@@ -98,7 +100,17 @@ class NavbarNotifier extends ChangeNotifier {
     }
   }
 
-  // pops all routes except first, if there are more than 1 route in each navigator stack
+  /// Use this method to programmatically push a route to a specific navigator stack
+  /// by passing the route name and the index of the navigator stack
+  static void pushNamed(String route, int x) {
+    NavigatorState? currentState;
+    currentState = _keys[x].currentState;
+    if (currentState != null) {
+      currentState.pushNamed(route);
+    }
+  }
+
+  /// pops all routes except first, if there are more than 1 route in each navigator stack
   static void popAllRoutes(int index) {
     NavigatorState? currentState;
     for (int i = 0; i < _keys.length; i++) {
