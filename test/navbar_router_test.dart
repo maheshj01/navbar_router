@@ -359,7 +359,7 @@ void main() {
         await tester.pumpAndSettle();
         expect('switching to Home'.textX(), findsOneWidget);
         expect(find.byType(SnackBar), findsOneWidget);
-        await tester.pumpAndSettle(Duration(seconds: 4));
+        await tester.pumpAndSettle(const Duration(seconds: 4));
         final feedRoute = routes[0]!['/'].runtimeType.typeX();
         final feedDetailRoute =
             routes[0]![FeedDetail.route]!.runtimeType.typeX();
