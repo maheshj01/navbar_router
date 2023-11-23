@@ -9,8 +9,10 @@ class NavbarItem {
       this.badgeOffset,
       this.onlyDot});
 
-  /// IconData for the navbar item
-  final IconData iconData;
+  
+  
+  /// navbar item index 
+  final int index;
 
   /// label for the navbar item
   final String text;
@@ -18,7 +20,7 @@ class NavbarItem {
   /// background color for the navbar item when type is [NavbarType.shifting]
   final Color? backgroundColor;
 
-/// badge widget for the navbar item, normally a Text
+  /// badge widget for the navbar item, normally a Text
   final Widget? badge;
 
   /// background color for the badge
