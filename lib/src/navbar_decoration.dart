@@ -9,10 +9,11 @@ class NavbarItem {
       this.badgeOffset,
       this.onlyDot});
 
-  
-  
   /// navbar item index 
   final int index;
+
+  /// IconData for the navbar item
+  final IconData iconData;
 
   /// label for the navbar item
   final String text;
