@@ -434,9 +434,17 @@ class StandardNavbarState extends State<StandardNavbar> {
       items: widget.menuItems
           .map((NavbarItem menuItem) => BottomNavigationBarItem(
                 backgroundColor: menuItem.backgroundColor,
-                icon: Icon(
-                  menuItem.iconData,
-                ),
+                icon: menuItem.badge == null
+                    ? Icon(
+                        menuItem.iconData,
+                      )
+                    : Badge(
+                        label: menuItem.badge,
+                        backgroundColor: menuItem.backgroundBadgeColor,
+                        child: Icon(
+                          menuItem.iconData,
+                        ),
+                      ),
                 label: menuItem.text,
               ))
           .toList(),
