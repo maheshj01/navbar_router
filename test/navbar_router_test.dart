@@ -29,7 +29,7 @@ extension FindIcon on IconData {
 
 void main() {
   const List<NavbarItem> items = [
-    NavbarItem(Icons.home, 'Home', backgroundColor: mediumPurple),
+    NavbarItem(Icons.home, 'Home', backgroundColor: mediumPurple, badge: Text('1')),
     NavbarItem(Icons.shopping_bag, 'Products', backgroundColor: Colors.orange),
     NavbarItem(Icons.person, 'Me', backgroundColor: Colors.teal),
   ];

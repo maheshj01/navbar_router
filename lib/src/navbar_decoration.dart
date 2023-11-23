@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:navbar_router/navbar_router.dart';
 
 class NavbarItem {
-  const NavbarItem(this.iconData, this.text, {this.backgroundColor, this.backgroundBadgeColor, this.badge});
+  const NavbarItem(this.index, this.iconData, this.text,
+      {this.backgroundColor,
+      this.badgeBackgroundColor,
+      this.badge,
+      this.badgeOffset,
+      this.onlyDot});
 
   /// IconData for the navbar item
   final IconData iconData;
@@ -13,10 +18,17 @@ class NavbarItem {
   /// background color for the navbar item when type is [NavbarType.shifting]
   final Color? backgroundColor;
 
-  final Color? backgroundBadgeColor;
-
+/// badge widget for the navbar item, normally a Text
   final Widget? badge;
 
+  /// background color for the badge
+  final Color? badgeBackgroundColor;
+
+  /// custom offset for the badge
+  final Offset? badgeOffset;
+
+  /// custom offset for the badge
+  final bool? onlyDot;
 }
 
 /// Decoration class for the navbar [NavbarType.standard]

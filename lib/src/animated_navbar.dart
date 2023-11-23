@@ -439,8 +439,15 @@ class StandardNavbarState extends State<StandardNavbar> {
                         menuItem.iconData,
                       )
                     : Badge(
+                        largeSize: menuItem.onlyDot == true ? 8 : null,
+                        offset: menuItem.badgeOffset ??
+                            (menuItem.onlyDot == true
+                                ? const Offset(9, -1)
+                                : const Offset(15, -5)),
                         label: menuItem.badge,
-                        backgroundColor: menuItem.backgroundBadgeColor,
+                        backgroundColor: menuItem.index == widget.index
+                            ? menuItem.badgeBackgroundColor
+                            : menuItem.badgeBackgroundColor?.withOpacity(0.3),
                         child: Icon(
                           menuItem.iconData,
                         ),
