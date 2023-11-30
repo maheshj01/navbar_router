@@ -217,6 +217,22 @@ class _NavbarRouterState extends State<NavbarRouter>
       );
     }
 
+    for (int i = 0; i < widget.destinations.length; i++) {
+      if (widget.destinations[i].navbarItem !=
+          oldWidget.destinations[i].navbarItem) {
+        items[i] = NavbarItem(
+          widget.destinations[i].navbarItem.index,
+          widget.destinations[i].navbarItem.iconData,
+          widget.destinations[i].navbarItem.text,
+          badge: widget.destinations[i].navbarItem.badge,
+          badgeBackgroundColor:
+              widget.destinations[i].navbarItem.badgeBackgroundColor,
+          dot: widget.destinations[i].navbarItem.dot,
+          backgroundColor: widget.destinations[i].navbarItem.backgroundColor,
+        );
+      }
+    }
+
     if (widget.destinations.length != oldWidget.destinations.length ||
         widget.type != oldWidget.type) {
       NavbarNotifier.length = widget.destinations.length;

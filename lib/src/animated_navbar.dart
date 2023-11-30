@@ -434,16 +434,10 @@ class StandardNavbarState extends State<StandardNavbar> {
       items: widget.menuItems
           .map((NavbarItem menuItem) => BottomNavigationBarItem(
                 backgroundColor: menuItem.backgroundColor,
-                icon: menuItem.badge == null
-                    ? Icon(
-                        menuItem.iconData,
-                      )
-                    : Badge(
-                        largeSize: menuItem.onlyDot == true ? 8 : null,
-                        offset: menuItem.badgeOffset ??
-                            (menuItem.onlyDot == true
-                                ? const Offset(9, -1)
-                                : const Offset(15, -5)),
+                icon: menuItem.badge != null
+                    ? Badge(
+                        largeSize: null,
+                        offset: const Offset(18, -5),
                         label: menuItem.badge,
                         backgroundColor: menuItem.index == widget.index
                             ? menuItem.badgeBackgroundColor
@@ -451,7 +445,25 @@ class StandardNavbarState extends State<StandardNavbar> {
                         child: Icon(
                           menuItem.iconData,
                         ),
-                      ),
+                      )
+                    : menuItem.dot == true
+                        ? Badge(
+                            largeSize: 8,
+                            offset: const Offset(9, -1),
+                            label: Container(
+                              height: 5,
+                            ),
+                            backgroundColor: menuItem.index == widget.index
+                                ? menuItem.badgeBackgroundColor
+                                : menuItem.badgeBackgroundColor
+                                    ?.withOpacity(0.3),
+                            child: Icon(
+                              menuItem.iconData,
+                            ),
+                          )
+                        : Icon(
+                            menuItem.iconData,
+                          ),
                 label: menuItem.text,
               ))
           .toList(),

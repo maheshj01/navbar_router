@@ -3,13 +3,9 @@ import 'package:navbar_router/navbar_router.dart';
 
 class NavbarItem {
   const NavbarItem(this.index, this.iconData, this.text,
-      {this.backgroundColor,
-      this.badgeBackgroundColor,
-      this.badge,
-      this.badgeOffset,
-      this.onlyDot});
+      {this.backgroundColor, this.badgeBackgroundColor, this.badge, this.dot});
 
-  /// navbar item index 
+  /// navbar item index
   final int index;
 
   /// IconData for the navbar item
@@ -28,10 +24,7 @@ class NavbarItem {
   final Color? badgeBackgroundColor;
 
   /// custom offset for the badge
-  final Offset? badgeOffset;
-
-  /// custom offset for the badge
-  final bool? onlyDot;
+  final bool? dot;
 }
 
 /// Decoration class for the navbar [NavbarType.standard]
