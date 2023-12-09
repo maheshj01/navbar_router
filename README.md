@@ -2,7 +2,7 @@
 
 <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
-_Checkout our [extensive docs](https://docs.page/maheshmnj/navbar_router/) to learn more about this package, the inspiration behind it and how to use it._
+_Checkout our [extensive docs](https://docs.maheshjamdade.com/navbar_router/) to learn more about this package, the inspiration behind it and how to use it._
 
 #### Adding a BottomNavigationBar to your app?
 
