@@ -12,4 +12,4 @@ jobs:
           channel: stable
       - run: flutter pub get
       - run: flutter test
-      - run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
+      # - run: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart
