@@ -142,7 +142,7 @@ defaults to
   destinationAnimationDuration: 600,
 ```
 
-<img src="https://github.com/flutter/flutter/assets/31410839/90e2d176-cd62-4e0f-8b3c-6afa64c96330">
+<img width="300" src="https://github.com/flutter/flutter/assets/31410839/90e2d176-cd62-4e0f-8b3c-6afa64c96330">
 
 ## Hide or show bottomNavigationBar
 
