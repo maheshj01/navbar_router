@@ -1,4 +1,4 @@
-## **navbar_router v0.6.3**
+## **navbar_router v0.7.0**
 
 <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
@@ -139,10 +139,10 @@ defaults to
 
 ```dart
   destinationAnimationCurve: Curves.fastOutSlowIn,
-  destinationAnimationDuration: 700,
+  destinationAnimationDuration: 600,
 ```
 
-<img src="https://miro.medium.com/max/600/1*08wCOOPCe1C1l_2uqIYEEg.gif">
+<img width="300" src="https://github.com/flutter/flutter/assets/31410839/90e2d176-cd62-4e0f-8b3c-6afa64c96330">
 
 ## Hide or show bottomNavigationBar
 
@@ -236,7 +236,7 @@ Each DestinationRouter specifies a List of Destinations, initialRoute, and the n
 
 **_destinationAnimationCurve_**: Curve for the destination animation when the user taps a navbar item. Defaults to `Curves.fastOutSlowIn`.
 
-**_destinationAnimationDuration_**: The duration in milliseconds of the animation of the destination. Defaults to 700ms.
+**_destinationAnimationDuration_**: The duration in milliseconds of the animation of the destination. Defaults to 300ms.
 
 **_errorBuilder_**: A WidgetBuilder to show the user when the user tried to navigate to a route that does not exist in the [destinations].
 

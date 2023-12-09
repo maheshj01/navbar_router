@@ -1,3 +1,7 @@
+## [0.7.0] Dec 08, 2023
+
+- Fixes: [Issue #6](https://github.com/maheshmnj/navbar_router/issues/6) Fade Transition is not smooth
+
 ## [0.6.3] Nov 14, 2023
 
 - Add a method to programmatically push a route to the NavigatorStack

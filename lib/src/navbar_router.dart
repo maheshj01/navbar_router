@@ -77,7 +77,8 @@ class NavbarRouter extends StatefulWidget {
   /// defaults to true.
   final bool shouldPopToBaseRoute;
 
-  /// AnimationDuration in milliseconds
+  /// AnimationDuration in milliseconds for the destination animation
+  /// defaults to 300 milliseconds
   final int destinationAnimationDuration;
 
   /// defaults to Curves.fastOutSlowIn
@@ -139,7 +140,7 @@ class NavbarRouter extends StatefulWidget {
       this.initialIndex = 0,
       this.type = NavbarType.standard,
       this.destinationAnimationCurve = Curves.fastOutSlowIn,
-      this.destinationAnimationDuration = 700,
+      this.destinationAnimationDuration = 300,
       this.backButtonBehavior = BackButtonBehavior.exit,
       this.onCurrentTabClicked,
       this.onBackButtonPressed})
@@ -152,25 +153,14 @@ class NavbarRouter extends StatefulWidget {
 }
 
 class _NavbarRouterState extends State<NavbarRouter>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   final List<NavbarItem> items = [];
-  late Animation<double> fadeAnimation;
-  late AnimationController _controller;
+  late List<AnimationController> fadeAnimation;
   List<GlobalKey<NavigatorState>> keys = [];
 
   @override
   void initState() {
     super.initState();
-
-    /// AnimationController for the Destination Animation
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: widget.destinationAnimationDuration),
-    );
-    fadeAnimation = Tween<double>(begin: 0.4, end: 1.0).animate(
-      CurvedAnimation(
-          parent: _controller, curve: widget.destinationAnimationCurve),
-    );
     initialize();
   }
 
@@ -181,24 +171,39 @@ class _NavbarRouterState extends State<NavbarRouter>
       keys.add(GlobalKey<NavigatorState>());
       items.add(navbaritem);
     }
-
+    initAnimation();
+    fadeAnimation[widget.initialIndex].value = 1.0;
     NavbarNotifier.setKeys(keys);
-
     NavbarNotifier.index = widget.initialIndex;
-    _controller.forward();
+
+    NavbarNotifier.addIndexChangeListener((p0) {
+      _handleFadeAnimation();
+    });
+  }
+
+  void initAnimation() {
+    fadeAnimation = items.map<AnimationController>((NavbarItem item) {
+      return AnimationController(
+          vsync: this,
+          value: item == items[widget.initialIndex] ? 1.0 : 0.0,
+          duration:
+              Duration(milliseconds: widget.destinationAnimationDuration));
+    }).toList();
   }
 
   void clearInitialization() {
-    _controller.reset();
     keys.clear();
     items.clear();
     NavbarNotifier.clear();
+    NavbarNotifier.removeAllListeners();
   }
 
   @override
   void dispose() {
+    for (var controller in fadeAnimation) {
+      controller.dispose();
+    }
     clearInitialization();
-    _controller.dispose();
     super.dispose();
   }
 
@@ -209,14 +214,8 @@ class _NavbarRouterState extends State<NavbarRouter>
             oldWidget.destinationAnimationCurve ||
         widget.destinationAnimationDuration !=
             oldWidget.destinationAnimationDuration) {
-      _controller.duration =
-          Duration(milliseconds: widget.destinationAnimationDuration);
-      fadeAnimation = Tween<double>(begin: 0.4, end: 1.0).animate(
-        CurvedAnimation(
-            parent: _controller, curve: widget.destinationAnimationCurve),
-      );
+      initAnimation();
     }
-
     if (widget.destinations.length != oldWidget.destinations.length ||
         widget.type != oldWidget.type) {
       NavbarNotifier.length = widget.destinations.length;
@@ -237,11 +236,6 @@ class _NavbarRouterState extends State<NavbarRouter>
     return 0;
   }
 
-  void _animateDestinations() {
-    _controller.reset();
-    _controller.forward();
-  }
-
   double bottomPadding() {
     switch (widget.type) {
       case NavbarType.standard:
@@ -257,102 +251,100 @@ class _NavbarRouterState extends State<NavbarRouter>
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        final bool isExitingApp = await NavbarNotifier.onBackButtonPressed(
-            behavior: widget.backButtonBehavior);
-        final bool value = widget.onBackButtonPressed!(isExitingApp);
-        return value;
+  Widget _buildIndexedStackItem(int index, BuildContext context) {
+    return AnimatedBuilder(
+      animation: fadeAnimation[index],
+      builder: (context, child) {
+        return IgnorePointer(
+          ignoring: index != NavbarNotifier.currentIndex,
+          child: Opacity(opacity: fadeAnimation[index].value, child: child),
+        );
       },
-      child: AnimatedBuilder(
-          animation: _navbarNotifier,
-          builder: (context, snapshot) {
-            return Stack(
-              children: [
-                AnimatedPadding(
-                  /// same duration as [_AnimatedNavbar]'s animation duration
-                  duration: const Duration(milliseconds: 500),
-                  padding: EdgeInsets.only(left: getPadding()),
-                  child: IndexedStack(
-                    index: NavbarNotifier.currentIndex,
-                    children: [
-                      for (int i = 0; i < NavbarNotifier.length; i++)
-                        IgnorePointer(
-                          ignoring: NavbarNotifier.currentIndex != i,
-                          child: FadeTransition(
-                            opacity: fadeAnimation,
-                            child: Navigator(
-                                key: keys[i],
-                                initialRoute:
-                                    widget.destinations[i].initialRoute,
-                                onGenerateRoute: (RouteSettings settings) {
-                                  WidgetBuilder? builder = widget.errorBuilder;
-                                  final nestedLength = widget
-                                      .destinations[i].destinations.length;
-                                  for (int j = 0; j < nestedLength; j++) {
-                                    if (widget.destinations[i].destinations[j]
-                                            .route ==
-                                        settings.name) {
-                                      builder = (BuildContext _) => widget
-                                          .destinations[i]
-                                          .destinations[j]
-                                          .widget;
-                                    }
-                                  }
-                                  return MaterialPageRoute(
-                                      builder: builder!, settings: settings);
-                                }),
-                          ),
-                        )
-                    ],
-                  ),
-                ),
-                Positioned(
-                  left: 0,
-                  top: widget.isDesktop ? 0 : null,
-                  bottom: bottomPadding(),
-                  right: widget.isDesktop ? null : 0,
-                  child: _AnimatedNavBar(
-                      model: _navbarNotifier,
-                      isDesktop: widget.isDesktop,
-                      decoration: widget.decoration,
-                      navbarType: widget.type,
-                      onItemTapped: (x) {
-                        // User pressed  on the same tab twice
-                        if (NavbarNotifier.currentIndex == x) {
-                          if (widget.shouldPopToBaseRoute) {
-                            NavbarNotifier.popAllRoutes(x);
-                          }
-                          if (widget.onCurrentTabClicked != null) {
-                            widget.onCurrentTabClicked!();
-                          }
-                        } else {
-                          NavbarNotifier.index = x;
-                          _animateDestinations();
-                          if (widget.onChanged != null) {
-                            widget.onChanged!(x);
-                          }
-                        }
-                      },
-                      menuItems: items),
-                ),
-              ],
-            );
+      child: Navigator(
+          key: keys[index],
+          initialRoute: widget.destinations[index].initialRoute,
+          onGenerateRoute: (RouteSettings settings) {
+            WidgetBuilder? builder = widget.errorBuilder;
+            final nestedLength = widget.destinations[index].destinations.length;
+            for (int j = 0; j < nestedLength; j++) {
+              if (widget.destinations[index].destinations[j].route ==
+                  settings.name) {
+                builder = (BuildContext _) =>
+                    widget.destinations[index].destinations[j].widget;
+              }
+            }
+            return MaterialPageRoute(builder: builder!, settings: settings);
           }),
     );
   }
-}
 
-/// `navigate` method is deprecated use Navigate.push instead, see [routes-and-navigation](https://docs.page/maheshmnj/navbar_router/routes-and-navigation) for details.
-@Deprecated('Use `Navigate.push` instead')
-Future<void> navigate(BuildContext context, String route,
-        {bool isDialog = false,
-        bool isRootNavigator = true,
-        Map<String, dynamic>? arguments}) =>
-    Navigator.of(context, rootNavigator: isRootNavigator)
-        .pushNamed(route, arguments: arguments);
+  void _handleFadeAnimation() {
+    for (int i = 0; i < fadeAnimation.length; i++) {
+      if (i == NavbarNotifier.currentIndex) {
+        fadeAnimation[i].forward();
+      } else {
+        fadeAnimation[i].reverse();
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+        onWillPop: () async {
+          final bool isExitingApp = await NavbarNotifier.onBackButtonPressed(
+              behavior: widget.backButtonBehavior);
+          final bool value = widget.onBackButtonPressed!(isExitingApp);
+          return value;
+        },
+        child: AnimatedBuilder(
+            animation: _navbarNotifier,
+            builder: (context, child) {
+              return Stack(
+                children: [
+                  AnimatedPadding(
+                    /// same duration as [_AnimatedNavbar]'s animation duration
+                    duration: const Duration(milliseconds: 500),
+                    padding: EdgeInsets.only(left: getPadding()),
+                    child: Stack(children: [
+                      for (int i = 0; i < NavbarNotifier.length; i++)
+                        _buildIndexedStackItem(i, context)
+                    ]),
+                  ),
+                  Positioned(
+                    left: 0,
+                    top: widget.isDesktop ? 0 : null,
+                    bottom: bottomPadding(),
+                    right: widget.isDesktop ? null : 0,
+                    child: _AnimatedNavBar(
+                        model: _navbarNotifier,
+                        isDesktop: widget.isDesktop,
+                        decoration: widget.decoration,
+                        navbarType: widget.type,
+                        onItemTapped: (x) {
+                          // User pressed  on the same tab twice
+                          if (NavbarNotifier.currentIndex == x) {
+                            if (widget.shouldPopToBaseRoute) {
+                              NavbarNotifier.popAllRoutes(x);
+                            }
+                            if (widget.onCurrentTabClicked != null) {
+                              widget.onCurrentTabClicked!();
+                            }
+                          } else {
+                            NavbarNotifier.index = x;
+                            if (widget.onChanged != null) {
+                              widget.onChanged!(x);
+                            }
+                            _handleFadeAnimation();
+                          }
+                        },
+                        menuItems: items),
+                  ),
+                ],
+              );
+            }));
+  }
+}
 
 final NavbarNotifier _navbarNotifier = NavbarNotifier();
 List<Color> colors = [mediumPurple, Colors.orange, Colors.teal];

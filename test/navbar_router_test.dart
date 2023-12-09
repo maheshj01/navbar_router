@@ -357,8 +357,8 @@ void main() {
         expect(tapTargetText.textX(), findsOneWidget);
         await tester.tap(tapTargetText.textX());
         await tester.pumpAndSettle();
-        expect('switching to Home'.textX(), findsOneWidget);
-        expect(find.byType(SnackBar), findsOneWidget);
+        expect('switching to Home'.textX(), findsNWidgets(items.length));
+        expect(find.byType(SnackBar), findsNWidgets(items.length));
         await tester.pumpAndSettle(const Duration(seconds: 4));
         final feedRoute = routes[0]!['/'].runtimeType.typeX();
         final feedDetailRoute =
@@ -430,7 +430,26 @@ void main() {
   });
 
   /// Test navbar type notched
-  ///
+
+  testWidgets('Navbar should programmatically change index',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(boilerplate());
+    await tester.pumpAndSettle();
+    expect(NavbarNotifier.currentIndex, equals(0));
+    expect('Feed 0 card'.textX(), findsOneWidget);
+    NavbarNotifier.index = 1;
+    await tester.pumpAndSettle();
+    expect(NavbarNotifier.currentIndex, equals(1));
+    expect('Product 1'.textX(), findsOneWidget);
+    NavbarNotifier.index = 2;
+    await tester.pumpAndSettle();
+    expect(NavbarNotifier.currentIndex, equals(2));
+    expect('Hi! This is your Profile Page'.textX(), findsOneWidget);
+    // NavbarNotifier.index = 3;
+    // await tester.pumpAndSettle();
+    // expect(NavbarNotifier.currentIndex, equals(3));
+    // expect('Slide to change theme color'.textX(), findsOneWidget);
+  });
 
   group('Test NavbarType: NavbarType.notched ', () {
     group('NavbarType.notched: should build destination and navbar items', () {
@@ -1193,14 +1212,17 @@ void main() {
     expect(index, 0);
   });
 
-  group('Snackbar should be controlled using NavbarNotifier:', () {
+  // WARNING: Snackbar Test are written considering snackbars are shown across all the tabs
+  // e.g if a snackbar is shown it will be displayed items.length times
+  // This is because we have migrated to Stack inplace of IndexedStack
+  group('Snackbar should be controlled using NavbarNotifier:', skip: false, () {
     testWidgets('Snackbar should be shown', (WidgetTester tester) async {
       await tester.pumpWidget(boilerplate());
       expect(find.byType(SnackBar), findsNothing);
       final BuildContext context = tester.element(find.byType(NavbarRouter));
       NavbarNotifier.showSnackBar(context, "This is a Snackbar message");
       await tester.pumpAndSettle();
-      expect(find.byType(SnackBar), findsOneWidget);
+      expect(find.byType(SnackBar), findsNWidgets(items.length));
     });
 
     testWidgets('Snackbar should be hidden', (WidgetTester tester) async {
@@ -1210,7 +1232,7 @@ void main() {
       NavbarNotifier.showSnackBar(context, "This is a Snackbar message",
           duration: const Duration(seconds: 5));
       await tester.pumpAndSettle();
-      expect(find.byType(SnackBar), findsOneWidget);
+      expect(find.byType(SnackBar), findsNWidgets(items.length));
       NavbarNotifier.hideSnackBar(context);
       await tester.pumpAndSettle();
       expect(find.byType(SnackBar), findsNothing);
@@ -1224,9 +1246,9 @@ void main() {
       NavbarNotifier.showSnackBar(context, "This is a Snackbar message",
           duration: const Duration(seconds: 5));
       await tester.pumpAndSettle();
-      expect(find.byType(SnackBar), findsOneWidget);
+      expect(find.byType(SnackBar), findsNWidgets(items.length));
       await tester.pumpAndSettle(const Duration(seconds: 4));
-      expect(find.byType(SnackBar), findsOneWidget);
+      expect(find.byType(SnackBar), findsNWidgets(items.length));
       await tester.pumpAndSettle(const Duration(seconds: 1));
       expect(find.byType(SnackBar), findsNothing);
     });
@@ -1241,8 +1263,8 @@ void main() {
         duration: const Duration(seconds: 5),
       );
       await tester.pumpAndSettle();
-      expect(find.byType(SnackBar), findsOneWidget);
-      await tester.tap(find.byIcon(Icons.close));
+      expect(find.byType(SnackBar), findsNWidgets(items.length));
+      await tester.tap(find.byIcon(Icons.close).first);
       await tester.pumpAndSettle();
       expect(find.byType(SnackBar), findsNothing);
     });
@@ -1261,8 +1283,8 @@ void main() {
         },
       );
       await tester.pumpAndSettle();
-      expect(find.byType(SnackBar), findsOneWidget);
-      await tester.tap(find.byIcon(Icons.close));
+      expect(find.byType(SnackBar), findsNWidgets(items.length));
+      await tester.tap(find.byIcon(Icons.close).first);
       await tester.pumpAndSettle();
       expect(find.byType(SnackBar), findsNothing);
       expect(isClosed, true);
@@ -1282,8 +1304,8 @@ void main() {
         duration: const Duration(seconds: 5),
       );
       await tester.pumpAndSettle();
-      expect(find.byType(SnackBar), findsOneWidget);
-      await tester.tap(find.text("Tap me"));
+      expect(find.byType(SnackBar), findsNWidgets(items.length));
+      await tester.tap(find.text("Tap me").first);
       await tester.pumpAndSettle();
       expect(find.byType(SnackBar), findsNothing);
     });
