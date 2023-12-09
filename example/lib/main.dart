@@ -120,11 +120,11 @@ class _HomePageState extends State<HomePage> {
   DateTime newTime = DateTime.now();
 
   /// This is only for demo purposes
-  void simulateTabChange() {
+  void simulateTabChange({int times = 2, int delayInMs = 1000}) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      for (int i = 0; i < items.length * 2; i++) {
+      for (int i = 0; i < items.length * times; i++) {
         NavbarNotifier.index = i % items.length;
-        await Future.delayed(const Duration(milliseconds: 1000));
+        await Future.delayed(Duration(milliseconds: delayInMs));
       }
     });
   }
@@ -132,7 +132,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // simulateTabChange();
+    // simulateTabChange(times: 1, delayInMs: 2000);
     NavbarNotifier.addIndexChangeListener((x) {
       log('NavbarNotifier.indexChangeListener: $x');
     });
@@ -360,26 +360,25 @@ class FeedTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
       color: Theme.of(context).colorScheme.surface,
       child: Card(
-        child: Stack(
+        child: Column(
           children: [
-            Positioned(
-              top: 4,
-              right: 4,
-              left: 4,
-              child: Container(
-                height: 180,
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+            Container(
+              height: 180,
+              margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.secondary,
-                alignment: Alignment.center,
-                child: Text('Feed $index card'),
+                borderRadius: BorderRadius.circular(8.0),
               ),
+              child: Text('Feed $index card'),
             ),
-            Positioned(
-                bottom: 12,
-                right: 12,
-                left: 12,
-                child: Text(placeHolderText.substring(0, 200)))
+            Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                alignment: Alignment.center,
+                child: Text(
+                  placeHolderText.substring(0, 200),
+                  textAlign: TextAlign.justify,
+                ))
           ],
         ),
       ),
