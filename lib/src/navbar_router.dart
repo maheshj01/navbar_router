@@ -5,10 +5,10 @@ import 'package:navbar_router/navbar_router.dart';
 part 'animated_navbar.dart';
 
 class Destination {
-  // Named route associaed with this destination.
+  /// Named route associaed with this destination.
   String route;
 
-  // must have a initial route `/`
+  /// must have a initial route `/`
   Widget widget;
 
   Destination({required this.route, required this.widget});

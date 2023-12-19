@@ -3,7 +3,7 @@ import 'package:navbar_router/navbar_router.dart';
 
 class NavbarItem {
   const NavbarItem(this.iconData, this.text,
-      {this.backgroundColor, this.child});
+      {this.backgroundColor, this.child, this.selectedIcon});
 
   /// IconData for the navbar item
   final IconData iconData;
@@ -15,9 +15,12 @@ class NavbarItem {
   /// ignored otherwise
   final Color? backgroundColor;
 
-  // When child is specified, the item will be rendered as a floating navbar
-  // ignoring iconData and text
+  /// When child is specified, the item will be rendered as a floating navbar
+  /// ignoring iconData and text
   final Widget? child;
+
+  /// Widget to show when the item is selected
+  final Widget? selectedIcon;
 
   @override
   bool operator ==(Object other) =>
@@ -28,11 +31,16 @@ class NavbarItem {
           iconData == other.iconData &&
           text == other.text &&
           child == other.child &&
+          selectedIcon == other.selectedIcon &&
           backgroundColor == other.backgroundColor;
 
   @override
   int get hashCode =>
-      iconData.hashCode ^ text.hashCode ^ backgroundColor.hashCode;
+      iconData.hashCode ^
+      text.hashCode ^
+      child.hashCode ^
+      selectedIcon.hashCode ^
+      backgroundColor.hashCode;
 }
 
 /// Decoration class for the navbar [NavbarType.standard]

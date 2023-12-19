@@ -34,7 +34,7 @@ You can choose between different NavbarTypes using the `NavbarDecoration.navbarT
 
 |                                                 NavbarType.material3                                                 |                                                 NavbarType.floating                                                 |
 | :------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------: |
-| ![Material3 Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/027adf4f-d527-4dc5-ac22-8fe321734977) | ![Floating Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/b735a016-703a-4fc9-be4a-a8e924a7c645) |
+| ![Material3 Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/027adf4f-d527-4dc5-ac22-8fe321734977) | ![Floating Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/d439f3d2-1c1c-448e-bbf0-cb73b372f76d) |
 
 _Heres a [sample app](example/lib/main.dart) built using this package to see how it works._
 

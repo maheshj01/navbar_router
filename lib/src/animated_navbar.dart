@@ -410,8 +410,10 @@ class StandardNavbarState extends State<StandardNavbar> {
   @override
   void initState() {
     super.initState();
+    _selectedIndex = widget.index;
   }
 
+  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     final items = widget.menuItems;
@@ -419,6 +421,7 @@ class StandardNavbarState extends State<StandardNavbar> {
         type: widget.decoration.navbarType,
         currentIndex: NavbarNotifier.currentIndex,
         onTap: (x) {
+          _selectedIndex = x;
           widget.onItemTapped!(x);
         },
         backgroundColor: widget.decoration.backgroundColor,
@@ -437,10 +440,14 @@ class StandardNavbarState extends State<StandardNavbar> {
           for (int index = 0; index < items.length; index++)
             BottomNavigationBarItem(
               backgroundColor: items[index].backgroundColor,
-              icon: items[index].child ??
-                  Icon(
-                    items[index].iconData,
-                  ),
+              icon: _selectedIndex == index
+                  ? items[index].selectedIcon ??
+                      Icon(
+                        items[index].iconData,
+                      )
+                  : Icon(
+                      items[index].iconData,
+                    ),
               label: items[index].text,
             )
         ]);
@@ -585,12 +592,13 @@ class NotchedNavBarState extends State<NotchedNavBar>
             ),
           ],
         ),
-        child: Icon(
-          widget.menuItems[NavbarNotifier.currentIndex].iconData,
-          color: widget.decoration.selectedIconColor,
-          size: (widget.decoration.selectedIconTheme?.size ?? 24.0) *
-              scaleAnimation.value,
-        ));
+        child: widget.menuItems[NavbarNotifier.currentIndex].selectedIcon ??
+            Icon(
+              widget.menuItems[NavbarNotifier.currentIndex].iconData,
+              color: widget.decoration.selectedIconColor,
+              size: (widget.decoration.selectedIconTheme?.size ?? 24.0) *
+                  scaleAnimation.value,
+            ));
   }
 
   @override
@@ -655,6 +663,7 @@ class NotchedNavBarState extends State<NotchedNavBar>
   }
 }
 
+/// To layout the menu items of the Notched navbar
 class MenuTile extends StatelessWidget {
   final NavbarDecoration decoration;
   final NavbarItem item;
@@ -832,7 +841,7 @@ class M3NavBarState extends State<M3NavBar> {
                 tooltip: e.text,
                 icon: Icon(e.iconData),
                 label: e.text,
-                selectedIcon: Icon(e.iconData),
+                selectedIcon: e.selectedIcon ?? Icon(e.iconData),
               );
             }).toList(),
             selectedIndex: NavbarNotifier.currentIndex,
@@ -900,6 +909,16 @@ class FloatingNavbarState extends State<FloatingNavbar> {
     super.didUpdateWidget(oldWidget);
   }
 
+  Widget _unselectedIcon(int i) {
+    return Icon(
+      widget.items[i].iconData,
+      size: 26,
+      color: _selectedIndex == i
+          ? widget.decoration.selectedIconColor
+          : widget.decoration.unselectedIconColor,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -965,13 +984,10 @@ class FloatingNavbarState extends State<FloatingNavbar> {
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(
-                                  widget.items[i].iconData,
-                                  size: 26,
-                                  color: _selectedIndex == i
-                                      ? widget.decoration.selectedIconColor
-                                      : widget.decoration.unselectedIconColor,
-                                ),
+                                _selectedIndex == i
+                                    ? widget.items[i].selectedIcon ??
+                                        _unselectedIcon(i)
+                                    : _unselectedIcon(i),
                                 if (widget.decoration.showSelectedLabels! &&
                                     widget.index == i)
                                   Text(

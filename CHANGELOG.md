@@ -1,6 +1,8 @@
 ## [0.7.1] Dec 18, 2023
 
 - Rebuild Navbar on updating its properties Fixes: [Issue #38](https://github.com/maheshmnj/navbar_router/issues/38)
+- Add child parameter to NavbarItem for adding custom widgets in place of icon and label
+- Add unselectedIcon property to NavbarItem
 
 ## [0.7.0] Dec 08, 2023
 
