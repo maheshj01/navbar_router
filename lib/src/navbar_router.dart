@@ -247,6 +247,7 @@ class _NavbarRouterState extends State<NavbarRouter>
     }
     if (widget.destinations.length != oldWidget.destinations.length ||
         widget.type != oldWidget.type ||
+        oldWidget.decoration != widget.decoration ||
         !listEquals(oldWidget.destinations, widget.destinations)) {
       NavbarNotifier.length = widget.destinations.length;
       clearInitialization();
@@ -273,7 +274,7 @@ class _NavbarRouterState extends State<NavbarRouter>
       case NavbarType.notched:
         return 0;
       case NavbarType.material3:
-        return -24;
+        return 0;
       case NavbarType.floating:
         return 0;
       default:

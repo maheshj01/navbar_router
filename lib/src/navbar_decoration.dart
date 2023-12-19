@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:navbar_router/navbar_router.dart';
 
 class NavbarItem {
-  const NavbarItem(this.iconData, this.text, {this.backgroundColor});
+  const NavbarItem(this.iconData, this.text,
+      {this.backgroundColor, this.child});
 
   /// IconData for the navbar item
   final IconData iconData;
@@ -11,7 +12,12 @@ class NavbarItem {
   final String text;
 
   /// background color for the navbar item when type is [NavbarType.shifting]
+  /// ignored otherwise
   final Color? backgroundColor;
+
+  // When child is specified, the item will be rendered as a floating navbar
+  // ignoring iconData and text
+  final Widget? child;
 
   @override
   bool operator ==(Object other) =>
@@ -21,6 +27,7 @@ class NavbarItem {
           runtimeType == other.runtimeType &&
           iconData == other.iconData &&
           text == other.text &&
+          child == other.child &&
           backgroundColor == other.backgroundColor;
 
   @override
@@ -165,6 +172,51 @@ class NavbarDecoration {
         selectedIconTheme: selectedIconTheme ?? this.selectedIconTheme,
         unselectedIconTheme: unselectedIconTheme ?? this.unselectedIconTheme,
       );
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is NavbarDecoration &&
+          runtimeType == other.runtimeType &&
+          backgroundColor == other.backgroundColor &&
+          borderRadius == other.borderRadius &&
+          isExtended == other.isExtended &&
+          unselectedItemColor == other.unselectedItemColor &&
+          elevation == other.elevation &&
+          unselectedIconColor == other.unselectedIconColor &&
+          selectedIconColor == other.selectedIconColor &&
+          showUnselectedLabels == other.showUnselectedLabels &&
+          unselectedLabelColor == other.unselectedLabelColor &&
+          showSelectedLabels == other.showSelectedLabels &&
+          enableFeedback == other.enableFeedback &&
+          indicatorColor == other.indicatorColor &&
+          labelBehavior == other.labelBehavior &&
+          indicatorShape == other.indicatorShape &&
+          selectedLabelTextStyle == other.selectedLabelTextStyle &&
+          unselectedLabelTextStyle == other.unselectedLabelTextStyle &&
+          selectedIconTheme == other.selectedIconTheme &&
+          unselectedIconTheme == other.unselectedIconTheme;
+
+  @override
+  int get hashCode =>
+      backgroundColor.hashCode ^
+      borderRadius.hashCode ^
+      isExtended.hashCode ^
+      unselectedItemColor.hashCode ^
+      elevation.hashCode ^
+      unselectedIconColor.hashCode ^
+      selectedIconColor.hashCode ^
+      showUnselectedLabels.hashCode ^
+      unselectedLabelColor.hashCode ^
+      showSelectedLabels.hashCode ^
+      enableFeedback.hashCode ^
+      indicatorColor.hashCode ^
+      labelBehavior.hashCode ^
+      indicatorShape.hashCode ^
+      selectedLabelTextStyle.hashCode ^
+      unselectedLabelTextStyle.hashCode ^
+      selectedIconTheme.hashCode ^
+      unselectedIconTheme.hashCode;
 }
 
 class NotchedDecoration extends NavbarDecoration {
@@ -289,6 +341,7 @@ class FloatingNavbarDecoration extends NavbarDecoration {
       EdgeInsetsGeometry? margin,
       BorderRadius? borderRadius,
       double? height,
+      bool? showSelectedLabels,
       bool? isExtended})
       : super(
           backgroundColor: backgroundColor,
@@ -300,6 +353,7 @@ class FloatingNavbarDecoration extends NavbarDecoration {
           margin: margin,
           unselectedIconColor: unselectedIconColor,
           selectedIconColor: selectedIconColor,
+          showSelectedLabels: showSelectedLabels ?? true,
           isExtended: isExtended ?? false,
         );
 
@@ -309,6 +363,7 @@ class FloatingNavbarDecoration extends NavbarDecoration {
         backgroundColor: navbarDecoration.backgroundColor,
         borderRadius: navbarDecoration.borderRadius,
         margin: navbarDecoration.margin,
+        showSelectedLabels: navbarDecoration.showSelectedLabels,
         unselectedIconColor: navbarDecoration.unselectedIconColor,
         selectedIconColor: navbarDecoration.selectedIconColor,
         isExtended: navbarDecoration.isExtended,
@@ -323,5 +378,7 @@ class FloatingNavbarDecoration extends NavbarDecoration {
         margin: margin,
         selectedIconColor: selectedIconColor,
         elevation: elevation,
+        showSelectedLabels: showSelectedLabels,
+        showUnselectedLabels: showSelectedLabels!,
       );
 }
