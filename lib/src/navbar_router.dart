@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:navbar_router/navbar_router.dart';
 
@@ -11,6 +12,18 @@ class Destination {
   Widget widget;
 
   Destination({required this.route, required this.widget});
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Destination &&
+        other.route == route &&
+        other.widget == widget;
+  }
+
+  @override
+  int get hashCode => route.hashCode ^ widget.hashCode;
 }
 
 class DestinationRouter {
@@ -31,6 +44,20 @@ class DestinationRouter {
       this.initialRoute = '/'})
       : assert(_isRoutePresent(initialRoute, destinations),
             'Initial route must be present in List of Destinations');
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is DestinationRouter &&
+        listEquals(other.destinations, destinations) &&
+        other.initialRoute == initialRoute &&
+        other.navbarItem == navbarItem;
+  }
+
+  @override
+  int get hashCode =>
+      destinations.hashCode ^ initialRoute.hashCode ^ navbarItem.hashCode;
 }
 
 /// helper class for assert
@@ -174,7 +201,9 @@ class _NavbarRouterState extends State<NavbarRouter>
     initAnimation();
     fadeAnimation[widget.initialIndex].value = 1.0;
     NavbarNotifier.setKeys(keys);
-    NavbarNotifier.index = widget.initialIndex;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      NavbarNotifier.index = widget.initialIndex;
+    });
 
     NavbarNotifier.addIndexChangeListener((p0) {
       _handleFadeAnimation();
@@ -195,7 +224,6 @@ class _NavbarRouterState extends State<NavbarRouter>
     keys.clear();
     items.clear();
     NavbarNotifier.clear();
-    NavbarNotifier.removeAllListeners();
   }
 
   @override
@@ -204,6 +232,7 @@ class _NavbarRouterState extends State<NavbarRouter>
       controller.dispose();
     }
     clearInitialization();
+    NavbarNotifier.removeAllListeners();
     super.dispose();
   }
 
@@ -217,7 +246,8 @@ class _NavbarRouterState extends State<NavbarRouter>
       initAnimation();
     }
     if (widget.destinations.length != oldWidget.destinations.length ||
-        widget.type != oldWidget.type) {
+        widget.type != oldWidget.type ||
+        !listEquals(oldWidget.destinations, widget.destinations)) {
       NavbarNotifier.length = widget.destinations.length;
       clearInitialization();
       initialize();

@@ -12,6 +12,20 @@ class NavbarItem {
 
   /// background color for the navbar item when type is [NavbarType.shifting]
   final Color? backgroundColor;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is NavbarItem &&
+          hashCode == other.hashCode &&
+          runtimeType == other.runtimeType &&
+          iconData == other.iconData &&
+          text == other.text &&
+          backgroundColor == other.backgroundColor;
+
+  @override
+  int get hashCode =>
+      iconData.hashCode ^ text.hashCode ^ backgroundColor.hashCode;
 }
 
 /// Decoration class for the navbar [NavbarType.standard]
