@@ -1,7 +1,6 @@
 ## [0.7.1] Dec 18, 2023
 
-- Fixes: [Issue #38](https://github.com/maheshmnj/navbar_router/issues/38)
--
+- Rebuild Navbar on updating its properties Fixes: [Issue #38](https://github.com/maheshmnj/navbar_router/issues/38)
 
 ## [0.7.0] Dec 08, 2023
 
