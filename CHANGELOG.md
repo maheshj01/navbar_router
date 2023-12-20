@@ -62,7 +62,7 @@
 
 - Adds `Navigate` class to help with navigation with transitions.
 - Fix M3Navbar Color scheme to match M3 spec
-- Fix: Notched Navbar Shape [Issue 19](https://github.com/maheshmnj/navbar_router/issues/19)
+- Fix: Notched Navbar Shape [Issue #19](https://github.com/maheshmnj/navbar_router/issues/19)
 - Migrate example app to material 3
 
 ## [0.5.1] May 21, 2023
@@ -85,7 +85,7 @@
 
 ## [0.4.0] Dec 25, 2022
 
-- [WIP Ref:#8](https://github.com/maheshmnj/navbar_router/issues/8) Adds support for custom Navbar using `NavbarRouter.type: NavbarType.notched`
+- [WIP Ref Issue:#8](https://github.com/maheshmnj/navbar_router/issues/8) Adds support for custom Navbar using `NavbarRouter.type: NavbarType.notched`
 
 ## [0.3.3] Aug 14, 2022
 
@@ -102,7 +102,7 @@
 
 ## [0.3.0] Aug 7, 2022
 
-- Remember stack history on back button press [Issue 9](https://github.com/maheshmnj/navbar_router/issues/9)
+- Remember stack history on back button press [Issue #9](https://github.com/maheshmnj/navbar_router/issues/9)
 
 ## [0.2.2] Jul 9, 2022
 
