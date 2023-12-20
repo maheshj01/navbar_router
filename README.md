@@ -1,6 +1,6 @@
-## **navbar_router v0.7.1**
+<!-- ## **navbar_router v0.7.1** -->
 
-<a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
+<!-- <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a> -->
 
 ![Floating
   Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/7da504ae-4894-481c-a443-01a24fc61946)
@@ -64,9 +64,24 @@ class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
 
   List<NavbarItem> items = [
-    NavbarItem(Icons.home, 'Home', backgroundColor: colors[0]),
-    NavbarItem(Icons.shopping_bag, 'Products', backgroundColor: colors[1]),
-    NavbarItem(Icons.person, 'Me', backgroundColor: colors[2]),
+    NavbarItem(Icons.home_outlined, 'Home',
+        backgroundColor: mediumPurple,
+        selectedIcon: Icon(
+          Icons.home,
+          size: 26,
+        )),
+    NavbarItem(Icons.shopping_bag_outlined, 'Products',
+        backgroundColor: Colors.orange,
+        selectedIcon: Icon(
+          Icons.shopping_bag,
+          size: 26,
+        )),
+    NavbarItem(Icons.person_outline, 'Me',
+        backgroundColor: Colors.teal,
+        selectedIcon: Icon(
+          Icons.person,
+          size: 26,
+        )),
   ];
 
   final Map<int, Map<String, Widget>> _routes = const {
@@ -228,40 +243,13 @@ onBackButtonPressed: (isExitingApp) {
 
 <img src="https://user-images.githubusercontent.com/31410839/175865246-39b783fd-2030-4bc1-ad87-528db50fe3d7.gif">
 
-## **Docs**
-
-**backButtonBehavior**:An enum which decides, How the back button is handled, defaults to `BackButtonBehavior.rememberHistory`.
-
-**_destinations_**: A List of `DestinationRouter` to show when the user taps the [NavbarItem].
-Each DestinationRouter specifies a List of Destinations, initialRoute, and the navbarItem corresponding to that destination.
-
-**type**: The type of NavigationBar to be passed to NavbarRouter defaults to `NavbarType.standard`. This allows you to choose between the default `NavbarType.standard` and `NavbarType.notched`.
-
-**_decoration_** : The decoraton for Navbar has all the properties you would expect in a [BottomNavigationBar] to adjust the style of the Navbar.
-
-**_destinationAnimationCurve_**: Curve for the destination animation when the user taps a navbar item. Defaults to `Curves.fastOutSlowIn`.
-
-**_destinationAnimationDuration_**: The duration in milliseconds of the animation of the destination. Defaults to 300ms.
-
-**_errorBuilder_**: A WidgetBuilder to show the user when the user tried to navigate to a route that does not exist in the [destinations].
-
-**initialIndex**: Navbar item that is initially selected, defaults to the first item in the list of [NavbarItems]
-
-**_isDesktop_**: if true, navbar will be shown on the left, this property can be used along with `NavbarDecoration.isExtended` to make the navbar adaptable for large screen sizes.
-
-**_onBackButtonPressed_**: A function which defines whether it is the root Navigator or not. if the method returns true then the Navigator is at the base of the navigator stack
-
-**_onChanged_**: A callback that is called when the currentIndex of the navbarchanges.
-
-**_shouldPopToBaseRoute_**: A boolean which decides, whether the navbar should pop to the base route (pop all except first) when the current navbar is tapped while the route is deeply nested. This feature is similar to Instagram's navigation bar defaults to true.
-
-**_onCurrentTabClicked_**: A callback that is called when the selected navbar is tapped again. (This allows you to handle useCases like scroll to top when the navbar is tapped again or Pop to the base route similar to Instagram.)
+For detailed description of all the features and properties please visit the [documentation](https://docs.maheshjamdade.com/navbar_router)
 
 ### Curious how the navbar_router works?
 
 Read more in a [medium blog post](https://maheshmnj.medium.com/everything-about-the-bottomnavigationbar-in-flutter-e99e5470dddb) for detailed explanation.
 
-Youtube: [Heres a discussion](https://www.youtube.com/watch?v=IhlikgW8OY8&t=614s) I had with Allen Wyma from Flying high with Fluter regarding this package.
+Youtube: [Heres a discussion](https://www.youtube.com/watch?v=IhlikgW8OY8&t=614s) I had with [Allen Wyma](https://twitter.com/fhwflutter) from Flying high with Fluter regarding this package.
 
 ## **Contribution**
 
