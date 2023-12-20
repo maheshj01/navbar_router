@@ -204,7 +204,6 @@ class _NavbarRouterState extends State<NavbarRouter>
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       NavbarNotifier.index = widget.initialIndex;
     });
-
     NavbarNotifier.addIndexChangeListener((p0) {
       _handleFadeAnimation();
     });
@@ -247,7 +246,6 @@ class _NavbarRouterState extends State<NavbarRouter>
     }
     if (widget.destinations.length != oldWidget.destinations.length ||
         widget.type != oldWidget.type ||
-        oldWidget.decoration != widget.decoration ||
         !listEquals(oldWidget.destinations, widget.destinations)) {
       NavbarNotifier.length = widget.destinations.length;
       clearInitialization();
