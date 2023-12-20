@@ -91,10 +91,30 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<NavbarItem> items = [
-    NavbarItem(Icons.home, 'Home', backgroundColor: colors[0]),
-    NavbarItem(Icons.shopping_bag, 'Products', backgroundColor: colors[1]),
-    NavbarItem(Icons.person, 'Me', backgroundColor: colors[2]),
-    NavbarItem(Icons.settings, 'Settings', backgroundColor: colors[0]),
+    NavbarItem(Icons.home_outlined, 'Home',
+        backgroundColor: colors[0],
+        selectedIcon: const Icon(
+          Icons.home,
+          size: 26,
+        )),
+    NavbarItem(Icons.shopping_bag_outlined, 'Products',
+        backgroundColor: colors[1],
+        selectedIcon: const Icon(
+          Icons.shopping_bag,
+          size: 26,
+        )),
+    NavbarItem(Icons.person_outline, 'Me',
+        backgroundColor: colors[2],
+        selectedIcon: const Icon(
+          Icons.person,
+          size: 26,
+        )),
+    NavbarItem(Icons.settings_outlined, 'Settings',
+        backgroundColor: colors[0],
+        selectedIcon: const Icon(
+          Icons.settings,
+          size: 26,
+        )),
   ];
 
   final Map<int, Map<String, Widget>> _routes = const {
@@ -234,16 +254,19 @@ class _HomePageState extends State<HomePage> {
         initialIndex: 0,
         type: NavbarType.floating,
         destinationAnimationCurve: Curves.fastOutSlowIn,
-        destinationAnimationDuration: 600,
-        decoration: M3NavbarDecoration(
+        destinationAnimationDuration: 200,
+        decoration: FloatingNavbarDecoration(
           height: 80,
+          borderRadius: BorderRadius.circular(20),
           isExtended: size.width > 800 ? true : false,
           // labelTextStyle: const TextStyle(
           //     color: Color.fromARGB(255, 176, 207, 233), fontSize: 14),
-          elevation: 3.0,
+          // elevation: 3.0,
           // indicatorShape: const RoundedRectangleBorder(
           //   borderRadius: BorderRadius.all(Radius.circular(20)),
           // ),
+          showSelectedLabels: false,
+          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
           // indicatorColor: const Color.fromARGB(255, 176, 207, 233),
           // // iconTheme: const IconThemeData(color: Colors.indigo),
           // /// labelTextStyle: const TextStyle(color: Colors.white, fontSize: 14),

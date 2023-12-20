@@ -29,10 +29,35 @@ extension FindIcon on IconData {
 
 void main() {
   const List<NavbarItem> items = [
-    NavbarItem(Icons.home, 'Home', backgroundColor: mediumPurple),
-    NavbarItem(Icons.shopping_bag, 'Products', backgroundColor: Colors.orange),
-    NavbarItem(Icons.person, 'Me', backgroundColor: Colors.teal),
+    NavbarItem(Icons.home_outlined, 'Home',
+        backgroundColor: mediumPurple,
+        selectedIcon: Icon(
+          key: Key("HomeIconSelected"),
+          Icons.home,
+          size: 26,
+        )),
+    NavbarItem(Icons.shopping_bag_outlined, 'Products',
+        backgroundColor: Colors.orange,
+        selectedIcon: Icon(
+          Icons.shopping_bag,
+          key: Key("ProductsIconSelected"),
+          size: 26,
+        )),
+    NavbarItem(Icons.person_outline, 'Me',
+        backgroundColor: Colors.teal,
+        selectedIcon: Icon(
+          key: Key("MeIconSelected"),
+          Icons.person,
+          size: 26,
+        )),
+    NavbarItem(Icons.settings_outlined, 'Settings',
+        backgroundColor: Colors.red,
+        selectedIcon: Icon(
+          Icons.settings,
+          size: 26,
+        )),
   ];
+
   const Map<int, Map<String, Widget>> routes = {
     0: {
       '/': HomeFeeds(),
@@ -46,6 +71,9 @@ void main() {
     2: {
       '/': UserProfile(),
       ProfileEdit.route: ProfileEdit(),
+    },
+    3: {
+      '/': Settings(),
     },
   };
 
@@ -78,7 +106,7 @@ void main() {
                 backButtonBehavior: behavior,
                 isDesktop: isDesktop,
                 destinationAnimationCurve: Curves.fastOutSlowIn,
-                destinationAnimationDuration: 600,
+                destinationAnimationDuration: 200,
                 decoration: decoration ??
                     NavbarDecoration(
                         navbarType: BottomNavigationBarType.shifting),
@@ -100,23 +128,47 @@ void main() {
     );
   }
 
+  Future<void> changeNavbarDestination(
+      WidgetTester tester, Widget destination, Finder finder) async {
+    final destinationType = destination.runtimeType.typeX();
+    expect(finder, findsOneWidget);
+    await tester.tap(finder);
+    await tester.pumpAndSettle();
+    expect(destinationType, findsOneWidget);
+  }
+
+  Future<void> navigateToNestedTarget(
+      WidgetTester tester, Finder tapTarget, Widget destination) async {
+    expect(tapTarget, findsOneWidget);
+    await tester.tap(tapTarget);
+    await tester.pumpAndSettle();
+    final destinationFinder = (destination).runtimeType.typeX();
+    expect(destinationFinder, findsOneWidget);
+  }
+
   group('Test NavbarType: NavbarType.standard ', () {
     group('NavbarType.standard: should build destination and navbar items', () {
       testWidgets('NavbarType.standard: should build destinations',
           (WidgetTester tester) async {
         final bottomNavigation = (BottomNavigationBar).typeX();
         final navigationRail = (NavigationRail).typeX();
+        int initialIndex = 0;
 
-        await tester.pumpWidget(boilerplate());
+        await tester.pumpWidget(boilerplate(index: initialIndex));
         await tester.pumpAndSettle();
         expect(navigationRail, findsNothing);
         expect(bottomNavigation, findsOneWidget);
-
         for (int i = 0; i < items.length; i++) {
           final icon = find.byIcon(items[i].iconData);
+          final selectedIcon = find.byKey(const Key('HomeIconSelected'));
           final destination = (routes[i]!['/']).runtimeType.typeX();
-          expect(icon, findsOneWidget);
-          await tester.tap(icon);
+          if (i == initialIndex) {
+            expect(selectedIcon, findsOneWidget);
+            await tester.tap(selectedIcon);
+          } else {
+            expect(icon, findsOneWidget);
+            await tester.tap(icon);
+          }
           await tester.pumpAndSettle();
           expect(destination, findsOneWidget);
         }
@@ -134,10 +186,12 @@ void main() {
           "NavbarType.standard: should allow updating navbar routes dynamically ",
           (WidgetTester tester) async {
         List<NavbarItem>? menuitems = [
-          const NavbarItem(Icons.home, 'Home', backgroundColor: mediumPurple),
-          const NavbarItem(Icons.shopping_bag, 'Products',
+          const NavbarItem(Icons.home_outlined, 'Home',
+              backgroundColor: mediumPurple),
+          const NavbarItem(Icons.shopping_bag_outlined, 'Products',
               backgroundColor: Colors.orange),
-          const NavbarItem(Icons.person, 'Me', backgroundColor: Colors.teal),
+          const NavbarItem(Icons.person_outline, 'Me',
+              backgroundColor: Colors.teal),
         ];
         Map<int, Map<String, Widget>>? navBarRoutes = {
           0: {
@@ -190,9 +244,10 @@ void main() {
       expect(NavbarNotifier.currentIndex, 0);
       final destination = (routes[0]!['/']).runtimeType.typeX();
       expect(destination, findsOneWidget);
-      final icon = find.byIcon(items[0].iconData);
+      final icon = find.byKey(const Key('HomeIconSelected'));
       expect(icon, findsOneWidget);
     });
+
     testWidgets('NavbarType.standard: Set initial index to non-zero',
         (WidgetTester tester) async {
       int initialIndex = 2;
@@ -219,16 +274,6 @@ void main() {
     });
 
     group('NavbarType.standard: should respect BackButtonBehavior', () {
-      Future<void> changeNavbarDestination(
-          WidgetTester tester, Widget destination, IconData iconData) async {
-        final icon = find.byIcon(iconData);
-        final destinationType = destination.runtimeType.typeX();
-        expect(icon, findsOneWidget);
-        await tester.tap(icon);
-        await tester.pumpAndSettle();
-        expect(destinationType, findsOneWidget);
-      }
-
       Future<void> navigateToNestedTarget(
           WidgetTester tester, Finder tapTarget, Widget destination) async {
         expect(tapTarget, findsOneWidget);
@@ -254,16 +299,17 @@ void main() {
         expect(find.byType(BottomNavigationBar), findsOneWidget);
 
         /// verify feeds is the current destination
-        await changeNavbarDestination(
-            tester, routes[0]!['/']!, items[0].iconData);
+        final selectedIcon = find.byKey(const Key('HomeIconSelected'));
+        await changeNavbarDestination(tester, routes[0]!['/']!, selectedIcon);
 
         /// Navigate to FeedDetail
         await navigateToNestedTarget(
             tester, "Feed 0 card".textX(), routes[0]![FeedDetail.route]!);
 
         /// Change index to products
+        final productsIcon = find.byIcon(items[1].iconData);
         await changeNavbarDestination(
-            tester, routes[1]![ProductList.route]!, items[1].iconData);
+            tester, routes[1]![ProductList.route]!, productsIcon);
 
         /// Navigate to ProductDetail
         await navigateToNestedTarget(
@@ -274,8 +320,9 @@ void main() {
             routes[1]![ProductComments.route]!);
 
         /// Change index to profile
+        final profileIcon = find.byIcon(items[2].iconData);
         await changeNavbarDestination(
-            tester, routes[2]![UserProfile.route]!, items[2].iconData);
+            tester, routes[2]![UserProfile.route]!, profileIcon);
 
         /// Navigate to ProfileEdit
         await navigateToNestedTarget(
@@ -299,16 +346,17 @@ void main() {
         expect(find.byType(BottomNavigationBar), findsOneWidget);
 
         /// verify feeds is the current destination
-        await changeNavbarDestination(
-            tester, routes[0]!['/']!, items[0].iconData);
+        final selectedIcon = find.byKey(const Key('HomeIconSelected'));
+        await changeNavbarDestination(tester, routes[0]!['/']!, selectedIcon);
 
         /// Navigate to FeedDetail
         await navigateToNestedTarget(
             tester, "Feed 0 card".textX(), routes[0]![FeedDetail.route]!);
 
         /// Change index to products
+        final productsIcon = find.byIcon(items[1].iconData);
         await changeNavbarDestination(
-            tester, routes[1]![ProductList.route]!, items[1].iconData);
+            tester, routes[1]![ProductList.route]!, productsIcon);
 
         /// Navigate to ProductDetail
         await navigateToNestedTarget(
@@ -319,8 +367,9 @@ void main() {
             routes[1]![ProductComments.route]!);
 
         /// Change index to profile
+        final profileIcon = find.byIcon(items[2].iconData);
         await changeNavbarDestination(
-            tester, routes[2]![UserProfile.route]!, items[2].iconData);
+            tester, routes[2]![UserProfile.route]!, profileIcon);
 
         /// Navigate to ProfileEdit
         await navigateToNestedTarget(
@@ -457,19 +506,24 @@ void main() {
           (WidgetTester tester) async {
         final navbar = (NotchedNavBar).typeX();
         final navigationRail = (NavigationRail).typeX();
-
-        await tester.pumpWidget(boilerplate(
-          type: NavbarType.notched,
-        ));
+        int initialIndex = 0;
+        await tester.pumpWidget(
+            boilerplate(type: NavbarType.notched, index: initialIndex));
         await tester.pumpAndSettle();
         expect(navigationRail, findsNothing);
         expect(navbar, findsOneWidget);
 
         for (int i = 0; i < items.length; i++) {
           final icon = find.byIcon(items[i].iconData);
+          final selectedIcon = find.byKey(const Key('HomeIconSelected'));
           final destination = (routes[i]!['/']).runtimeType.typeX();
-          expect(icon, findsOneWidget);
-          await tester.tap(icon);
+          if (i == initialIndex) {
+            expect(selectedIcon, findsOneWidget);
+            await tester.tap(selectedIcon);
+          } else {
+            expect(icon, findsOneWidget);
+            await tester.tap(icon);
+          }
           await tester.pumpAndSettle();
           expect(destination, findsOneWidget);
         }
@@ -490,10 +544,12 @@ void main() {
           "NavbarType.notched: should allow updating navbar routes dynamically ",
           (WidgetTester tester) async {
         List<NavbarItem>? menuitems = [
-          const NavbarItem(Icons.home, 'Home', backgroundColor: mediumPurple),
-          const NavbarItem(Icons.shopping_bag, 'Products',
+          const NavbarItem(Icons.home_outlined, 'Home',
+              backgroundColor: mediumPurple),
+          const NavbarItem(Icons.shopping_bag_outlined, 'Products',
               backgroundColor: Colors.orange),
-          const NavbarItem(Icons.person, 'Me', backgroundColor: Colors.teal),
+          const NavbarItem(Icons.person_outline, 'Me',
+              backgroundColor: Colors.teal),
         ];
         Map<int, Map<String, Widget>>? navBarRoutes = {
           0: {
@@ -549,8 +605,8 @@ void main() {
         expect(NavbarNotifier.currentIndex, 0);
         final destination = (routes[0]!['/']).runtimeType.typeX();
         expect(destination, findsOneWidget);
-        final icon = find.byIcon(items[0].iconData);
-        expect(icon, findsOneWidget);
+        final selectedIcon = find.byKey(const Key('HomeIconSelected'));
+        expect(selectedIcon, findsOneWidget);
       });
 
       testWidgets('NavbarType.notched: Set initial index to non-zero',
@@ -582,25 +638,6 @@ void main() {
     });
 
     group('NavbarType.notched: should respect BackButtonBehavior', () {
-      Future<void> changeNavbarDestination(
-          WidgetTester tester, Widget destination, IconData iconData) async {
-        final icon = find.byIcon(iconData);
-        final destinationType = destination.runtimeType.typeX();
-        expect(icon, findsOneWidget);
-        await tester.tap(icon);
-        await tester.pumpAndSettle();
-        expect(destinationType, findsOneWidget);
-      }
-
-      Future<void> navigateToNestedTarget(
-          WidgetTester tester, Finder tapTarget, Widget destination) async {
-        expect(tapTarget, findsOneWidget);
-        await tester.tap(tapTarget);
-        await tester.pumpAndSettle();
-        final destinationFinder = (destination).runtimeType.typeX();
-        expect(destinationFinder, findsOneWidget);
-      }
-
       Future<void> triggerBackButton(WidgetTester tester) async {
         final dynamic widgetsAppState = tester.state(find.byType(WidgetsApp));
         await widgetsAppState.didPopRoute();
@@ -619,16 +656,17 @@ void main() {
         expect(find.byType(NotchedNavBar), findsOneWidget);
 
         /// verify feeds is the current destination
-        await changeNavbarDestination(
-            tester, routes[0]!['/']!, items[0].iconData);
+        final selectedIcon = find.byKey(const Key('HomeIconSelected'));
+        await changeNavbarDestination(tester, routes[0]!['/']!, selectedIcon);
 
         /// Navigate to FeedDetail
         await navigateToNestedTarget(
             tester, "Feed 0 card".textX(), routes[0]![FeedDetail.route]!);
 
         /// Change index to products
+        final productsIcon = find.byIcon(items[1].iconData);
         await changeNavbarDestination(
-            tester, routes[1]![ProductList.route]!, items[1].iconData);
+            tester, routes[1]![ProductList.route]!, productsIcon);
 
         /// Navigate to ProductDetail
         await navigateToNestedTarget(
@@ -639,8 +677,9 @@ void main() {
             routes[1]![ProductComments.route]!);
 
         /// Change index to profile
+        final profileIcon = find.byIcon(items[2].iconData);
         await changeNavbarDestination(
-            tester, routes[2]![UserProfile.route]!, items[2].iconData);
+            tester, routes[2]![UserProfile.route]!, profileIcon);
 
         /// Navigate to ProfileEdit
         await navigateToNestedTarget(
@@ -665,16 +704,17 @@ void main() {
         expect(find.byType(NotchedNavBar), findsOneWidget);
 
         /// verify feeds is the current destination
-        await changeNavbarDestination(
-            tester, routes[0]!['/']!, items[0].iconData);
+        final selectedIcon = find.byKey(const Key('HomeIconSelected'));
+        await changeNavbarDestination(tester, routes[0]!['/']!, selectedIcon);
 
         /// Navigate to FeedDetail
         await navigateToNestedTarget(
             tester, "Feed 0 card".textX(), routes[0]![FeedDetail.route]!);
 
         /// Change index to products
+        final productsIcon = find.byIcon(items[1].iconData);
         await changeNavbarDestination(
-            tester, routes[1]![ProductList.route]!, items[1].iconData);
+            tester, routes[1]![ProductList.route]!, productsIcon);
 
         /// Navigate to ProductDetail
         await navigateToNestedTarget(
@@ -685,8 +725,9 @@ void main() {
             routes[1]![ProductComments.route]!);
 
         /// Change index to profile
+        final profileIcon = find.byIcon(items[2].iconData);
         await changeNavbarDestination(
-            tester, routes[2]![UserProfile.route]!, items[2].iconData);
+            tester, routes[2]![UserProfile.route]!, profileIcon);
 
         /// Navigate to ProfileEdit
         await navigateToNestedTarget(
@@ -780,7 +821,8 @@ void main() {
           (WidgetTester tester) async {
         final navbar = (M3NavBar).typeX();
         final navigationRail = (NavigationRail).typeX();
-
+        int initialIndex = 0;
+        final selectedIcon = find.byKey(const Key('HomeIconSelected'));
         await tester.pumpWidget(boilerplate(
           type: NavbarType.material3,
         ));
@@ -791,8 +833,13 @@ void main() {
         for (int i = 0; i < items.length; i++) {
           final icon = find.byIcon(items[i].iconData);
           final destination = (routes[i]!['/']).runtimeType.typeX();
-          expect(icon, findsOneWidget);
-          await tester.tap(icon);
+          if (i == initialIndex) {
+            expect(selectedIcon, findsOneWidget);
+            await tester.tap(selectedIcon);
+          } else {
+            expect(icon, findsOneWidget);
+            await tester.tap(icon);
+          }
           await tester.pumpAndSettle();
           expect(destination, findsOneWidget);
         }
@@ -816,10 +863,12 @@ void main() {
           "NavbarType.material3: should allow updating navbar routes dynamically ",
           (WidgetTester tester) async {
         List<NavbarItem>? menuitems = [
-          const NavbarItem(Icons.home, 'Home', backgroundColor: mediumPurple),
-          const NavbarItem(Icons.shopping_bag, 'Products',
+          const NavbarItem(Icons.home_outlined, 'Home',
+              backgroundColor: mediumPurple),
+          const NavbarItem(Icons.shopping_bag_outlined, 'Products',
               backgroundColor: Colors.orange),
-          const NavbarItem(Icons.person, 'Me', backgroundColor: Colors.teal),
+          const NavbarItem(Icons.person_outline, 'Me',
+              backgroundColor: Colors.teal),
         ];
         Map<int, Map<String, Widget>>? navBarRoutes = {
           0: {
@@ -875,8 +924,8 @@ void main() {
         expect(NavbarNotifier.currentIndex, 0);
         final destination = (routes[0]!['/']).runtimeType.typeX();
         expect(destination, findsOneWidget);
-        final icon = find.byIcon(items[0].iconData);
-        expect(icon, findsOneWidget);
+        final selectedIcon = find.byKey(const Key('HomeIconSelected'));
+        expect(selectedIcon, findsOneWidget);
       });
 
       testWidgets('NavbarType.material3: Set initial index to non-zero',
@@ -908,16 +957,6 @@ void main() {
     });
 
     group('NavbarType.material3: should respect BackButtonBehavior', () {
-      Future<void> changeNavbarDestination(
-          WidgetTester tester, Widget destination, IconData iconData) async {
-        final icon = find.byIcon(iconData);
-        final destinationType = destination.runtimeType.typeX();
-        expect(icon, findsOneWidget);
-        await tester.tap(icon);
-        await tester.pumpAndSettle();
-        expect(destinationType, findsOneWidget);
-      }
-
       Future<void> navigateToNestedTarget(
           WidgetTester tester, Finder tapTarget, Widget destination) async {
         expect(tapTarget, findsOneWidget);
@@ -945,16 +984,17 @@ void main() {
         expect(find.byType(M3NavBar), findsOneWidget);
 
         /// verify feeds is the current destination
-        await changeNavbarDestination(
-            tester, routes[0]!['/']!, items[0].iconData);
+        final selectedIcon = find.byKey(const Key('HomeIconSelected'));
+        await changeNavbarDestination(tester, routes[0]!['/']!, selectedIcon);
 
         /// Navigate to FeedDetail
         await navigateToNestedTarget(
             tester, "Feed 0 card".textX(), routes[0]![FeedDetail.route]!);
 
         /// Change index to products
+        final productIcon = find.byIcon(items[1].iconData);
         await changeNavbarDestination(
-            tester, routes[1]![ProductList.route]!, items[1].iconData);
+            tester, routes[1]![ProductList.route]!, productIcon);
 
         /// Navigate to ProductDetail
         await navigateToNestedTarget(
@@ -965,8 +1005,10 @@ void main() {
             routes[1]![ProductComments.route]!);
 
         /// Change index to profile
+
+        final profileIcon = find.byIcon(items[2].iconData);
         await changeNavbarDestination(
-            tester, routes[2]![UserProfile.route]!, items[2].iconData);
+            tester, routes[2]![UserProfile.route]!, profileIcon);
 
         /// Navigate to ProfileEdit
         await navigateToNestedTarget(
@@ -991,16 +1033,17 @@ void main() {
         expect(find.byType(M3NavBar), findsOneWidget);
 
         /// verify feeds is the current destination
-        await changeNavbarDestination(
-            tester, routes[0]!['/']!, items[0].iconData);
+        final selectedIcon = find.byKey(const Key('HomeIconSelected'));
+        await changeNavbarDestination(tester, routes[0]!['/']!, selectedIcon);
 
         /// Navigate to FeedDetail
         await navigateToNestedTarget(
             tester, "Feed 0 card".textX(), routes[0]![FeedDetail.route]!);
 
         /// Change index to products
+        final productIcon = find.byIcon(items[1].iconData);
         await changeNavbarDestination(
-            tester, routes[1]![ProductList.route]!, items[1].iconData);
+            tester, routes[1]![ProductList.route]!, productIcon);
 
         /// Navigate to ProductDetail
         await navigateToNestedTarget(
@@ -1011,8 +1054,9 @@ void main() {
             routes[1]![ProductComments.route]!);
 
         /// Change index to profile
+        final profileIcon = find.byIcon(items[2].iconData);
         await changeNavbarDestination(
-            tester, routes[2]![UserProfile.route]!, items[2].iconData);
+            tester, routes[2]![UserProfile.route]!, profileIcon);
 
         /// Navigate to ProfileEdit
         await navigateToNestedTarget(
@@ -1188,7 +1232,9 @@ void main() {
     await tester.tap(productIcon);
     expect(index, 0);
     await tester.pumpAndSettle();
-    await tester.tap(productIcon);
+    final productSelectedIcon = find.byKey(const Key("ProductsIconSelected"));
+    expect(productSelectedIcon, findsOneWidget);
+    await tester.tap(productSelectedIcon);
     expect(index, 1);
   });
 
