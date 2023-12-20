@@ -2,9 +2,12 @@
 
 <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
+![Floating
+  Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/7da504ae-4894-481c-a443-01a24fc61946)
+
 _Checkout our [extensive docs](https://docs.maheshjamdade.com/navbar_router/) to learn more about this package, the inspiration behind it and how to use it._
 
-#### Adding a BottomNavigationBar to your app?
+## Adding a BottomNavigationBar to your app?
 
 NavbarRouter is a complete package to handle all your BottomNavigationBar needs. It provides a simplest api to achieve the advanced features of BottomNavigationBar making the user experience of your app much better. You only need to specify the NavbarItems and the routes for each NavbarItem and NavbarRouter will take care of the rest.
 
@@ -18,6 +21,8 @@ _Most of the features which this package provides are mainly to improve the user
 - Support for nested navigation.
 - Intercept back button press to handle app exits (Android).
 - Fading between NavbarDestinations
+- show different icons for selected and unselected NavbarItems.
+- Consistent API for all types of Navbar.
 - Programmatically control state of bottom navbar from any part of widget tree e.g change index, hide/show bottom navbar,push/pop routes of a specific tab etc
 - Show Snackbar messages on top of Navbar with a single line of code.
 - persist state across bottom navbar tabs.
