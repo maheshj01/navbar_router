@@ -1,6 +1,6 @@
-<!-- ## **navbar_router v0.7.1** -->
+## **navbar_router v0.7.1** -->
 
-<!-- <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a> -->
+<a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
 ![Floating
   Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/7da504ae-4894-481c-a443-01a24fc61946)
