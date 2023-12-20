@@ -66,6 +66,8 @@ class NavbarDecoration {
   /// The color of the unselected item icon
   final Color? unselectedIconColor;
 
+  /// The icon color of the selected NavbarItem
+  /// if NavbarItem.selectedIcon is specified then this is ignored
   final Color? selectedIconColor;
 
   /// Whether or not to show the unselected label text
@@ -101,6 +103,8 @@ class NavbarDecoration {
   /// BorderRadius for floating navbar
   final BorderRadius? borderRadius;
 
+  /// Specifies when each [NavigationDestination]'s label should appear.
+  /// This is used to determine the behavior of [NavigationBar]'s destinations
   final NavigationDestinationLabelBehavior? labelBehavior;
 
   final double? height;
