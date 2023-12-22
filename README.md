@@ -159,7 +159,7 @@ defaults to
 
 ```dart
   destinationAnimationCurve: Curves.fastOutSlowIn,
-  destinationAnimationDuration: 600,
+  destinationAnimationDuration: 300,
 ```
 
 <img width="300" src="https://github.com/flutter/flutter/assets/31410839/90e2d176-cd62-4e0f-8b3c-6afa64c96330">
