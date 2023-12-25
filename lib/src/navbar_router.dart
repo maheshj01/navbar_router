@@ -19,7 +19,7 @@ class Destination {
 
     return other is Destination &&
         other.route == route &&
-        other.widget == widget;
+        other.widget.runtimeType == widget.runtimeType;
   }
 
   @override
@@ -237,7 +237,6 @@ class _NavbarRouterState extends State<NavbarRouter>
 
   @override
   void didUpdateWidget(covariant NavbarRouter oldWidget) {
-    /// update animation
     if (widget.destinationAnimationCurve !=
             oldWidget.destinationAnimationCurve ||
         widget.destinationAnimationDuration !=
