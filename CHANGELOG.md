@@ -1,3 +1,5 @@
+## [0.7.2] Dec 25, 2023
+- Compare widget runtimeType to prevent unnecessary rebuilds
 ## [0.7.1] Dec 20, 2023
 
 - Rebuild Navbar on updating its properties Fixes: [Issue #38](https://github.com/maheshmnj/navbar_router/issues/38)
