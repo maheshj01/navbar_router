@@ -199,14 +199,8 @@ class _NavbarRouterState extends State<NavbarRouter>
       items.add(navbaritem);
     }
     initAnimation();
-    fadeAnimation[widget.initialIndex].value = 1.0;
     NavbarNotifier.setKeys(keys);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      NavbarNotifier.index = widget.initialIndex;
-    });
-    NavbarNotifier.addIndexChangeListener((p0) {
-      _handleFadeAnimation();
-    });
+    NavbarNotifier.index = widget.initialIndex;
   }
 
   void initAnimation() {
@@ -217,6 +211,7 @@ class _NavbarRouterState extends State<NavbarRouter>
           duration:
               Duration(milliseconds: widget.destinationAnimationDuration));
     }).toList();
+    fadeAnimation[widget.initialIndex].value = 1.0;
   }
 
   void clearInitialization() {

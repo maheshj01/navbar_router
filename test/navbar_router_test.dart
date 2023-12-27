@@ -256,7 +256,7 @@ void main() {
       expect(NavbarNotifier.currentIndex, initialIndex);
       final destination = (routes[initialIndex]!['/']).runtimeType.typeX();
       expect(destination, findsOneWidget);
-      final icon = find.byIcon(items[initialIndex].iconData);
+      final icon = find.byWidget(items[initialIndex].selectedIcon!);
       expect(icon, findsOneWidget);
     });
 
@@ -617,7 +617,7 @@ void main() {
         expect(NavbarNotifier.currentIndex, initialIndex);
         final destination = (routes[initialIndex]!['/']).runtimeType.typeX();
         expect(destination, findsOneWidget);
-        final icon = find.byIcon(items[initialIndex].iconData);
+        final icon = find.byWidget(items[initialIndex].selectedIcon!);
         expect(icon, findsOneWidget);
       });
 
@@ -936,7 +936,7 @@ void main() {
         expect(NavbarNotifier.currentIndex, initialIndex);
         final destination = (routes[initialIndex]!['/']).runtimeType.typeX();
         expect(destination, findsOneWidget);
-        final icon = find.byIcon(items[initialIndex].iconData);
+        final icon = find.byWidget(items[initialIndex].selectedIcon!);
         expect(icon, findsOneWidget);
       });
 
