@@ -1418,4 +1418,59 @@ void main() {
       expect(floatingNavbar.decoration.margin, const EdgeInsets.all(10));
     });
   });
+
+  testWidgets('Navbar should persist index on widget update',
+      (WidgetTester tester) async {
+    // pass outlined icons
+    Color backgroundColor = Colors.red;
+    List<NavbarItem> navItems = [
+      NavbarItem(Icons.home_outlined, 'Home',
+          backgroundColor: backgroundColor,
+          selectedIcon: const Icon(
+            key: Key("HomeIconSelected"),
+            Icons.home_outlined,
+            size: 26,
+          )),
+      const NavbarItem(Icons.shopping_bag_outlined, 'Products',
+          backgroundColor: Colors.orange,
+          selectedIcon: Icon(
+            Icons.shopping_bag_outlined,
+            key: Key("ProductsIconSelected"),
+            size: 26,
+          )),
+      const NavbarItem(Icons.person_outline, 'Me',
+          backgroundColor: Colors.teal,
+          selectedIcon: Icon(
+            key: Key("MeIconSelected"),
+            Icons.person,
+            size: 26,
+          )),
+      const NavbarItem(Icons.settings_outlined, 'Settings',
+          backgroundColor: Colors.red,
+          selectedIcon: Icon(
+            Icons.settings,
+            size: 26,
+          )),
+    ];
+    await tester.pumpWidget(boilerplate(navBarItems: navItems));
+
+    await tester.pumpAndSettle();
+    expect(NavbarNotifier.currentIndex, equals(0));
+    expect('Feed 0 card'.textX(), findsOneWidget);
+    NavbarNotifier.index = 1;
+    await tester.pumpAndSettle();
+    expect(NavbarNotifier.currentIndex, equals(1));
+    expect('Product 1'.textX(), findsOneWidget);
+    NavbarNotifier.index = 2;
+    await tester.pumpAndSettle();
+    expect(NavbarNotifier.currentIndex, equals(2));
+    expect('Hi! This is your Profile Page'.textX(), findsOneWidget);
+
+    // change background color
+    await tester.pumpAndSettle();
+    expect(NavbarNotifier.currentIndex, equals(2));
+    backgroundColor = Colors.green;
+    await tester.pumpAndSettle();
+    expect(NavbarNotifier.currentIndex, equals(2));
+  });
 }
