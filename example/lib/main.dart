@@ -1,14 +1,25 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:example/app_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:navbar_router/navbar_router.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(ProviderScope(
+    child: MyApp(),
+  ));
 }
+
+final appProvider = StateNotifierProvider<AppNotifier, AppController>(
+    (ref) => AppNotifier(AppController(
+          extended: false,
+          index: 0,
+          showFAB: true,
+        )));
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
@@ -82,14 +93,13 @@ class AppSetting extends ChangeNotifier {
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-
+class HomePage extends ConsumerStatefulWidget {
+  const HomePage({super.key});
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
   List<NavbarItem> items = [
     NavbarItem(Icons.home_outlined, 'Home',
         backgroundColor: colors[0],
@@ -167,12 +177,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final appRef = ref.watch(appProvider);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       floatingActionButton: AnimatedBuilder(
           animation: NavbarNotifier(),
           builder: (context, child) {
-            if (NavbarNotifier.currentIndex < 1) {
+            if (!appRef.showFAB || appRef.index < 2) {
               return Padding(
                 padding: EdgeInsets.only(bottom: kNavbarHeight),
                 child: Row(
@@ -272,7 +284,9 @@ class _HomePageState extends State<HomePage> {
           // /// labelTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
           // labelBehavior: NavigationDestinationLabelBehavior.alwaysShow
         ),
-        onChanged: (x) {},
+        onChanged: (x) {
+          ref.read(appProvider.notifier).setIndex(x);
+        },
         backButtonBehavior: BackButtonBehavior.rememberHistory,
         destinations: [
           for (int i = 0; i < items.length; i++)
@@ -438,15 +452,15 @@ class FeedDetail extends StatelessWidget {
   }
 }
 
-class ProductList extends StatefulWidget {
-  const ProductList({Key? key}) : super(key: key);
+class ProductList extends ConsumerStatefulWidget {
+  const ProductList({super.key});
   static const String route = '/';
 
   @override
-  State<ProductList> createState() => _ProductListState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ProductListState();
 }
 
-class _ProductListState extends State<ProductList> {
+class _ProductListState extends ConsumerState<ProductList> {
   final _scrollController = ScrollController();
 
   @override
@@ -482,6 +496,12 @@ class _ProductListState extends State<ProductList> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    print("productlist initState invoked");
   }
 
   @override
@@ -622,6 +642,13 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   final GlobalKey iconKey = GlobalKey();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("profile initState invoked");
+  }
 
   @override
   Widget build(BuildContext context) {
