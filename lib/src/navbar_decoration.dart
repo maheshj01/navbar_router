@@ -26,12 +26,11 @@ class NavbarItem {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is NavbarItem &&
-          hashCode == other.hashCode &&
           runtimeType == other.runtimeType &&
           iconData == other.iconData &&
           text == other.text &&
-          child == other.child &&
-          selectedIcon == other.selectedIcon &&
+          child.runtimeType == other.child.runtimeType &&
+          selectedIcon.runtimeType == other.selectedIcon.runtimeType &&
           backgroundColor == other.backgroundColor;
 
   @override
