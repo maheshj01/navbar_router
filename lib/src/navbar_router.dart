@@ -1,6 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:navbar_router/navbar_router.dart';
+import 'package:navbar_router/src/navbars/floating_navbar.dart';
+import 'package:navbar_router/src/navbars/m3_navbar.dart';
+import 'package:navbar_router/src/navbars/notched_navbar.dart';
+import 'package:navbar_router/src/navbars/standard_navbar.dart';
 
 part 'animated_navbar.dart';
 

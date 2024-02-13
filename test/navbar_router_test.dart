@@ -4,6 +4,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:navbar_router/navbar_router.dart';
+import 'package:navbar_router/src/navbars/floating_navbar.dart';
+import 'package:navbar_router/src/navbars/m3_navbar.dart';
+import 'package:navbar_router/src/navbars/notched_navbar.dart';
 
 import 'navbar_utils.dart';
 
