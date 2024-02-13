@@ -1,7 +1,13 @@
+## [0.7.4] Feb 14, 2023
+
+- Migrate to PopScope
+
 ## [0.7.3] Dec 30, 2023
+
 - Prevent unwanted rebuilds of NavbarItem
 
 ## [0.7.2] Dec 25, 2023
+
 - Compare widget runtimeType to prevent unnecessary rebuilds
 
 ## [0.7.1] Dec 20, 2023
