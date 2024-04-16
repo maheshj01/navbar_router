@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:navbar_router/src/navbar_router.dart';
+import 'package:navbar_router/navbar_router.dart';
 
 class NavbarNotifier extends ChangeNotifier {
   static final NavbarNotifier _singleton = NavbarNotifier._internal();
@@ -30,8 +30,40 @@ class NavbarNotifier extends ChangeNotifier {
 
   static List<GlobalKey<NavigatorState>> _keys = [];
 
-  static void setKeys(List<GlobalKey<NavigatorState>> value) {
+  /// Set to true will hide the badges when the tap on the navbar icon.
+  static bool hideBadgeOnPageChanged = true;
+
+  /// List of badges of the navbar
+  static List<NavbarBadge> get badges => _badges;
+  static List<NavbarBadge> _badges = [];
+
+  /// Use to update a badge using its [index], e.g: update the number, text...
+  ///
+  /// If you want to hide badges on a specific index, use [makeBadgeVisible]
+  ///
+  static void setBadges(int index, NavbarBadge badge) {
+    if (index < 0 || index >= length) return;
+    badges[index] = badge;
+    // TODO: wonder if this will cause performance issue
+    _notifyIndexChangeListeners(index);
+    _singleton.notify();
+  }
+
+  /// Use to set the visibility of a badge using its [index].
+  static void makeBadgeVisible(int index, bool visible) {
+    if (index < 0 || index >= length) return;
+    badges[index].showBadge = visible;
+  }
+
+  /// Conveniently setup the badges if user choose to show them. Also the only place that init the badges.
+  ///
+  /// Will throw AssertionError if length of keys and given badgeList are not the same
+  static void setKeys(List<GlobalKey<NavigatorState>> value,
+      {List<NavbarBadge>? badgeList}) {
     _keys = value;
+    if (badgeList != null) {
+      _badges = badgeList;
+    }
   }
 
   static final List<Function(int)> _indexChangeListeners = [];
@@ -40,6 +72,7 @@ class NavbarNotifier extends ChangeNotifier {
 
   static set index(int x) {
     _index = x;
+    if (hideBadgeOnPageChanged) badges[x].clearBadge();
     if (_navbarStackHistory.contains(x)) {
       _navbarStackHistory.remove(x);
     }
@@ -242,5 +275,6 @@ class NavbarNotifier extends ChangeNotifier {
     _keys.clear();
     _index = null;
     _length = null;
+    _badges.clear();
   }
 }

@@ -13,6 +13,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  badges: ^3.1.2
 
 dev_dependencies:
   flutter_test:

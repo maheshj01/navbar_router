@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:navbar_router/navbar_router.dart';
@@ -148,6 +149,9 @@ class NavbarRouter extends StatefulWidget {
   /// defaults to the first item in the list of [NavbarItems]
   final int initialIndex;
 
+  /// Set to true will hide the badges when the tap on the navbar icon.
+  final bool hideBadgeOnPageChanged;
+
   /// Take a look at the [readme](https://github.com/maheshmnj/navbar_router) for more information on how to use this package.
   ///
   /// Please help me improve this package.
@@ -170,6 +174,7 @@ class NavbarRouter extends StatefulWidget {
       this.destinationAnimationDuration = 300,
       this.backButtonBehavior = BackButtonBehavior.exit,
       this.onCurrentTabClicked,
+      this.hideBadgeOnPageChanged = true,
       this.onBackButtonPressed})
       : assert(destinations.length >= 2,
             "Destinations length must be greater than or equal to 2"),
@@ -193,12 +198,17 @@ class _NavbarRouterState extends State<NavbarRouter>
 
   void initialize({bool isUpdate = false}) {
     NavbarNotifier.length = widget.destinations.length;
+    // init badge
+    List<NavbarBadge> badges = [];
     for (int i = 0; i < NavbarNotifier.length; i++) {
       final navbaritem = widget.destinations[i].navbarItem;
       keys.add(GlobalKey<NavigatorState>());
       items.add(navbaritem);
+      badges.add(navbaritem.badge ?? NavbarBadge());
     }
-    NavbarNotifier.setKeys(keys);
+    // set badge list here
+    NavbarNotifier.setKeys(keys, badgeList: badges);
+    NavbarNotifier.hideBadgeOnPageChanged = widget.hideBadgeOnPageChanged;
     if (!isUpdate) {
       initAnimation();
       NavbarNotifier.index = widget.initialIndex;

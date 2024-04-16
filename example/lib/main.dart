@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:math' hide log;
 
+import 'package:badges/badges.dart';
 import 'package:example/app_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -106,19 +108,30 @@ class _HomePageState extends ConsumerState<HomePage> {
         selectedIcon: const Icon(
           Icons.home,
           size: 26,
+        ),
+        badge: NavbarBadge(
+          badgeText: "11",
+          showBadge: true,
         )),
     NavbarItem(Icons.shopping_bag_outlined, 'Products',
         backgroundColor: colors[1],
         selectedIcon: const Icon(
           Icons.shopping_bag,
           size: 26,
+        ),
+        badge: NavbarBadge(
+          badgeText: "8",
+          showBadge: true,
         )),
     NavbarItem(Icons.person_outline, 'Me',
         backgroundColor: colors[2],
         selectedIcon: const Icon(
           Icons.person,
           size: 26,
-        )),
+        ),
+        // dot badge
+        badge:
+            NavbarBadge(badgeText: "", showBadge: true, color: Colors.amber)),
     NavbarItem(Icons.settings_outlined, 'Settings',
         backgroundColor: colors[0],
         selectedIcon: const Icon(
@@ -755,10 +768,87 @@ class _SettingsState extends State<Settings> {
                       index = x;
                     });
                     appSetting.changeThemeSeed(themeColorSeed[index.toInt()]);
-                  })
+                  }),
+              const SizedBox(
+                height: 40,
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    showRandomBadges();
+                  },
+                  child: const Text('Show Random Badges'))
             ],
           ),
         ));
+  }
+
+  showRandomBadges() {
+    var anims = [
+      BadgeAnimation.fade,
+      BadgeAnimation.rotation,
+      BadgeAnimation.scale,
+      BadgeAnimation.size,
+      BadgeAnimation.slide
+    ];
+    var pos = [
+      BadgePosition.bottomEnd,
+      BadgePosition.bottomStart,
+      BadgePosition.topEnd,
+      BadgePosition.topStart
+    ];
+    int r = Random().nextInt(100);
+    var b = Random().nextBool();
+    NavbarNotifier.setBadges(
+        0,
+        NavbarBadge(
+            badgeText: "${b ? r : ""}",
+            color: b
+                ? null
+                : themeColorSeed[Random().nextInt(themeColorSeed.length)],
+            position: pos[Random().nextInt(pos.length)](),
+            showBadge: Random().nextInt(5) > 1,
+            badgeAnimation: anims[Random().nextInt(anims.length)](),
+            animationDuration:
+                Duration(milliseconds: (Random().nextInt(5) + 5) * 600)));
+    b = Random().nextBool();
+    NavbarNotifier.setBadges(
+        1,
+        NavbarBadge(
+            badgeText: "${b ? r : ""}",
+            position: pos[Random().nextInt(pos.length)](),
+            color: b
+                ? null
+                : themeColorSeed[Random().nextInt(themeColorSeed.length)],
+            showBadge: Random().nextInt(5) > 1,
+            badgeAnimation: anims[Random().nextInt(anims.length)](),
+            animationDuration:
+                Duration(milliseconds: (Random().nextInt(5) + 5) * 600)));
+    b = Random().nextBool();
+    NavbarNotifier.setBadges(
+        2,
+        NavbarBadge(
+            badgeText: "${b ? r : ""}",
+            position: pos[Random().nextInt(pos.length)](),
+            color: b
+                ? null
+                : themeColorSeed[Random().nextInt(themeColorSeed.length)],
+            showBadge: Random().nextInt(5) > 1,
+            badgeAnimation: anims[Random().nextInt(anims.length)](),
+            animationDuration:
+                Duration(milliseconds: (Random().nextInt(5) + 5) * 600)));
+    b = Random().nextBool();
+    NavbarNotifier.setBadges(
+        3,
+        NavbarBadge(
+            badgeText: "${b ? r : ""}",
+            position: pos[Random().nextInt(pos.length)](),
+            color: b
+                ? null
+                : themeColorSeed[Random().nextInt(themeColorSeed.length)],
+            showBadge: Random().nextInt(5) > 1,
+            badgeAnimation: anims[Random().nextInt(anims.length)](),
+            animationDuration:
+                Duration(milliseconds: (Random().nextInt(5) + 5) * 600)));
   }
 }
 
