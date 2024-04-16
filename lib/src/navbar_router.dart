@@ -364,6 +364,10 @@ class _NavbarRouterState extends State<NavbarRouter>
                             if (widget.onCurrentTabClicked != null) {
                               widget.onCurrentTabClicked!();
                             }
+                            if (widget.hideBadgeOnPageChanged) {
+                              NavbarNotifier.makeBadgeVisible(
+                                  NavbarNotifier.currentIndex, false);
+                            }
                           } else {
                             NavbarNotifier.index = x;
                             if (widget.onChanged != null) {

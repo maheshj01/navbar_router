@@ -53,6 +53,8 @@ class NavbarNotifier extends ChangeNotifier {
   static void makeBadgeVisible(int index, bool visible) {
     if (index < 0 || index >= length) return;
     badges[index].showBadge = visible;
+    _notifyIndexChangeListeners(index);
+    _singleton.notify();
   }
 
   /// Conveniently setup the badges if user choose to show them. Also the only place that init the badges.

@@ -1,6 +1,8 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 
+/// A customized badge/dot class for NavbarRouter.
+/// Based on [badges] package of flutter.
 class NavbarBadge {
   /// Your badge content, can be number (as string) of text.
   /// Please choose either [badgeText] or [badgeContent].
@@ -68,7 +70,7 @@ class NavbarBadge {
   /// ```
   /// final BadgeGradient? borderGradient;
   /// ```
-  /// Specifies padding for [badgeContent].
+  /// Specifies padding/**size** for [badgeContent].
   /// The default value is EdgeInsets.all(5.0).
   /// ```
   /// final EdgeInsetsGeometry padding;
@@ -183,6 +185,7 @@ class NavbarBadge {
 
   Key? key;
 
+  /// Use padding of [badgeStyle] or fontSize of [badgeTextStyle] to change size of the badge/dot. 
   NavbarBadge({
     this.key,
     this.badgeText = "",
