@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:navbar_router/navbar_router.dart';
@@ -28,6 +29,7 @@ extension FindIcon on IconData {
 }
 
 void main() {
+  // updated test items with badges
   const List<NavbarItem> items = [
     NavbarItem(Icons.home_outlined, 'Home',
         backgroundColor: mediumPurple,
@@ -35,6 +37,11 @@ void main() {
           key: Key("HomeIconSelected"),
           Icons.home,
           size: 26,
+        ),
+        badge: NavbarBadge(
+          key: Key("TwoDigitBadge"),
+          badgeText: "10",
+          showBadge: true,
         )),
     NavbarItem(Icons.shopping_bag_outlined, 'Products',
         backgroundColor: Colors.orange,
@@ -42,6 +49,11 @@ void main() {
           Icons.shopping_bag,
           key: Key("ProductsIconSelected"),
           size: 26,
+        ),
+        badge: NavbarBadge(
+          key: Key("OneDigitBadge"),
+          badgeText: "8",
+          showBadge: true,
         )),
     NavbarItem(Icons.person_outline, 'Me',
         backgroundColor: Colors.teal,
@@ -49,12 +61,22 @@ void main() {
           key: Key("MeIconSelected"),
           Icons.person,
           size: 26,
+        ),
+        badge: NavbarBadge(
+          key: Key("DotBadge1"),
+          showBadge: true,
+          color: Colors.amber,
         )),
     NavbarItem(Icons.settings_outlined, 'Settings',
         backgroundColor: Colors.red,
         selectedIcon: Icon(
           Icons.settings,
           size: 26,
+        ),
+        badge: NavbarBadge(
+          key: Key("DotBadge2"),
+          showBadge: true,
+          color: Colors.red,
         )),
   ];
 
@@ -146,8 +168,176 @@ void main() {
     expect(destinationFinder, findsOneWidget);
   }
 
+  // function containing all badge tests and subtests
+  badgeGroupTest() {
+    badges.Badge findBadge(tester, index) {
+      return tester.widget(find.byKey(NavbarNotifier.badges[index].key!))
+          as badges.Badge;
+    }
+
+    // test color and visibility
+    testDot(tester, index) {
+      expect(find.byKey(NavbarNotifier.badges[index].key!), findsOneWidget);
+
+      // test visibility
+      expect(findBadge(tester, index).showBadge,
+          NavbarNotifier.badges[index].showBadge);
+
+      // test color
+      expect(findBadge(tester, index).badgeStyle.badgeColor,
+          NavbarNotifier.badges[index].color);
+    }
+
+    /// Test badge
+    testBadgeWithText(tester, index) {
+      var textFind = find.text(NavbarNotifier.badges[index].badgeText);
+      expect(textFind, findsOneWidget);
+
+      // test dot
+      testDot(tester, index);
+
+      // compare the content of badge
+      Text text = tester.firstWidget(textFind);
+      expect(text.data, NavbarNotifier.badges[index].badgeText);
+    }
+
+    desktopMode(tester) async {
+      await tester.pumpWidget(boilerplate(isDesktop: true));
+      await tester.pumpAndSettle();
+      expect(find.byType(NavigationRail), findsOneWidget);
+      expect(find.byType(BottomNavigationBar), findsNothing);
+    }
+
+    testBadge(tester, index) async {
+      NavbarNotifier.badges[index].badgeText.isNotEmpty
+          ? testBadgeWithText(tester, index)
+          : testDot(tester, index);
+      NavbarNotifier.badges[index].badgeText.isNotEmpty
+          ? testBadgeWithText(tester, index)
+          : testDot(tester, index);
+    }
+
+    testWidgets('Should build initial badges', (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate());
+      // test visibility
+      testBadge(tester, 0);
+      testBadge(tester, 1);
+      testBadge(tester, 2);
+      testBadge(tester, 3);
+    });
+
+    testWidgets('Should allow to update badges dynamically',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate());
+
+      // test badge
+      testBadge(tester, 0);
+      // update the whole badge
+      NavbarNotifier.updateBadge(
+          0,
+          const NavbarBadge(
+            key: Key("TwoDigitBadgeNew"),
+            badgeText: "11",
+            showBadge: true,
+          ));
+      await tester.pumpAndSettle();
+
+      testBadge(tester, 0);
+
+      // hide the badge
+      NavbarNotifier.makeBadgeVisible(0, false);
+      await tester.pumpAndSettle();
+      expect(NavbarNotifier.badges[0].showBadge, false);
+      testBadge(tester, 0);
+    });
+
+    testWidgets('Should allow to hide/show badges on demand',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate());
+
+      // test badge
+      testBadge(tester, 0);
+
+      // hide all the badge
+      for (int i = 0; i < NavbarNotifier.length; i++) {
+        NavbarNotifier.makeBadgeVisible(i, false);
+        await tester.pumpAndSettle();
+        expect(NavbarNotifier.badges[i].showBadge, false);
+        testBadge(tester, i);
+      }
+
+      // show all the badge
+      for (int i = 0; i < NavbarNotifier.length; i++) {
+        NavbarNotifier.makeBadgeVisible(i, true);
+        await tester.pumpAndSettle();
+        expect(NavbarNotifier.badges[i].showBadge, true);
+        testBadge(tester, i);
+      }
+    });
+
+    testWidgets('Desktop: should build initial badges',
+        (WidgetTester tester) async {
+      await desktopMode(tester);
+      // test visibility
+      testBadge(tester, 0);
+      testBadge(tester, 1);
+      testBadge(tester, 2);
+      testBadge(tester, 3);
+    });
+
+    testWidgets('Desktop: should allow to update badges dynamically',
+        (WidgetTester tester) async {
+      await desktopMode(tester);
+
+      // test badge
+      testBadge(tester, 0);
+      // update the whole badge
+      NavbarNotifier.updateBadge(
+          0,
+          const NavbarBadge(
+            key: Key("TwoDigitBadgeNew"),
+            badgeText: "11",
+            showBadge: true,
+          ));
+      await tester.pumpAndSettle();
+
+      testBadge(tester, 0);
+
+      // hide the badge
+      NavbarNotifier.makeBadgeVisible(0, false);
+      await tester.pumpAndSettle();
+      expect(NavbarNotifier.badges[0].showBadge, false);
+      testBadge(tester, 0);
+    });
+
+    testWidgets('Desktop: should allow to hide/show badges on demand',
+        (WidgetTester tester) async {
+      await desktopMode(tester);
+
+      // test badge
+      testBadge(tester, 0);
+
+      // hide all the badge
+      for (int i = 0; i < NavbarNotifier.length; i++) {
+        NavbarNotifier.makeBadgeVisible(i, false);
+        await tester.pumpAndSettle();
+        expect(NavbarNotifier.badges[i].showBadge, false);
+        testBadge(tester, i);
+      }
+
+      // show all the badge
+      for (int i = 0; i < NavbarNotifier.length; i++) {
+        NavbarNotifier.makeBadgeVisible(i, true);
+        await tester.pumpAndSettle();
+        expect(NavbarNotifier.badges[i].showBadge, true);
+        testBadge(tester, i);
+      }
+    });
+  }
+
   group('Test NavbarType: NavbarType.standard ', () {
-    group('NavbarType.standard: should build destination and navbar items', () {
+    // test badges
+    group('Should build destination, navbar items, and badges', () {
       testWidgets('NavbarType.standard: should build destinations',
           (WidgetTester tester) async {
         final bottomNavigation = (BottomNavigationBar).typeX();
@@ -180,6 +370,10 @@ void main() {
         expect(find.text(items[0].text), findsOneWidget);
         expect(find.text(items[1].text), findsWidgets);
         expect(find.text(items[2].text), findsOneWidget);
+      });
+
+      group('NavbarType.standard: badges test', () {
+        badgeGroupTest();
       });
 
       testWidgets(
@@ -238,6 +432,7 @@ void main() {
         }
       });
     });
+
     testWidgets('NavbarType.standard: default index must be zero',
         (WidgetTester tester) async {
       await tester.pumpWidget(boilerplate());
@@ -502,6 +697,10 @@ void main() {
 
   group('Test NavbarType: NavbarType.notched ', () {
     group('NavbarType.notched: should build destination and navbar items', () {
+      group('Badges test', () {
+        badgeGroupTest();
+      });
+
       testWidgets('navbar_router should build destinations',
           (WidgetTester tester) async {
         final navbar = (NotchedNavBar).typeX();
@@ -817,6 +1016,9 @@ void main() {
     group(
         'NavbarType.material3: should build destination and navbar items (Desktop)',
         () {
+      group('Badges test', () {
+        badgeGroupTest();
+      });
       testWidgets('navbar_router should build destinations',
           (WidgetTester tester) async {
         final navbar = (M3NavBar).typeX();
@@ -1358,6 +1560,9 @@ void main() {
   });
 
   group('Test NavbarType: NavbarType.floating', () {
+    group('Badges test', () {
+      badgeGroupTest();
+    });
     testWidgets('NavbarType can be changed during runtime', (tester) async {
       NavbarType type = NavbarType.notched;
       await tester.pumpWidget(boilerplate(type: type));

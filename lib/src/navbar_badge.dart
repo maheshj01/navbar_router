@@ -8,31 +8,31 @@ class NavbarBadge {
   /// Please choose either [badgeText] or [badgeContent].
   ///
   /// If **[badgeContent]** is not null, **[badgeText]** will be **ignored**.
-  String badgeText;
+  final String badgeText;
 
   /// Text style for badge
-  TextStyle? badgeTextStyle;
+  final TextStyle? badgeTextStyle;
 
   /// Content inside badge. Please choose either [badgeText] or [badgeContent].
   ///
   /// If not null, **[badgeText]** will be **ignored**.
-  Widget? badgeContent;
+  final Widget? badgeContent;
 
   /// Allows you to hide or show entire badge.
   /// The default value is false.
-  bool showBadge;
+  final bool showBadge;
 
   /// Duration of the badge animations when the [badgeContent] changes.
   /// The default value is Duration(milliseconds: 500).
-  Duration animationDuration;
+  final Duration animationDuration;
 
   /// Background color of the badge.
   /// The default value is white.
-  Color? color;
+  final Color? color;
 
   /// Text color of the badge.
   /// The default value is black.
-  Color? textColor;
+  final Color? textColor;
 
   /// Contains all badge style properties.
   ///
@@ -75,7 +75,7 @@ class NavbarBadge {
   /// ```
   /// final EdgeInsetsGeometry padding;
   /// ```
-  BadgeStyle badgeStyle;
+  final BadgeStyle badgeStyle;
 
   /// Contains all badge animation properties.
   ///
@@ -162,36 +162,36 @@ class NavbarBadge {
   /// ```
   /// final bool appearanceDisappearanceFadeAnimationEnabled;
   /// ```
-  BadgeAnimation? badgeAnimation;
+  final BadgeAnimation? badgeAnimation;
 
   /// Allows to set custom position of badge according to [child].
   /// If [child] is null, it doesn't make sense to use it.
-  BadgePosition? position;
+  final BadgePosition? position;
 
   /// Can make your [badgeContent] interactive.
   /// The default value is false.
   /// Make it true to make badge intercept all taps
   /// Make it false and all taps will be passed through the badge
-  bool ignorePointer;
+  final bool ignorePointer;
 
   /// Allows to edit fit parameter to [Stack] widget.
   /// The default value is [StackFit.loose].
-  StackFit stackFit;
+  final StackFit stackFit;
 
   /// Will be called when you tap on the badge
   /// Important: if the badge is outside of the child
   /// the additional padding will be applied to make the full badge clickable
-  Function()? onTap;
+  final Function()? onTap;
 
-  Key? key;
+  final Key? key;
 
   /// Use padding of [badgeStyle] or fontSize of [badgeTextStyle] to change size of the badge/dot. 
-  NavbarBadge({
+  const NavbarBadge({
     this.key,
     this.badgeText = "",
     this.showBadge = false,
     this.animationDuration = const Duration(milliseconds: 500),
-    this.color,
+    this.color = Colors.white,
     this.textColor,
     this.badgeStyle = const BadgeStyle(),
     this.badgeAnimation = const BadgeAnimation.slide(),
@@ -202,12 +202,6 @@ class NavbarBadge {
     this.badgeContent,
     this.badgeTextStyle,
   });
-
-  /// Clear the content of the badge and hide it.
-  void clearBadge() {
-    badgeText = "";
-    showBadge = false;
-  }
 
   @override
   int get hashCode =>
@@ -243,5 +237,39 @@ class NavbarBadge {
             onTap == other.onTap &&
             badgeContent == other.badgeContent &&
             badgeStyle == other.badgeStyle;
+  }
+
+  NavbarBadge copyWith({
+    String? badgeText,
+    TextStyle? badgeTextStyle,
+    Widget? badgeContent,
+    bool? showBadge,
+    Duration? animationDuration,
+    Color? color,
+    Color? textColor,
+    BadgeStyle? badgeStyle,
+    BadgeAnimation? badgeAnimation,
+    BadgePosition? position,
+    bool? ignorePointer,
+    StackFit? stackFit,
+    Function()? onTap,
+    Key? key,
+  }) {
+    return NavbarBadge(
+      badgeText: badgeText ?? this.badgeText,
+      badgeTextStyle: badgeTextStyle ?? this.badgeTextStyle,
+      badgeContent: badgeContent ?? this.badgeContent,
+      showBadge: showBadge ?? this.showBadge,
+      animationDuration: animationDuration ?? this.animationDuration,
+      color: color ?? this.color,
+      textColor: textColor ?? this.textColor,
+      badgeStyle: badgeStyle ?? this.badgeStyle,
+      badgeAnimation: badgeAnimation ?? this.badgeAnimation,
+      position: position ?? this.position,
+      ignorePointer: ignorePointer ?? this.ignorePointer,
+      stackFit: stackFit ?? this.stackFit,
+      onTap: onTap ?? this.onTap,
+      key: key ?? this.key,
+    );
   }
 }

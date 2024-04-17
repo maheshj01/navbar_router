@@ -41,9 +41,9 @@ class NavbarNotifier extends ChangeNotifier {
   ///
   /// If you want to hide badges on a specific index, use [makeBadgeVisible]
   ///
-  static void setBadges(int index, NavbarBadge badge) {
+  static void updateBadge(int index, NavbarBadge badge) {
     if (index < 0 || index >= length) return;
-    badges[index] = badge;
+    _badges[index] = badge;
     // TODO: wonder if this will cause performance issue
     _notifyIndexChangeListeners(index);
     _singleton.notify();
@@ -52,7 +52,7 @@ class NavbarNotifier extends ChangeNotifier {
   /// Use to set the visibility of a badge using its [index].
   static void makeBadgeVisible(int index, bool visible) {
     if (index < 0 || index >= length) return;
-    badges[index].showBadge = visible;
+    _badges[index] = _badges[index].copyWith(showBadge: visible);
     _notifyIndexChangeListeners(index);
     _singleton.notify();
   }
@@ -74,7 +74,7 @@ class NavbarNotifier extends ChangeNotifier {
 
   static set index(int x) {
     _index = x;
-    if (hideBadgeOnPageChanged) badges[x].clearBadge();
+    if (hideBadgeOnPageChanged) makeBadgeVisible(x, false);
     if (_navbarStackHistory.contains(x)) {
       _navbarStackHistory.remove(x);
     }

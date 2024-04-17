@@ -25,10 +25,11 @@ Widget buildBadge(
             ? badges.BadgePosition.topEnd(top: -15, end: -15)
             : badges.BadgePosition.topEnd()),
     badgeAnimation: NavbarNotifier.badges[index].badgeAnimation ??
-        const badges.BadgeAnimation.slide(
-            // disappearanceFadeAnimationDuration: Duration(milliseconds: 200),
-            // curve: Curves.easeInCubic,
-            ),
+        badges.BadgeAnimation.slide(
+          animationDuration: NavbarNotifier.badges[index].animationDuration,
+          // disappearanceFadeAnimationDuration: Duration(milliseconds: 200),
+          // curve: Curves.easeInCubic,
+        ),
     ignorePointer: NavbarNotifier.badges[index].ignorePointer,
     stackFit: NavbarNotifier.badges[index].stackFit,
     onTap: NavbarNotifier.badges[index].onTap,

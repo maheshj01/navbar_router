@@ -204,7 +204,7 @@ class _NavbarRouterState extends State<NavbarRouter>
       final navbaritem = widget.destinations[i].navbarItem;
       keys.add(GlobalKey<NavigatorState>());
       items.add(navbaritem);
-      badges.add(navbaritem.badge ?? NavbarBadge());
+      badges.add(navbaritem.badge ?? const NavbarBadge());
     }
     // set badge list here
     NavbarNotifier.setKeys(keys, badgeList: badges);
@@ -212,6 +212,8 @@ class _NavbarRouterState extends State<NavbarRouter>
     if (!isUpdate) {
       initAnimation();
       NavbarNotifier.index = widget.initialIndex;
+      // re-enable the initial badge that was hidden on setting NavbarNotifier.index
+      NavbarNotifier.makeBadgeVisible(NavbarNotifier.currentIndex, true);
     }
   }
 

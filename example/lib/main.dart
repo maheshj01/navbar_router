@@ -109,7 +109,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           Icons.home,
           size: 26,
         ),
-        badge: NavbarBadge(
+        badge: const NavbarBadge(
           badgeText: "11",
           showBadge: true,
         )),
@@ -119,7 +119,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           Icons.shopping_bag,
           size: 26,
         ),
-        badge: NavbarBadge(
+        badge: const NavbarBadge(
           badgeText: "8",
           showBadge: true,
         )),
@@ -130,8 +130,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           size: 26,
         ),
         // dot badge
-        badge:
-            NavbarBadge(badgeText: "", showBadge: true, color: Colors.amber)),
+        badge: const NavbarBadge(
+            badgeText: "", showBadge: true, color: Colors.amber)),
     NavbarItem(Icons.settings_outlined, 'Settings',
         backgroundColor: colors[0],
         selectedIcon: const Icon(
@@ -798,7 +798,7 @@ class _SettingsState extends State<Settings> {
     ];
     int r = Random().nextInt(100);
     var b = Random().nextBool();
-    NavbarNotifier.setBadges(
+    NavbarNotifier.updateBadge(
         0,
         NavbarBadge(
             badgeText: "${b ? r : ""}",
@@ -811,7 +811,7 @@ class _SettingsState extends State<Settings> {
             animationDuration:
                 Duration(milliseconds: (Random().nextInt(5) + 5) * 600)));
     b = Random().nextBool();
-    NavbarNotifier.setBadges(
+    NavbarNotifier.updateBadge(
         1,
         NavbarBadge(
             badgeText: "${b ? r : ""}",
@@ -824,7 +824,7 @@ class _SettingsState extends State<Settings> {
             animationDuration:
                 Duration(milliseconds: (Random().nextInt(5) + 5) * 600)));
     b = Random().nextBool();
-    NavbarNotifier.setBadges(
+    NavbarNotifier.updateBadge(
         2,
         NavbarBadge(
             badgeText: "${b ? r : ""}",
@@ -837,7 +837,7 @@ class _SettingsState extends State<Settings> {
             animationDuration:
                 Duration(milliseconds: (Random().nextInt(5) + 5) * 600)));
     b = Random().nextBool();
-    NavbarNotifier.setBadges(
+    NavbarNotifier.updateBadge(
         3,
         NavbarBadge(
             badgeText: "${b ? r : ""}",
