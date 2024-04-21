@@ -6,6 +6,9 @@ name: Deploy the build
   push:
     branches:
       - main
+defaults:
+  run:
+    working-directory: ./example
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -15,12 +18,8 @@ jobs:
         with:
           # flutter-version: '3.3.10'
           channel: "stable"
-      - name: Navigate to the example folder
-        run: cd example
-      - run: pwd
       - run: flutter clean
       - run: flutter pub get
-      - run: pwd
       - run: flutter build web --release
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v1.1
