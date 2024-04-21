@@ -17,7 +17,7 @@ jobs:
           channel: "stable"
       - name: Navigate to the example folder
         run: cd example
-        run: pwd 
+      - run: pwd
       - run: flutter clean
       - run: flutter pub get
       - run: pwd
