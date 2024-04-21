@@ -15,7 +15,9 @@ jobs:
         with:
           # flutter-version: '3.3.10'
           channel: "stable"
-      - run: cd example
+      - name: Navigate to the example folder
+        run: cd example
+        run: pwd 
       - run: flutter clean
       - run: flutter pub get
       - run: pwd
