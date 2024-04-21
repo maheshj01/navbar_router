@@ -191,7 +191,7 @@ class _NavbarRouterState extends State<NavbarRouter>
     initialize();
   }
 
-  void initialize({bool isUpdate = false}) {
+  void initialize() {
     NavbarNotifier.length = widget.destinations.length;
     for (int i = 0; i < NavbarNotifier.length; i++) {
       final navbaritem = widget.destinations[i].navbarItem;
@@ -199,9 +199,16 @@ class _NavbarRouterState extends State<NavbarRouter>
       items.add(navbaritem);
     }
     NavbarNotifier.setKeys(keys);
-    if (!isUpdate) {
-      initAnimation();
-      NavbarNotifier.index = widget.initialIndex;
+    initAnimation();
+    NavbarNotifier.index = widget.initialIndex;
+  }
+
+  void updateWidget() {
+    items.clear();
+    NavbarNotifier.length = widget.destinations.length;
+    for (int i = 0; i < NavbarNotifier.length; i++) {
+      final navbaritem = widget.destinations[i].navbarItem;
+      items.add(navbaritem);
     }
   }
 
@@ -243,8 +250,7 @@ class _NavbarRouterState extends State<NavbarRouter>
     if (widget.destinations.length != oldWidget.destinations.length ||
         widget.type != oldWidget.type ||
         !listEquals(oldWidget.destinations, widget.destinations)) {
-      clearInitialization();
-      initialize(isUpdate: true);
+      updateWidget();
     }
     super.didUpdateWidget(oldWidget);
   }
