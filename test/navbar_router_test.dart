@@ -1473,4 +1473,53 @@ void main() {
     await tester.pumpAndSettle();
     expect(NavbarNotifier.currentIndex, equals(2));
   });
+
+  testWidgets('NavbarItem properties can be changed during runtime',
+      (tester) async {
+    Color backgroundColor = Colors.red;
+    List<NavbarItem> navItems = [
+      NavbarItem(Icons.home_outlined, 'Home',
+          backgroundColor: backgroundColor,
+          selectedIcon: const Icon(
+            key: Key("HomeIconSelected"),
+            Icons.home_outlined,
+            size: 26,
+          )),
+      const NavbarItem(Icons.shopping_bag_outlined, 'Products',
+          backgroundColor: Colors.orange,
+          selectedIcon: Icon(
+            Icons.shopping_bag_outlined,
+            key: Key("ProductsIconSelected"),
+            size: 26,
+          )),
+      const NavbarItem(Icons.person_outline, 'Me',
+          backgroundColor: Colors.teal,
+          selectedIcon: Icon(
+            key: Key("MeIconSelected"),
+            Icons.person,
+            size: 26,
+          )),
+      const NavbarItem(Icons.settings_outlined, 'Settings',
+          backgroundColor: Colors.red,
+          selectedIcon: Icon(
+            Icons.settings,
+            size: 26,
+          )),
+    ];
+    await tester.pumpWidget(boilerplate(navBarItems: navItems));
+    await tester.pumpAndSettle();
+    expect(NavbarNotifier.currentIndex, equals(0));
+    expect((navItems[2].selectedIcon as Icon).color, isNull);
+    navItems[2] = const NavbarItem(Icons.person_outline, 'Me',
+        backgroundColor: Colors.teal,
+        selectedIcon: Icon(
+          key: Key("MeIconSelected"),
+          Icons.person,
+          color: Colors.green,
+          size: 26,
+        ));
+
+    await tester.pumpAndSettle();
+    expect((navItems[2].selectedIcon as Icon).color, Colors.green);
+  });
 }
