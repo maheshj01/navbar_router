@@ -18,6 +18,7 @@ jobs:
       - run: cd example
       - run: flutter clean
       - run: flutter pub get
+      - run: pwd
       - run: flutter build web --release
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v1.1
