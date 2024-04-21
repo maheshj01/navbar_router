@@ -807,24 +807,22 @@ class M3NavBarState extends State<M3NavBar> {
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-          useMaterial3: true,
           navigationBarTheme: NavigationBarThemeData(
-            backgroundColor: widget.decoration.backgroundColor ??
-                Theme.of(context).colorScheme.surface,
-            elevation: widget.elevation,
-            labelTextStyle: MaterialStateProperty.all(
-                widget.decoration.selectedLabelTextStyle),
-            indicatorShape: widget.decoration.indicatorShape ??
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)),
-            iconTheme:
-                MaterialStateProperty.all(widget.decoration.selectedIconTheme),
-            labelBehavior: widget.decoration.showUnselectedLabels
-                ? NavigationDestinationLabelBehavior.alwaysShow
-                : NavigationDestinationLabelBehavior.onlyShowSelected,
-            indicatorColor: widget.decoration.indicatorColor,
-            height: widget.height,
-          )),
+        backgroundColor: widget.decoration.backgroundColor ??
+            Theme.of(context).colorScheme.surface,
+        elevation: widget.elevation,
+        labelTextStyle:
+            MaterialStateProperty.all(widget.decoration.selectedLabelTextStyle),
+        indicatorShape: widget.decoration.indicatorShape ??
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+        iconTheme:
+            MaterialStateProperty.all(widget.decoration.selectedIconTheme),
+        labelBehavior: widget.decoration.showUnselectedLabels
+            ? NavigationDestinationLabelBehavior.alwaysShow
+            : NavigationDestinationLabelBehavior.onlyShowSelected,
+        indicatorColor: widget.decoration.indicatorColor,
+        height: widget.height,
+      )),
       child: MediaQuery(
         data: MediaQuery.of(context).removePadding(removeTop: true),
         child: NavigationBar(
@@ -924,24 +922,22 @@ class FloatingNavbarState extends State<FloatingNavbar> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Theme(
         data: Theme.of(context).copyWith(
-            useMaterial3: true,
             navigationBarTheme: NavigationBarThemeData(
-              backgroundColor: widget.decoration.backgroundColor ??
-                  Theme.of(context).colorScheme.surface,
-              elevation: widget.elevation,
-              labelTextStyle: MaterialStateProperty.all(
-                  widget.decoration.selectedLabelTextStyle),
-              indicatorShape: widget.decoration.indicatorShape ??
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0)),
-              iconTheme: MaterialStateProperty.all(
-                  widget.decoration.selectedIconTheme),
-              labelBehavior: widget.decoration.showSelectedLabels!
-                  ? NavigationDestinationLabelBehavior.onlyShowSelected
-                  : NavigationDestinationLabelBehavior.alwaysShow,
-              indicatorColor: widget.decoration.indicatorColor,
-              height: widget.height,
-            )),
+          backgroundColor: widget.decoration.backgroundColor ??
+              Theme.of(context).colorScheme.surface,
+          elevation: widget.elevation,
+          labelTextStyle: MaterialStateProperty.all(
+              widget.decoration.selectedLabelTextStyle),
+          indicatorShape: widget.decoration.indicatorShape ??
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+          iconTheme:
+              MaterialStateProperty.all(widget.decoration.selectedIconTheme),
+          labelBehavior: widget.decoration.showSelectedLabels!
+              ? NavigationDestinationLabelBehavior.onlyShowSelected
+              : NavigationDestinationLabelBehavior.alwaysShow,
+          indicatorColor: widget.decoration.indicatorColor,
+          height: widget.height,
+        )),
         child: Container(
           height: widget.navbarHeight,
           margin: widget.margin ??

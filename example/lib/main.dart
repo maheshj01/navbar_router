@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:developer';
 
 import 'package:example/app_controller.dart';
@@ -15,7 +14,7 @@ void main() {
 }
 
 final appProvider = StateNotifierProvider<AppNotifier, AppController>(
-    (ref) => AppNotifier(AppController(
+    (ref) => AppNotifier(const AppController(
           extended: false,
           index: 0,
           showFAB: true,
@@ -100,33 +99,6 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  List<NavbarItem> items = [
-    NavbarItem(Icons.home_outlined, 'Home',
-        backgroundColor: colors[0],
-        selectedIcon: const Icon(
-          Icons.home,
-          size: 26,
-        )),
-    NavbarItem(Icons.shopping_bag_outlined, 'Products',
-        backgroundColor: colors[1],
-        selectedIcon: const Icon(
-          Icons.shopping_bag,
-          size: 26,
-        )),
-    NavbarItem(Icons.person_outline, 'Me',
-        backgroundColor: colors[2],
-        selectedIcon: const Icon(
-          Icons.person,
-          size: 26,
-        )),
-    NavbarItem(Icons.settings_outlined, 'Settings',
-        backgroundColor: colors[0],
-        selectedIcon: const Icon(
-          Icons.settings,
-          size: 26,
-        )),
-  ];
-
   final Map<int, Map<String, Widget>> _routes = const {
     0: {
       '/': HomeFeeds(),
@@ -150,14 +122,14 @@ class _HomePageState extends ConsumerState<HomePage> {
   DateTime newTime = DateTime.now();
 
   /// This is only for demo purposes
-  void simulateTabChange({int times = 2, int delayInMs = 1000}) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      for (int i = 0; i < items.length * times; i++) {
-        NavbarNotifier.index = i % items.length;
-        await Future.delayed(Duration(milliseconds: delayInMs));
-      }
-    });
-  }
+  // void simulateTabChange({int times = 2, int delayInMs = 1000}) {
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+  //     for (int i = 0; i < items.length * times; i++) {
+  //       NavbarNotifier.index = i % items.length;
+  //       await Future.delayed(Duration(milliseconds: delayInMs));
+  //     }
+  //   });
+  // }
 
   @override
   void initState() {
@@ -179,6 +151,33 @@ class _HomePageState extends ConsumerState<HomePage> {
     final size = MediaQuery.of(context).size;
     final appRef = ref.watch(appProvider);
 
+    List<NavbarItem> items = [
+      NavbarItem(Icons.home_outlined, 'Home',
+          backgroundColor: colors[0],
+          selectedIcon: const Icon(
+            Icons.home,
+            size: 26,
+          )),
+      NavbarItem(Icons.shopping_bag_outlined, 'Products',
+          backgroundColor: colors[1],
+          selectedIcon: const Icon(
+            Icons.shopping_bag,
+            size: 26,
+          )),
+      NavbarItem(Icons.person_outline, 'Me',
+          backgroundColor: colors[2],
+          selectedIcon: const Icon(
+            Icons.person,
+            size: 26,
+          )),
+      NavbarItem(Icons.settings_outlined, 'Settings',
+          backgroundColor: colors[0],
+          selectedIcon: Icon(
+            color: Theme.of(context).colorScheme.primary,
+            Icons.settings,
+            size: 26,
+          )),
+    ];
     return Scaffold(
       resizeToAvoidBottomInset: false,
       floatingActionButton: AnimatedBuilder(
@@ -501,7 +500,6 @@ class _ProductListState extends ConsumerState<ProductList> {
   @override
   void initState() {
     super.initState();
-    print("productlist initState invoked");
   }
 
   @override
@@ -645,9 +643,7 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    print("profile initState invoked");
   }
 
   @override

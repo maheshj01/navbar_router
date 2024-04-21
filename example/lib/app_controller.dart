@@ -9,7 +9,7 @@ class AppController {
   final bool showFAB;
   final bool extended;
 
-  AppController({
+  const AppController({
     this.index = 0,
     this.showFAB = true,
     this.extended = true,
