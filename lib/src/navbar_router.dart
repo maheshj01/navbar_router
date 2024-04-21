@@ -241,6 +241,7 @@ class _NavbarRouterState extends State<NavbarRouter>
 
   @override
   void didUpdateWidget(covariant NavbarRouter oldWidget) {
+    super.didUpdateWidget(oldWidget);
     if (widget.destinationAnimationCurve !=
             oldWidget.destinationAnimationCurve ||
         widget.destinationAnimationDuration !=
@@ -252,7 +253,6 @@ class _NavbarRouterState extends State<NavbarRouter>
         !listEquals(oldWidget.destinations, widget.destinations)) {
       updateWidget();
     }
-    super.didUpdateWidget(oldWidget);
   }
 
   double getPadding() {
