@@ -35,6 +35,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
     with SingleTickerProviderStateMixin {
   @override
   void didUpdateWidget(covariant _AnimatedNavBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
     if (NavbarNotifier.isNavbarHidden != isHidden) {
       if (!isHidden) {
         _showBottomNavBar();
@@ -43,7 +44,26 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
       }
       isHidden = !isHidden;
     }
-    super.didUpdateWidget(oldWidget);
+
+    if ((widget.isDesktop != oldWidget.isDesktop) ||
+        widget.decoration!.isExtended != oldWidget.decoration!.isExtended ||
+        widget.decoration!.minExtendedWidth !=
+            oldWidget.decoration!.minExtendedWidth ||
+        widget.decoration!.minWidth != oldWidget.decoration!.minWidth) {
+      setUpAnimation();
+    }
+  }
+
+  void setUpAnimation() {
+    double offset = 75.0;
+    if (widget.isDesktop) {
+      if (widget.decoration!.isExtended) {
+        offset = widget.decoration!.minExtendedWidth;
+      } else {
+        offset = widget.decoration!.minWidth;
+      }
+    }
+    animation = Tween(begin: 0.0, end: offset).animate(_controller);
   }
 
   void _hideBottomNavBar() {
@@ -62,7 +82,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
     _controller = AnimationController(
         duration: const Duration(milliseconds: 500), vsync: this)
       ..addListener(() => setState(() {}));
-    animation = Tween(begin: 0.0, end: 100.0).animate(_controller);
+    setUpAnimation();
   }
 
   late AnimationController _controller;
@@ -79,6 +99,8 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final defaultDecoration = NavbarDecoration(
+        minWidth: 72.0,
+        minExtendedWidth: 200.0,
         borderRadius: BorderRadius.circular(20.0),
         selectedIconColor: theme.bottomNavigationBarTheme.selectedItemColor,
         margin: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
@@ -107,6 +129,10 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
         indicatorColor: theme.colorScheme.onBackground);
 
     NavbarDecoration navigationRailDefaultDecoration = NavbarDecoration(
+      minExtendedWidth: theme.navigationRailTheme.minExtendedWidth ??
+          widget.decoration!.minExtendedWidth,
+      minWidth:
+          theme.navigationRailTheme.minWidth ?? widget.decoration!.minWidth,
       backgroundColor: theme.navigationRailTheme.backgroundColor ??
           theme.colorScheme.surface,
       elevation: theme.navigationRailTheme.elevation,
@@ -293,6 +319,8 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
       if (widget.decoration != null) {
         navigationRailDefaultDecoration =
             navigationRailDefaultDecoration.copyWith(
+          minExtendedWidth: widget.decoration!.minExtendedWidth,
+          minWidth: widget.decoration!.minWidth,
           isExtended: widget.decoration!.isExtended,
           enableFeedback: widget.decoration!.enableFeedback,
           backgroundColor:
@@ -314,6 +342,8 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
       }
 
       return NavigationRail(
+          minExtendedWidth: navigationRailDefaultDecoration.minExtendedWidth,
+          minWidth: navigationRailDefaultDecoration.minWidth,
           elevation: navigationRailDefaultDecoration.elevation,
           onDestinationSelected: (x) {
             widget.onItemTapped(x);
@@ -344,6 +374,9 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
           selectedIndex: NavbarNotifier.currentIndex);
     }
 
+    // Todo: This should only be invoked when window size changes
+    //  if this can have any performance implication
+    setUpAnimation();
     return AnimatedBuilder(
         animation: animation,
         builder: (BuildContext context, Widget? child) {

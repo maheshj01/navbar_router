@@ -79,6 +79,7 @@ void main() {
 
   Widget boilerplate(
       {bool isDesktop = false,
+      Size? size,
       BackButtonBehavior behavior = BackButtonBehavior.exit,
       Map<int, Map<String, Widget>> navBarRoutes = routes,
       NavbarType type = NavbarType.standard,
@@ -87,11 +88,12 @@ void main() {
       Function()? onCurrentTabClicked,
       Function(int)? onChanged,
       List<NavbarItem> navBarItems = items}) {
+    size ??= const Size(800.0, 600.0);
     return MaterialApp(
       home: Directionality(
           textDirection: TextDirection.ltr,
           child: MediaQuery(
-              data: const MediaQueryData(size: Size(800.0, 600.0)),
+              data: MediaQueryData(size: size),
               child: NavbarRouter(
                 errorBuilder: (context) {
                   return const Center(child: Text('Error 404'));
@@ -475,6 +477,50 @@ void main() {
         expect(productDetail, findsNothing);
         expect(productDestination, findsOneWidget);
       });
+    });
+
+    testWidgets('NavbarDecoration can be set to NavigationRail in Desktop mode',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate(
+          isDesktop: true,
+          decoration: NavbarDecoration(
+            minExtendedWidth: 200,
+            isExtended: true,
+            navbarType: BottomNavigationBarType.shifting,
+            backgroundColor: Colors.blue,
+            elevation: 8.0,
+            indicatorColor: Colors.grey,
+            indicatorShape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+            ),
+            minWidth: 74,
+          )));
+
+      await tester.pumpAndSettle();
+      final navigationRail = (NavigationRail).typeX();
+      expect(navigationRail, findsOneWidget);
+      expect(find.byType(BottomNavigationBar), findsNothing);
+      final finder = find.byType(StandardNavbar);
+      expect(finder, findsNothing);
+      final NavigationRail navigationRailWidget =
+          tester.widget(navigationRail) as NavigationRail;
+      expect(navigationRailWidget.extended, true);
+      expect(navigationRailWidget.minExtendedWidth, 200);
+      expect(navigationRailWidget.backgroundColor, Colors.blue);
+      expect(navigationRailWidget.elevation, 8.0);
+      expect(navigationRailWidget.indicatorColor, Colors.grey);
+      expect(
+          navigationRailWidget.indicatorShape,
+          const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
+          ));
+      expect(navigationRailWidget.minWidth, 74);
     });
   });
 

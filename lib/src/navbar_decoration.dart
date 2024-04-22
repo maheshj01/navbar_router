@@ -56,6 +56,13 @@ class NavbarDecoration {
   /// defaults to false
   final bool isExtended;
 
+  /// The smallest possible width for the navbar when `NavbarRouter.isDesktop` is True, this width is regardless of the navbar's icon or label size.
+  /// The default is 72.
+  final double minWidth;
+
+  /// Width when `isExtended` is True, The default value is 256.
+  final double minExtendedWidth;
+
   /// The color of the unselected item
   final Color? unselectedItemColor;
 
@@ -120,6 +127,8 @@ class NavbarDecoration {
     this.navbarType,
     this.height = 80,
     this.margin,
+    this.minExtendedWidth = 256,
+    this.minWidth = 72,
     this.labelBehavior = NavigationDestinationLabelBehavior.alwaysShow,
     this.indicatorShape,
     this.showSelectedLabels,
@@ -143,6 +152,8 @@ class NavbarDecoration {
     Color? unselectedItemColor,
     double? elevation,
     double? height,
+    double? minWidth,
+    double? minExtendedWidth,
     Color? unselectedIconColor,
     bool? showUnselectedLabels,
     Color? unselectedLabelColor,
@@ -165,6 +176,8 @@ class NavbarDecoration {
         borderRadius: borderRadius ?? this.borderRadius,
         isExtended: isExtended ?? this.isExtended,
         margin: margin ?? this.margin,
+        minExtendedWidth: minExtendedWidth ?? this.minExtendedWidth,
+        minWidth: minWidth ?? this.minWidth,
         unselectedItemColor: unselectedItemColor ?? this.unselectedItemColor,
         elevation: elevation ?? this.elevation,
         unselectedIconColor: unselectedIconColor ?? this.unselectedIconColor,
@@ -194,6 +207,8 @@ class NavbarDecoration {
           isExtended == other.isExtended &&
           unselectedItemColor == other.unselectedItemColor &&
           elevation == other.elevation &&
+          minWidth == other.minWidth &&
+          minExtendedWidth == other.minExtendedWidth &&
           unselectedIconColor == other.unselectedIconColor &&
           selectedIconColor == other.selectedIconColor &&
           showUnselectedLabels == other.showUnselectedLabels &&
@@ -215,6 +230,8 @@ class NavbarDecoration {
       isExtended.hashCode ^
       unselectedItemColor.hashCode ^
       elevation.hashCode ^
+      minWidth.hashCode ^
+      minExtendedWidth.hashCode ^
       unselectedIconColor.hashCode ^
       selectedIconColor.hashCode ^
       showUnselectedLabels.hashCode ^

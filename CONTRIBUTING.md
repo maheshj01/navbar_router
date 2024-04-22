@@ -19,10 +19,11 @@ Contributing
 1. Fork This repo.
 2. Create a new branch.
 3. Commit a fix.
-4. Add appropriate tests(recommended).
-5. Submit a PR referencing the issue.
-6. Request a review.
-7. wait for LGTM 🚀 comment.
+4. Update the docs
+5. Add appropriate tests(recommended).
+6. Submit a PR referencing the issue.
+7. Request a review.
+8. wait for LGTM 🚀 comment.
 
 ### Publishing (Applicable for the maintainer of the repository)
 

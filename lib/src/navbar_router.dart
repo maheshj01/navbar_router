@@ -251,10 +251,13 @@ class _NavbarRouterState extends State<NavbarRouter>
 
   double getPadding() {
     if (widget.isDesktop) {
+      if (NavbarNotifier.isNavbarHidden) {
+        return 0;
+      }
       if (widget.decoration!.isExtended) {
-        return 256.0;
+        return widget.decoration!.minExtendedWidth;
       } else {
-        return 72.0;
+        return widget.decoration!.minWidth;
       }
     }
     return 0;
