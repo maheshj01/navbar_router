@@ -136,7 +136,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
       backgroundColor: theme.navigationRailTheme.backgroundColor ??
           theme.colorScheme.surface,
       elevation: theme.navigationRailTheme.elevation,
-      showUnselectedLabels: true,
+      showUnselectedLabels: widget.decoration!.showUnselectedLabels,
       selectedIconTheme: theme.navigationRailTheme.selectedIconTheme,
       enableFeedback: true,
       isExtended: true,
@@ -147,7 +147,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
       indicatorShape: theme.navigationRailTheme.indicatorShape,
       indicatorColor: theme.navigationRailTheme.indicatorColor,
       navbarType: BottomNavigationBarType.fixed,
-      showSelectedLabels: true,
+      showSelectedLabels: widget.decoration!.showSelectedLabels,
       labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
     );
 
@@ -348,6 +348,11 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
           onDestinationSelected: (x) {
             widget.onItemTapped(x);
           },
+          labelType: navigationRailDefaultDecoration.isExtended
+              ? NavigationRailLabelType.none
+              : navigationRailDefaultDecoration.showUnselectedLabels!
+                  ? NavigationRailLabelType.all
+                  : NavigationRailLabelType.selected,
           useIndicator: true,
           indicatorColor: navigationRailDefaultDecoration.indicatorColor ??
               theme.colorScheme.secondaryContainer,
