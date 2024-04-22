@@ -77,6 +77,7 @@ class NavbarDecoration {
   final Color? selectedIconColor;
 
   /// Whether or not to show the unselected label text
+  /// When in DesktopMode, either isExtended is False or showUnselectedLabels is True
   final bool showUnselectedLabels;
 
   /// The color of the unselected label text

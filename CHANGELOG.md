@@ -1,4 +1,4 @@
-## [0.7.4] April 30, 2023
+## [0.7.4] Unreleased
 
 - Expose NavigationRail properties
 
