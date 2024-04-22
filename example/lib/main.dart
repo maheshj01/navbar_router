@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:navbar_router/navbar_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(ProviderScope(
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
         animation: appSetting,
         builder: (BuildContext context, Widget? child) {
           return MaterialApp(
-              title: 'BottomNavbar Demo',
+              title: 'NavbarRouter Demo',
               routes: {
                 ProfileEdit.route: (context) => const ProfileEdit(),
               },
@@ -502,7 +503,6 @@ class _ProductListState extends ConsumerState<ProductList> {
   @override
   void initState() {
     super.initState();
-    print("productlist initState invoked");
   }
 
   @override
@@ -648,7 +648,14 @@ class _UserProfileState extends State<UserProfile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("profile initState invoked");
+  }
+
+  final Uri _url = Uri.parse('https://docs.maheshjamdade.com/navbar_router/');
+
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
+    }
   }
 
   @override
@@ -658,6 +665,11 @@ class _UserProfileState extends State<UserProfile> {
       appBar: AppBar(
           centerTitle: false,
           actions: [
+            IconButton(
+              tooltip: 'show  Docs',
+              icon: const Icon(Icons.edit_document),
+              onPressed: _launchUrl,
+            ),
             IconButton(
               key: iconKey,
               icon: const Icon(Icons.edit),
@@ -670,7 +682,7 @@ class _UserProfileState extends State<UserProfile> {
                     offset: offset,
                     transitionType: TransitionType.reveal);
               },
-            )
+            ),
           ],
           title: const Text('Hi User')),
       body: Center(
