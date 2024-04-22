@@ -267,8 +267,10 @@ class _HomePageState extends ConsumerState<HomePage> {
         type: NavbarType.floating,
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 200,
-        decoration: FloatingNavbarDecoration(
+        decoration: NavbarDecoration(
           height: 80,
+          minExtendedWidth: 226,
+          minWidth: 92,
           borderRadius: BorderRadius.circular(20),
           isExtended: size.width > 800 ? true : false,
           // labelTextStyle: const TextStyle(
