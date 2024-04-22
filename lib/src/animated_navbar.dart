@@ -348,9 +348,11 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
           onDestinationSelected: (x) {
             widget.onItemTapped(x);
           },
-          labelType: navigationRailDefaultDecoration.showUnselectedLabels!
-              ? NavigationRailLabelType.all
-              : NavigationRailLabelType.selected,
+          labelType: navigationRailDefaultDecoration.isExtended
+              ? NavigationRailLabelType.none
+              : navigationRailDefaultDecoration.showUnselectedLabels!
+                  ? NavigationRailLabelType.all
+                  : NavigationRailLabelType.selected,
           useIndicator: true,
           indicatorColor: navigationRailDefaultDecoration.indicatorColor ??
               theme.colorScheme.secondaryContainer,
