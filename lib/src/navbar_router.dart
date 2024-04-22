@@ -204,11 +204,14 @@ class _NavbarRouterState extends State<NavbarRouter>
       final navbaritem = widget.destinations[i].navbarItem;
       keys.add(GlobalKey<NavigatorState>());
       items.add(navbaritem);
-      badges.add(navbaritem.badge ?? const NavbarBadge());
+      badges.add(navbaritem.badge);
     }
+    NavbarNotifier.setKeys(keys);
+
     // set badge list here
-    NavbarNotifier.setKeys(keys, badgeList: badges);
+    NavbarNotifier.setBadges(badges);
     NavbarNotifier.hideBadgeOnPageChanged = widget.hideBadgeOnPageChanged;
+    
     if (!isUpdate) {
       initAnimation();
       NavbarNotifier.index = widget.initialIndex;

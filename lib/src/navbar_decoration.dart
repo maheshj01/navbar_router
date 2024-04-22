@@ -3,7 +3,10 @@ import 'package:navbar_router/navbar_router.dart';
 
 class NavbarItem {
   const NavbarItem(this.iconData, this.text,
-      {this.backgroundColor, this.child, this.selectedIcon, this.badge});
+      {this.backgroundColor,
+      this.child,
+      this.selectedIcon,
+      this.badge = const NavbarBadge()});
 
   /// IconData for the navbar item
   final IconData iconData;
@@ -23,7 +26,7 @@ class NavbarItem {
   final Widget? selectedIcon;
 
   /// Your initial badge configuration for this item, this is totally optional
-  final NavbarBadge? badge;
+  final NavbarBadge badge;
 
   @override
   bool operator ==(Object other) =>

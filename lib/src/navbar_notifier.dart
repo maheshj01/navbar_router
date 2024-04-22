@@ -44,8 +44,10 @@ class NavbarNotifier extends ChangeNotifier {
   static void updateBadge(int index, NavbarBadge badge) {
     if (index < 0 || index >= length) return;
     _badges[index] = badge;
-    // TODO: wonder if this will cause performance issue
-    NavbarNotifier.index = index;
+
+    // We don't navigate to that item when we update its badge. So cannot use this.
+    // NavbarNotifier.index = index;
+
     _singleton.notify();
   }
 
@@ -53,16 +55,16 @@ class NavbarNotifier extends ChangeNotifier {
   static void makeBadgeVisible(int index, bool visible) {
     if (index < 0 || index >= length) return;
     _badges[index] = _badges[index].copyWith(showBadge: visible);
-    _notifyIndexChangeListeners(index);
+
     _singleton.notify();
   }
 
-  /// Conveniently setup the badges if user choose to show them. Also the only place that init the badges.
-  ///
-  /// Will throw AssertionError if length of keys and given badgeList are not the same
-  static void setKeys(List<GlobalKey<NavigatorState>> value,
-      {List<NavbarBadge>? badgeList}) {
+  static void setKeys(List<GlobalKey<NavigatorState>> value) {
     _keys = value;
+  }
+
+  /// The only place that init the badges.
+  static void setBadges(List<NavbarBadge>? badgeList) {
     if (badgeList != null) {
       _badges = badgeList;
     }
