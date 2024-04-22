@@ -45,7 +45,7 @@ class NavbarNotifier extends ChangeNotifier {
     if (index < 0 || index >= length) return;
     _badges[index] = badge;
     // TODO: wonder if this will cause performance issue
-    _notifyIndexChangeListeners(index);
+    NavbarNotifier.index = index;
     _singleton.notify();
   }
 
