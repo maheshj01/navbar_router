@@ -13,6 +13,8 @@ NavbarRouter is a complete package to handle all your BottomNavigationBar needs.
 
 _Most of the features which this package provides are mainly to improve the user experience by handling the smallest things possible._
 
+See the [demo app here](https://navbar-router.netlify.app/)
+
 ## **Key Features**
 
 - Choose between different NavigationBar types.
