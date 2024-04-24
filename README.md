@@ -30,6 +30,7 @@ See the [demo app here](https://navbar-router.netlify.app/)
 - persist state across bottom navbar tabs.
 - Jump to base route from a deep nested route with a single tap(same as instagram).
 - Adapatable to different device Sizes.
+- Supports badges on the NavbarItems.
 
 ## Supports mulitple NavbarTypes
 
@@ -226,6 +227,27 @@ onBackButtonPressed: (isExitingApp) {
 ```
 
 <img src="https://miro.medium.com/max/600/1*NRszUNzsN-HDlDmeJP1IDQ.gif">
+
+## Adds Support for Animated Navbar Badges
+
+<img width="537" alt="image" src="https://github.com/maheshmnj/navbar_router/assets/31410839/6d8d28fa-e30c-498e-9216-91dc9b6765ea">
+
+![ScreenRecording2024-04-24at09 32 06-ezgif com-crop](https://github.com/maheshmnj/navbar_router/assets/31410839/d993f6cf-7f91-4f97-b453-fb4d3b18260e)
+
+```dart
+NavbarItem(Icons.home_outlined, 'Home',
+      backgroundColor: colors[0],
+      selectedIcon: const Icon(
+        Icons.home,
+        size: 26,
+      ),
+      badge: const NavbarBadge(
+        badgeText: "11",
+        showBadge: true,
+      )),
+```
+
+- Show or hide the badge using the `NavbarNotifier.makeBadgeVisible` and update using `NavbarNotifier.updateBadge` method from any part of the tree.
 
 ## Adapatable to different device Sizes
 
