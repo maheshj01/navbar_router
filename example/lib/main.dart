@@ -200,7 +200,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           builder: (context, child) {
             if (!appRef.showFAB || appRef.index < 2) {
               return Padding(
-                padding: EdgeInsets.only(bottom: kNavbarHeight),
+                padding: EdgeInsets.only(bottom: kNavbarHeight + 32.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -281,10 +281,10 @@ class _HomePageState extends ConsumerState<HomePage> {
         type: NavbarType.floating,
         destinationAnimationCurve: Curves.fastOutSlowIn,
         destinationAnimationDuration: 200,
-        decoration: NavbarDecoration(
+        decoration: FloatingNavbarDecoration(
           height: 80,
-          minExtendedWidth: 226,
-          minWidth: 92,
+          // minExtendedWidth: 226,
+          // minWidth: 92,
           borderRadius: BorderRadius.circular(20),
           isExtended: size.width > 800 ? true : false,
           // labelTextStyle: const TextStyle(
