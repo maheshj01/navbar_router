@@ -14,6 +14,7 @@ dependencies:
   url_launcher: ^6.2.6
   flutter:
     sdk: flutter
+  badges: ^3.1.2
 
 dev_dependencies:
   flutter_test:

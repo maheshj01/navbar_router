@@ -10,6 +10,45 @@ const double kFloatingNavbarHeight = 60.0;
 /// The height of the navbar based on the [NavbarType]
 double kNavbarHeight = 0.0;
 
+/// Function to build badges, using index and child from the [NavbarNotifier.badges] list (given by user)
+Widget buildBadge(
+  /// Current index of the navbar
+  int index,
+
+  /// The navbar icon
+  Widget child,
+) {
+  return badges.Badge(
+    key: NavbarNotifier.badges[index].key,
+    position: NavbarNotifier.badges[index].position ??
+        (NavbarNotifier.badges[index].badgeText.isNotEmpty
+            ? badges.BadgePosition.topEnd(top: -15, end: -15)
+            : badges.BadgePosition.topEnd()),
+    badgeAnimation: NavbarNotifier.badges[index].badgeAnimation ??
+        badges.BadgeAnimation.slide(
+          animationDuration: NavbarNotifier.badges[index].animationDuration,
+          // disappearanceFadeAnimationDuration: Duration(milliseconds: 200),
+          // curve: Curves.easeInCubic,
+        ),
+    ignorePointer: NavbarNotifier.badges[index].ignorePointer,
+    stackFit: NavbarNotifier.badges[index].stackFit,
+    onTap: NavbarNotifier.badges[index].onTap,
+    showBadge: NavbarNotifier.badges[index].showBadge,
+    badgeStyle: badges.BadgeStyle(
+      badgeColor: NavbarNotifier.badges[index].color ?? Colors.white,
+    ),
+    badgeContent: NavbarNotifier.badges[index].badgeContent ??
+        Text(
+          NavbarNotifier.badges[index].badgeText,
+          style: NavbarNotifier.badges[index].badgeTextStyle ??
+              TextStyle(
+                  color: NavbarNotifier.badges[index].textColor ?? Colors.black,
+                  fontSize: 9),
+        ),
+    child: child,
+  );
+}
+
 class _AnimatedNavBar extends StatefulWidget {
   const _AnimatedNavBar(
       {Key? key,
@@ -370,12 +409,13 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
           extended: navigationRailDefaultDecoration.isExtended,
           backgroundColor: navigationRailDefaultDecoration.backgroundColor ??
               theme.colorScheme.surface,
-          destinations: widget.menuItems.map((NavbarItem menuItem) {
-            return NavigationRailDestination(
-              icon: Icon(menuItem.iconData),
-              label: Text(menuItem.text),
-            );
-          }).toList(),
+          destinations: [
+            for (int i = 0; i < widget.menuItems.length; i++)
+              NavigationRailDestination(
+                icon: buildBadge(i, Icon(widget.menuItems[i].iconData)),
+                label: Text(widget.menuItems[i].text),
+              )
+          ],
           selectedIndex: NavbarNotifier.currentIndex);
     }
 
@@ -479,12 +519,13 @@ class StandardNavbarState extends State<StandardNavbar> {
             BottomNavigationBarItem(
               backgroundColor: items[index].backgroundColor,
               icon: _selectedIndex == index
-                  ? items[index].selectedIcon ??
-                      Icon(
-                        items[index].iconData,
-                      )
-                  : Icon(
-                      items[index].iconData,
+                  ? buildBadge(
+                      index,
+                      items[index].selectedIcon ?? Icon(items[index].iconData),
+                    )
+                  : buildBadge(
+                      index,
+                      Icon(items[index].iconData),
                     ),
               label: items[index].text,
             )
@@ -630,13 +671,15 @@ class NotchedNavBarState extends State<NotchedNavBar>
             ),
           ],
         ),
-        child: widget.menuItems[NavbarNotifier.currentIndex].selectedIcon ??
-            Icon(
-              widget.menuItems[NavbarNotifier.currentIndex].iconData,
-              color: widget.decoration.selectedIconColor,
-              size: (widget.decoration.selectedIconTheme?.size ?? 24.0) *
-                  scaleAnimation.value,
-            ));
+        child: buildBadge(
+            NavbarNotifier.currentIndex,
+            widget.menuItems[NavbarNotifier.currentIndex].selectedIcon ??
+                Icon(
+                  widget.menuItems[NavbarNotifier.currentIndex].iconData,
+                  color: widget.decoration.selectedIconColor,
+                  size: (widget.decoration.selectedIconTheme?.size ?? 24.0) *
+                      scaleAnimation.value,
+                )));
   }
 
   @override
@@ -689,6 +732,7 @@ class NotchedNavBarState extends State<NotchedNavBar>
                             alignment: Alignment.center,
                             height: 80,
                             child: MenuTile(
+                              index: i,
                               item: widget.menuItems[i],
                               decoration: widget.decoration,
                             ),
@@ -705,8 +749,13 @@ class NotchedNavBarState extends State<NotchedNavBar>
 class MenuTile extends StatelessWidget {
   final NavbarDecoration decoration;
   final NavbarItem item;
+  final int index;
 
-  const MenuTile({super.key, required this.item, required this.decoration});
+  const MenuTile(
+      {super.key,
+      required this.item,
+      required this.decoration,
+      required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -714,11 +763,13 @@ class MenuTile extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
-          item.iconData,
-          color:
-              decoration.unselectedIconColor ?? decoration.unselectedItemColor,
-        ),
+        buildBadge(
+            index,
+            Icon(
+              item.iconData,
+              color: decoration.unselectedIconColor ??
+                  decoration.unselectedItemColor,
+            )),
         const SizedBox(
           height: 6,
         ),
@@ -874,14 +925,18 @@ class M3NavBarState extends State<M3NavBar> {
             indicatorColor: widget.decoration.indicatorColor,
             indicatorShape: widget.decoration.indicatorShape,
             labelBehavior: widget.labelBehavior,
-            destinations: widget.items.map((e) {
-              return NavigationDestination(
-                tooltip: e.text,
-                icon: Icon(e.iconData),
-                label: e.text,
-                selectedIcon: e.selectedIcon ?? Icon(e.iconData),
-              );
-            }).toList(),
+            destinations: [
+              for (int i = 0; i < widget.items.length; i++)
+                NavigationDestination(
+                  tooltip: widget.items[i].text,
+                  icon: buildBadge(i, Icon(widget.items[i].iconData)),
+                  label: widget.items[i].text,
+                  selectedIcon: buildBadge(
+                      i,
+                      widget.items[i].selectedIcon ??
+                          Icon(widget.items[i].iconData)),
+                )
+            ],
             selectedIndex: NavbarNotifier.currentIndex,
             onDestinationSelected: (int index) => widget.onItemTapped!(index)),
       ),
@@ -1023,9 +1078,11 @@ class FloatingNavbarState extends State<FloatingNavbar> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 _selectedIndex == i
-                                    ? widget.items[i].selectedIcon ??
-                                        _unselectedIcon(i)
-                                    : _unselectedIcon(i),
+                                    ? buildBadge(
+                                        i,
+                                        widget.items[i].selectedIcon ??
+                                            _unselectedIcon(i))
+                                    : buildBadge(i, _unselectedIcon(i)),
                                 if (widget.decoration.showSelectedLabels! &&
                                     widget.index == i)
                                   Text(
