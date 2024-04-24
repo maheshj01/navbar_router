@@ -9,7 +9,7 @@ class AppController {
   final bool showFAB;
   final bool extended;
 
-  AppController({
+  const AppController({
     this.index = 0,
     this.showFAB = true,
     this.extended = true,
@@ -47,10 +47,12 @@ class AppController {
 
   String toJson() => json.encode(toMap());
 
-  factory AppController.fromJson(String source) => AppController.fromMap(json.decode(source));
+  factory AppController.fromJson(String source) =>
+      AppController.fromMap(json.decode(source));
 
   @override
-  String toString() => 'AppController(index: $index, showFAB: $showFAB, extended: $extended)';
+  String toString() =>
+      'AppController(index: $index, showFAB: $showFAB, extended: $extended)';
 
   @override
   bool operator ==(Object other) {

@@ -18,7 +18,7 @@ void main() {
 }
 
 final appProvider = StateNotifierProvider<AppNotifier, AppController>(
-    (ref) => AppNotifier(AppController(
+    (ref) => AppNotifier(const AppController(
           extended: false,
           index: 0,
           showFAB: true,
@@ -656,12 +656,6 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile> {
   final GlobalKey iconKey = GlobalKey();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
 
   final Uri _url = Uri.parse('https://docs.maheshjamdade.com/navbar_router/');
 
