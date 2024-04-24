@@ -169,7 +169,7 @@ void main() {
   }
 
   // function containing all badge tests and subtests
-  badgeGroupTest() {
+  badgeGroupTest({NavbarType type = NavbarType.standard}) {
     badges.Badge findBadge(tester, index) {
       return tester.widget(find.byKey(NavbarNotifier.badges[index].key!))
           as badges.Badge;
@@ -202,7 +202,7 @@ void main() {
     }
 
     desktopMode(tester) async {
-      await tester.pumpWidget(boilerplate(isDesktop: true));
+      await tester.pumpWidget(boilerplate(isDesktop: true, type: type));
       await tester.pumpAndSettle();
       expect(find.byType(NavigationRail), findsOneWidget);
       expect(find.byType(BottomNavigationBar), findsNothing);
@@ -698,7 +698,7 @@ void main() {
   group('Test NavbarType: NavbarType.notched ', () {
     group('NavbarType.notched: should build destination and navbar items', () {
       group('Badges test', () {
-        badgeGroupTest();
+        badgeGroupTest(type: NavbarType.notched);
       });
 
       testWidgets('navbar_router should build destinations',
@@ -1017,7 +1017,7 @@ void main() {
         'NavbarType.material3: should build destination and navbar items (Desktop)',
         () {
       group('Badges test', () {
-        badgeGroupTest();
+        badgeGroupTest(type: NavbarType.material3);
       });
       testWidgets('navbar_router should build destinations',
           (WidgetTester tester) async {
@@ -1561,7 +1561,7 @@ void main() {
 
   group('Test NavbarType: NavbarType.floating', () {
     group('Badges test', () {
-      badgeGroupTest();
+      badgeGroupTest(type: NavbarType.floating);
     });
     testWidgets('NavbarType can be changed during runtime', (tester) async {
       NavbarType type = NavbarType.notched;

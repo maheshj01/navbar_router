@@ -45,9 +45,6 @@ class NavbarNotifier extends ChangeNotifier {
     if (index < 0 || index >= length) return;
     _badges[index] = badge;
 
-    // We don't navigate to that item when we update its badge. So cannot use this.
-    // NavbarNotifier.index = index;
-
     _singleton.notify();
   }
 
