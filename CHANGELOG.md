@@ -3,7 +3,7 @@
 - Adds Support for Navbarbadges #[PR 43](https://github.com/maheshmnj/navbar_router/pull/43/)
 - Expose NavigationRail properties to NavbarRouter Part of [Issue #41](https://github.com/maheshmnj/navbar_router/issues/41)
 - Improve closing and opening of NavigationRail on Window resize/programmatically
-- Propagate NavbarItem updates to Navbar [Issue #38](https://github.com/maheshmnj/navbar_router/issues/38)
+<!-- - Propagate NavbarItem updates to Navbar [Issue #38](https://github.com/maheshmnj/navbar_router/issues/38) -->
 
 ## [0.7.3] Dec 30, 2023
 
