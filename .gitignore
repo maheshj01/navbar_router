@@ -34,3 +34,4 @@ example/pubspec.lock
 .dart_tool/
 .packages
 build/
+.vscode/
