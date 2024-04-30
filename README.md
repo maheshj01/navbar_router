@@ -1,6 +1,9 @@
 ## **navbar_router v0.7.4**
 
+<a href="https://github.com/maheshmnj/searchfield" rel="noopener" target="_blank"><img src="https://img.shields.io/badge/platform-flutter-ff69b4.svg" alt="Flutter Platform Badge"></a>
 <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
+[![Build](https://github.com/maheshmnj/navbar_router/actions/workflows/build.yml/badge.svg)](https://github.com/maheshmnj/navbar_router/actions/workflows/build.yml)
+<a href="https://opensource.org/licenses/MIT" rel="noopener" target="_blank"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="MIT License Badge"></a>
 
 ![Floating
   Navbar](https://github.com/maheshmnj/navbar_router/assets/31410839/7da504ae-4894-481c-a443-01a24fc61946)
