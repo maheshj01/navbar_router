@@ -1,4 +1,4 @@
-## **navbar_router v0.7.3**
+## **navbar_router v0.7.4**
 
 <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
 
@@ -266,7 +266,6 @@ NavbarItem(Icons.home_outlined, 'Home',
 ```
 
 <img src="https://github.com/maheshmnj/navbar_router/assets/31410839/2362187a-0a19-41a0-938c-214c103e64dd">
-
 
 For detailed description of all the features and properties please visit the [documentation](https://docs.maheshjamdade.com/navbar_router)
 

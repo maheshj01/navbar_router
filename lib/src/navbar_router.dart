@@ -196,7 +196,7 @@ class _NavbarRouterState extends State<NavbarRouter>
     initialize();
   }
 
-  void initialize({bool isUpdate = false}) {
+  void initialize() {
     NavbarNotifier.length = widget.destinations.length;
     // init badge
     List<NavbarBadge> badges = [];
@@ -211,12 +211,19 @@ class _NavbarRouterState extends State<NavbarRouter>
     // set badge list here
     NavbarNotifier.setBadges(badges);
     NavbarNotifier.hideBadgeOnPageChanged = widget.hideBadgeOnPageChanged;
-    
-    if (!isUpdate) {
-      initAnimation();
-      NavbarNotifier.index = widget.initialIndex;
-      // re-enable the initial badge that was hidden on setting NavbarNotifier.index
-      NavbarNotifier.makeBadgeVisible(NavbarNotifier.currentIndex, true);
+
+    // re-enable the initial badge that was hidden on setting NavbarNotifier.index
+    NavbarNotifier.makeBadgeVisible(NavbarNotifier.currentIndex, true);
+    initAnimation();
+    NavbarNotifier.index = widget.initialIndex;
+  }
+
+  void updateWidget() {
+    items.clear();
+    NavbarNotifier.length = widget.destinations.length;
+    for (int i = 0; i < NavbarNotifier.length; i++) {
+      final navbaritem = widget.destinations[i].navbarItem;
+      items.add(navbaritem);
     }
   }
 
@@ -249,6 +256,7 @@ class _NavbarRouterState extends State<NavbarRouter>
 
   @override
   void didUpdateWidget(covariant NavbarRouter oldWidget) {
+    super.didUpdateWidget(oldWidget);
     if (widget.destinationAnimationCurve !=
             oldWidget.destinationAnimationCurve ||
         widget.destinationAnimationDuration !=
@@ -258,10 +266,8 @@ class _NavbarRouterState extends State<NavbarRouter>
     if (widget.destinations.length != oldWidget.destinations.length ||
         widget.type != oldWidget.type ||
         !listEquals(oldWidget.destinations, widget.destinations)) {
-      clearInitialization();
-      initialize(isUpdate: true);
+      updateWidget();
     }
-    super.didUpdateWidget(oldWidget);
   }
 
   double getPadding() {

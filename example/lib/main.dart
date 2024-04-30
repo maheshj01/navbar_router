@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:developer';
 import 'dart:math' hide log;
 
@@ -103,44 +102,6 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  List<NavbarItem> items = [
-    NavbarItem(Icons.home_outlined, 'Home',
-        backgroundColor: colors[0],
-        selectedIcon: const Icon(
-          Icons.home,
-          size: 26,
-        ),
-        badge: const NavbarBadge(
-          badgeText: "11",
-          showBadge: true,
-        )),
-    NavbarItem(Icons.shopping_bag_outlined, 'Products',
-        backgroundColor: colors[1],
-        selectedIcon: const Icon(
-          Icons.shopping_bag,
-          size: 26,
-        ),
-        badge: const NavbarBadge(
-          badgeText: "8",
-          showBadge: true,
-        )),
-    NavbarItem(Icons.person_outline, 'Me',
-        backgroundColor: colors[2],
-        selectedIcon: const Icon(
-          Icons.person,
-          size: 26,
-        ),
-        // dot badge
-        badge: const NavbarBadge(
-            badgeText: "", showBadge: true, color: Colors.amber)),
-    NavbarItem(Icons.settings_outlined, 'Settings',
-        backgroundColor: colors[0],
-        selectedIcon: const Icon(
-          Icons.settings,
-          size: 26,
-        )),
-  ];
-
   final Map<int, Map<String, Widget>> _routes = const {
     0: {
       '/': HomeFeeds(),
@@ -164,14 +125,14 @@ class _HomePageState extends ConsumerState<HomePage> {
   DateTime newTime = DateTime.now();
 
   /// This is only for demo purposes
-  void simulateTabChange({int times = 2, int delayInMs = 1000}) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      for (int i = 0; i < items.length * times; i++) {
-        NavbarNotifier.index = i % items.length;
-        await Future.delayed(Duration(milliseconds: delayInMs));
-      }
-    });
-  }
+  // void simulateTabChange({int times = 2, int delayInMs = 1000}) {
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+  //     for (int i = 0; i < items.length * times; i++) {
+  //       NavbarNotifier.index = i % items.length;
+  //       await Future.delayed(Duration(milliseconds: delayInMs));
+  //     }
+  //   });
+  // }
 
   @override
   void initState() {
@@ -193,6 +154,33 @@ class _HomePageState extends ConsumerState<HomePage> {
     final size = MediaQuery.of(context).size;
     final appRef = ref.watch(appProvider);
 
+    List<NavbarItem> items = [
+      NavbarItem(Icons.home_outlined, 'Home',
+          backgroundColor: colors[0],
+          selectedIcon: const Icon(
+            Icons.home,
+            size: 26,
+          )),
+      NavbarItem(Icons.shopping_bag_outlined, 'Products',
+          backgroundColor: colors[1],
+          selectedIcon: const Icon(
+            Icons.shopping_bag,
+            size: 26,
+          )),
+      NavbarItem(Icons.person_outline, 'Me',
+          backgroundColor: colors[2],
+          selectedIcon: const Icon(
+            Icons.person,
+            size: 26,
+          )),
+      NavbarItem(Icons.settings_outlined, 'Settings',
+          backgroundColor: colors[0],
+          selectedIcon: Icon(
+            color: Theme.of(context).colorScheme.primary,
+            Icons.settings,
+            size: 26,
+          )),
+    ];
     return Scaffold(
       resizeToAvoidBottomInset: false,
       floatingActionButton: AnimatedBuilder(
@@ -663,6 +651,11 @@ class _UserProfileState extends State<UserProfile> {
     if (!await launchUrl(_url)) {
       throw Exception('Could not launch $_url');
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
