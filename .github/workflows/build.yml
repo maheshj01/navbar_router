@@ -21,6 +21,12 @@ jobs:
       - run: flutter clean
       - run: flutter pub get
       - run: flutter build web --release
+      - run: flutter test --coverage --coverage-path coverage/lcov.info
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: maheshmnj/navbar_router
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v1.1
         with:
@@ -35,9 +41,3 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         timeout-minutes: 1
-      - run: flutter test --coverage --coverage-path coverage/lcov.info
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4.0.1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: maheshmnj/navbar_router
