@@ -1,4 +1,4 @@
-## [0.7.4] Unreleased
+## [0.7.4] April 30, 2024
 
 - Adds Support for Navbarbadges #[PR 43](https://github.com/maheshmnj/navbar_router/pull/43/)
 - Expose NavigationRail properties to NavbarRouter Part of [Issue #41](https://github.com/maheshmnj/navbar_router/issues/41)

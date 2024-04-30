@@ -14,23 +14,31 @@ Thanks for taking you time to contribute to this repo. Before you start contribu
 
 - Additional changes for publishing a release. Update the version in readme, pubspec.yaml, and update the changelog
 
-Contributing
+### Contributing
 
-1. Fork This repo.
-2. Create a new branch.
-3. Commit a fix.
-4. Update the docs
-5. Add appropriate tests(recommended).
-6. Submit a PR referencing the issue.
-7. Request a review.
-8. wait for LGTM 🚀 comment.
+1. Fork This repo
+2. Create a new branch
+3. Commit a Fix
+4. Add appropriate tests(recommended)
+5. Submit a PR referencing the issue
+6. Request a review
+7. wait for LGTM 🚀 comment
 
-### Publishing (Applicable for the maintainer of the repository)
+### Publishing (Optional for contributors)
 
-When publishing a new release of this package make sure all the below points are done.
+This part is mainly applicable to the maintainer of the repository but you are welcome to make the below changes which are required to publish the package. When publishing a new release of this package ensure all the checklist are completed.
 
-- Update the version in readme, pubspec.yaml, and update the changelog.
-- make sure the documentation is updated as per the changes.
-- make sure existing and new tests are passing.
-- make sure the code is well formatted.
-- ensure the linter warnings are zero.
+- ✅ Update the version in readme, pubspec.yaml, and update the changelog
+- ✅ Make sure the documentation is updated as per the new changes.
+- ✅ Make sure existing and new tests are passing by running `flutter test`
+
+- (Optional) To see the code coverage run the following commands
+  ```bash
+  flutter test --coverage
+  genhtml coverage/lcov.info -o coverage/html
+  open coverage/html/index.html
+  ```
+- ✅ Make sure the code is well formatted.
+- ✅ ensure there are no linter warnings by running `flutter analyze`
+- ✅ Tag a package release in github [related to #Issue 103](https://github.com/maheshmnj/searchfield/issues/103)
+- ✅ Publish the package by running `flutter pub publish --dry-run` and `flutter pub publish`
