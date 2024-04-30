@@ -21,7 +21,7 @@ jobs:
       - run: flutter clean
       - run: flutter pub get
       - run: flutter build web --release
-      - run: flutter test --coverage --coverage-path coverage/lcov.info
+      - run: cd .. &&  flutter test --coverage --coverage-path coverage/lcov.info
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
