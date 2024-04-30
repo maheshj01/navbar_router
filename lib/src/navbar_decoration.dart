@@ -29,16 +29,23 @@ class NavbarItem {
   final NavbarBadge badge;
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is NavbarItem &&
-          runtimeType == other.runtimeType &&
-          iconData == other.iconData &&
-          text == other.text &&
-          child.runtimeType == other.child.runtimeType &&
-          selectedIcon.runtimeType == other.selectedIcon.runtimeType &&
-          backgroundColor == other.backgroundColor &&
-          badge == other.badge;
+  bool operator ==(Object other) {
+    bool result = other is NavbarItem &&
+        runtimeType == other.runtimeType &&
+        iconData == other.iconData &&
+        text == other.text &&
+        child.runtimeType == other.child.runtimeType &&
+        selectedIcon.runtimeType == other.selectedIcon.runtimeType &&
+        backgroundColor == other.backgroundColor &&
+        badge == other.badge;
+    if ((other as NavbarItem).selectedIcon.runtimeType == Icon && result) {
+      result = (selectedIcon as Icon).color ==
+              (other.selectedIcon as Icon).color &&
+          (selectedIcon as Icon).icon == (other.selectedIcon as Icon).icon &&
+          (selectedIcon as Icon).size == (other.selectedIcon as Icon).size;
+    }
+    return identical(this, other) || result;
+  }
 
   @override
   int get hashCode =>
