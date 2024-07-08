@@ -165,7 +165,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
         navbarType: BottomNavigationBarType.fixed,
         showSelectedLabels: true,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-        indicatorColor: theme.colorScheme.onBackground);
+        indicatorColor: theme.colorScheme.onSurface);
 
     NavbarDecoration navigationRailDefaultDecoration = NavbarDecoration(
       minExtendedWidth: theme.navigationRailTheme.minExtendedWidth ??
@@ -901,11 +901,10 @@ class M3NavBarState extends State<M3NavBar> {
             Theme.of(context).colorScheme.surface,
         elevation: widget.elevation,
         labelTextStyle:
-            MaterialStateProperty.all(widget.decoration.selectedLabelTextStyle),
+            WidgetStateProperty.all(widget.decoration.selectedLabelTextStyle),
         indicatorShape: widget.decoration.indicatorShape ??
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-        iconTheme:
-            MaterialStateProperty.all(widget.decoration.selectedIconTheme),
+        iconTheme: WidgetStateProperty.all(widget.decoration.selectedIconTheme),
         labelBehavior: widget.decoration.showUnselectedLabels
             ? NavigationDestinationLabelBehavior.alwaysShow
             : NavigationDestinationLabelBehavior.onlyShowSelected,
@@ -1019,12 +1018,12 @@ class FloatingNavbarState extends State<FloatingNavbar> {
           backgroundColor: widget.decoration.backgroundColor ??
               Theme.of(context).colorScheme.surface,
           elevation: widget.elevation,
-          labelTextStyle: MaterialStateProperty.all(
+          labelTextStyle: WidgetStateProperty.all(
               widget.decoration.selectedLabelTextStyle),
           indicatorShape: widget.decoration.indicatorShape ??
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
           iconTheme:
-              MaterialStateProperty.all(widget.decoration.selectedIconTheme),
+              WidgetStateProperty.all(widget.decoration.selectedIconTheme),
           labelBehavior: widget.decoration.showSelectedLabels!
               ? NavigationDestinationLabelBehavior.onlyShowSelected
               : NavigationDestinationLabelBehavior.alwaysShow,

@@ -281,7 +281,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           // indicatorShape: const RoundedRectangleBorder(
           //   borderRadius: BorderRadius.all(Radius.circular(20)),
           // ),
-          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+          backgroundColor:
+              Theme.of(context).colorScheme.surfaceContainerHighest,
           // indicatorColor: const Color.fromARGB(255, 176, 207, 233),
           // // iconTheme: const IconThemeData(color: Colors.indigo),
           // /// labelTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
