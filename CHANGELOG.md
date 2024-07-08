@@ -1,6 +1,7 @@
 ## [0.7.5] April 30, 2024
 
 - Fix Deprecation [Issue 49](https://github.com/maheshmnj/navbar_router/pull/49/)
+- Migrate example app to Flutter's Gradle plugins
 
 ## [0.7.4] April 30, 2024
 
