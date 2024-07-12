@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:navbar_router/navbar_router.dart';
 
@@ -99,9 +97,8 @@ class NavbarNotifier extends ChangeNotifier {
   // pop routes from the nested navigator stack and not the main stack
   // this is done based on the currentIndex of the bottom navbar
   // if the backButton is pressed on the initial route the app will be terminated
-  static FutureOr<bool> onBackButtonPressed(
-      {BackButtonBehavior behavior =
-          BackButtonBehavior.rememberHistory}) async {
+  static bool onBackButtonPressed(
+      {BackButtonBehavior behavior = BackButtonBehavior.rememberHistory}) {
     bool exitingApp = true;
     NavigatorState? currentState = _keys[_index!].currentState;
     if (currentState != null && currentState.canPop()) {

@@ -189,6 +189,8 @@ You can show a snackbar on top of the navbar by using the `NavbarNotifier.showSn
 
 ![snackbar](https://github.com/flutter/flutter/assets/31410839/b2c95c3b-45fa-474c-acee-6f48a051f8ef)
 
+Note: You will need to wrap your NavbarRouter within a builder for this to work see the [example](example/lib/main.dart) for more details.
+
 ```dart
 NavbarNotifier.showSnackBar(
   context,
