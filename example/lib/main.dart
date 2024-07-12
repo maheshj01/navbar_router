@@ -239,74 +239,76 @@ class _HomePageState extends ConsumerState<HomePage> {
             }
             return const SizedBox.shrink();
           }),
-      body: NavbarRouter(
-        errorBuilder: (context) {
-          return const Center(child: Text('Error 404'));
-        },
-        isDesktop: size.width > 600 ? true : false,
-        onBackButtonPressed: (isExitingApp) {
-          if (isExitingApp) {
-            newTime = DateTime.now();
-            int difference = newTime.difference(oldTime).inMilliseconds;
-            oldTime = newTime;
-            if (difference < 1000) {
-              NavbarNotifier.hideSnackBar(context);
-              return isExitingApp;
+      body: Builder(builder: (context) {
+        return NavbarRouter(
+          errorBuilder: (context) {
+            return const Center(child: Text('Error 404'));
+          },
+          isDesktop: size.width > 600 ? true : false,
+          onBackButtonPressed: (isExitingApp) {
+            if (isExitingApp) {
+              newTime = DateTime.now();
+              int difference = newTime.difference(oldTime).inMilliseconds;
+              oldTime = newTime;
+              if (difference < 1000) {
+                NavbarNotifier.hideSnackBar(context);
+                return isExitingApp;
+              } else {
+                final state = Scaffold.of(context);
+                NavbarNotifier.showSnackBar(
+                  context,
+                  "Tap back button again to exit",
+                  bottom: state.hasFloatingActionButton ? 0 : kNavbarHeight,
+                );
+                return false;
+              }
             } else {
-              final state = Scaffold.of(context);
-              NavbarNotifier.showSnackBar(
-                context,
-                "Tap back button again to exit",
-                bottom: state.hasFloatingActionButton ? 0 : kNavbarHeight,
-              );
-              return false;
+              return isExitingApp;
             }
-          } else {
-            return isExitingApp;
-          }
-        },
-        initialIndex: 0,
-        type: NavbarType.floating,
-        destinationAnimationCurve: Curves.fastOutSlowIn,
-        destinationAnimationDuration: 200,
-        decoration: FloatingNavbarDecoration(
-          height: 80,
-          // minExtendedWidth: 226,
-          // minWidth: 92,
-          borderRadius: BorderRadius.circular(20),
-          isExtended: size.width > 800 ? true : false,
-          // labelTextStyle: const TextStyle(
-          //     color: Color.fromARGB(255, 176, 207, 233), fontSize: 14),
-          // elevation: 3.0,
-          // indicatorShape: const RoundedRectangleBorder(
-          //   borderRadius: BorderRadius.all(Radius.circular(20)),
-          // ),
-          backgroundColor:
-              Theme.of(context).colorScheme.surfaceContainerHighest,
-          // indicatorColor: const Color.fromARGB(255, 176, 207, 233),
-          // // iconTheme: const IconThemeData(color: Colors.indigo),
-          // /// labelTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
-          // labelBehavior: NavigationDestinationLabelBehavior.alwaysShow
-        ),
-        onChanged: (x) {
-          ref.read(appProvider.notifier).setIndex(x);
-        },
-        backButtonBehavior: BackButtonBehavior.rememberHistory,
-        destinations: [
-          for (int i = 0; i < items.length; i++)
-            DestinationRouter(
-              navbarItem: items[i],
-              destinations: [
-                for (int j = 0; j < _routes[i]!.keys.length; j++)
-                  Destination(
-                    route: _routes[i]!.keys.elementAt(j),
-                    widget: _routes[i]!.values.elementAt(j),
-                  ),
-              ],
-              initialRoute: _routes[i]!.keys.first,
-            ),
-        ],
-      ),
+          },
+          initialIndex: 0,
+          type: NavbarType.floating,
+          destinationAnimationCurve: Curves.fastOutSlowIn,
+          destinationAnimationDuration: 200,
+          decoration: FloatingNavbarDecoration(
+            height: 80,
+            // minExtendedWidth: 226,
+            // minWidth: 92,
+            borderRadius: BorderRadius.circular(20),
+            isExtended: size.width > 800 ? true : false,
+            // labelTextStyle: const TextStyle(
+            //     color: Color.fromARGB(255, 176, 207, 233), fontSize: 14),
+            // elevation: 3.0,
+            // indicatorShape: const RoundedRectangleBorder(
+            //   borderRadius: BorderRadius.all(Radius.circular(20)),
+            // ),
+            backgroundColor:
+                Theme.of(context).colorScheme.surfaceContainerHighest,
+            // indicatorColor: const Color.fromARGB(255, 176, 207, 233),
+            // // iconTheme: const IconThemeData(color: Colors.indigo),
+            // /// labelTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
+            // labelBehavior: NavigationDestinationLabelBehavior.alwaysShow
+          ),
+          onChanged: (x) {
+            ref.read(appProvider.notifier).setIndex(x);
+          },
+          backButtonBehavior: BackButtonBehavior.rememberHistory,
+          destinations: [
+            for (int i = 0; i < items.length; i++)
+              DestinationRouter(
+                navbarItem: items[i],
+                destinations: [
+                  for (int j = 0; j < _routes[i]!.keys.length; j++)
+                    Destination(
+                      route: _routes[i]!.keys.elementAt(j),
+                      widget: _routes[i]!.values.elementAt(j),
+                    ),
+                ],
+                initialRoute: _routes[i]!.keys.first,
+              ),
+          ],
+        );
+      }),
     );
   }
 }
@@ -416,9 +418,10 @@ class FeedTile extends StatelessWidget {
             Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 alignment: Alignment.center,
-                child: Text(
-                  placeHolderText.substring(0, 200),
-                  textAlign: TextAlign.justify,
+                child: const Text(
+                  placeHolderText,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
                 ))
           ],
         ),

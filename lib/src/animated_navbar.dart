@@ -94,13 +94,15 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
   }
 
   void setUpAnimation() {
-    double offset = 75.0;
+    double offset = kNavbarHeight * 2;
     if (widget.isDesktop) {
       if (widget.decoration!.isExtended) {
         offset = widget.decoration!.minExtendedWidth;
       } else {
         offset = widget.decoration!.minWidth;
       }
+    } else {
+      offset += (widget.decoration!.margin?.vertical ?? 0) / 2;
     }
     animation = Tween(begin: 0.0, end: offset).animate(_controller);
   }
@@ -312,8 +314,9 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
               indicatorColor: widget.decoration!.indicatorColor ??
                   theme.colorScheme.secondaryContainer,
               labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-              indicatorShape: widget.decoration!.indicatorShape,
-              margin: widget.decoration!.margin,
+              indicatorShape: widget.decoration!.indicatorShape ??
+                  defaultDecoration.indicatorShape,
+              margin: widget.decoration!.margin ?? defaultDecoration.margin,
               showSelectedLabels: widget.decoration?.showSelectedLabels,
               selectedLabelTextStyle:
                   widget.decoration!.selectedLabelTextStyle ??
@@ -339,7 +342,7 @@ class _AnimatedNavBarState extends State<_AnimatedNavBar>
               items: widget.menuItems,
               onTap: widget.onItemTapped,
               borderRadius: widget.decoration!.borderRadius,
-              margin: widget.decoration!.margin,
+              margin: widget.decoration!.margin ?? defaultDecoration.margin,
               navBarElevation: defaultDecoration.elevation,
             );
           }
@@ -1018,8 +1021,8 @@ class FloatingNavbarState extends State<FloatingNavbar> {
           backgroundColor: widget.decoration.backgroundColor ??
               Theme.of(context).colorScheme.surface,
           elevation: widget.elevation,
-          labelTextStyle: WidgetStateProperty.all(
-              widget.decoration.selectedLabelTextStyle),
+          labelTextStyle:
+              WidgetStateProperty.all(widget.decoration.selectedLabelTextStyle),
           indicatorShape: widget.decoration.indicatorShape ??
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
           iconTheme:

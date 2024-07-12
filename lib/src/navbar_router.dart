@@ -338,12 +338,16 @@ class _NavbarRouterState extends State<NavbarRouter>
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async {
-          final bool isExitingApp = await NavbarNotifier.onBackButtonPressed(
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (bool didPop) async {
+          if (didPop) {
+            return;
+          }
+          final bool isExitingApp = NavbarNotifier.onBackButtonPressed(
               behavior: widget.backButtonBehavior);
-          final bool value = widget.onBackButtonPressed!(isExitingApp);
-          return value;
+          widget.onBackButtonPressed!(isExitingApp);
+          _handleFadeAnimation();
         },
         child: AnimatedBuilder(
             animation: _navbarNotifier,

@@ -1,4 +1,4 @@
-## **navbar_router v0.7.4**
+## **navbar_router v0.7.5**
 
 <a href="https://github.com/maheshmnj/searchfield" rel="noopener" target="_blank"><img src="https://img.shields.io/badge/platform-flutter-ff69b4.svg" alt="Flutter Platform Badge"></a>
 <a href="https://pub.dev/packages/navbar_router"><img src="https://img.shields.io/pub/v/navbar_router.svg" alt="Pub"></a>
@@ -188,6 +188,8 @@ You can hide or show bottom navigationBar with a single line of code from anywhe
 You can show a snackbar on top of the navbar by using the `NavbarNotifier.showSnackBar` method.
 
 ![snackbar](https://github.com/flutter/flutter/assets/31410839/b2c95c3b-45fa-474c-acee-6f48a051f8ef)
+
+Note: You will need to wrap your NavbarRouter within a builder for this to work see the [example](example/lib/main.dart) for more details.
 
 ```dart
 NavbarNotifier.showSnackBar(
