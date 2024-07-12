@@ -343,6 +343,7 @@ class _NavbarRouterState extends State<NavbarRouter>
           final bool isExitingApp = await NavbarNotifier.onBackButtonPressed(
               behavior: widget.backButtonBehavior);
           final bool value = widget.onBackButtonPressed!(isExitingApp);
+          _handleFadeAnimation();
           return value;
         },
         child: AnimatedBuilder(
