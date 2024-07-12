@@ -418,12 +418,10 @@ class FeedTile extends StatelessWidget {
             Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 alignment: Alignment.center,
-                child: const Flexible(
-                  child: Text(
-                    placeHolderText,
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                child: const Text(
+                  placeHolderText,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
                 ))
           ],
         ),
