@@ -1,4 +1,4 @@
-## [0.7.5] April 30, 2024
+## [0.7.5] July 12, 2024
 
 - Migrate WillPopScope to PopScope [Issue 48](https://github.com/maheshmnj/navbar_router/pull/48/)
 - Fix Deprecation [Issue 49](https://github.com/maheshmnj/navbar_router/pull/49/)
