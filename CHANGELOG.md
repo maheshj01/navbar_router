@@ -1,9 +1,10 @@
 ## [0.7.5] April 30, 2024
 
-- Migrate WillPopScope to PopScope [Issue 48](https://github.com/maheshmnj/navbar_router/pull/51/)
+- Migrate WillPopScope to PopScope [Issue 48](https://github.com/maheshmnj/navbar_router/pull/48/)
 - Fix Deprecation [Issue 49](https://github.com/maheshmnj/navbar_router/pull/49/)
 - Migrate example app to Flutter's Gradle plugins
 - Fix: Navbar Destination not updating on backbutton press [Issue 51](https://github.com/maheshmnj/navbar_router/pull/51/)
+- docs: Navbar Router should be wrapped in builder for Snackbar to work
 
 ## [0.7.4] April 30, 2024
 
