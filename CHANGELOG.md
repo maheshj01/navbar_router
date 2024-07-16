@@ -1,3 +1,7 @@
+## [0.7.6] Unreleased
+
+- Back button should call indexChangeListener [Issue #53](https://github.com/maheshmnj/navbar_router/issues/53)
+
 ## [0.7.5] July 12, 2024
 
 - Migrate WillPopScope to PopScope [Issue 48](https://github.com/maheshmnj/navbar_router/pull/48/)
