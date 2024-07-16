@@ -108,7 +108,7 @@ class NavbarNotifier extends ChangeNotifier {
       if (behavior == BackButtonBehavior.rememberHistory) {
         if (_navbarStackHistory.length > 1) {
           _navbarStackHistory.removeLast();
-          _index = _navbarStackHistory.last;
+          index = _navbarStackHistory.last;
           _singleton.notify();
           exitingApp = false;
         } else {

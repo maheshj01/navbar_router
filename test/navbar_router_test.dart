@@ -583,6 +583,26 @@ void main() {
         await triggerBackButton(tester);
         expect(NavbarNotifier.stackHistory, equals([0]));
       });
+
+    // This
+      // testWidgets('back button should trigger IndexChangeListener',
+      //     (WidgetTester tester) async {
+      //   int index = 0;
+      //   await tester.pumpWidget(boilerplate());
+      //   NavbarNotifier.addIndexChangeListener((x) {
+      //     index = x;
+      //   });
+      //   NavbarNotifier.index = 1;
+      //   expect(index, 1);
+      //   expect(NavbarNotifier.stackHistory, equals([0, 1]));
+      //   await triggerBackButton(tester);
+      //   expect(index, 0);
+      //   expect(NavbarNotifier.stackHistory, equals([0]));
+      //   NavbarNotifier.removeLastListener();
+      //   NavbarNotifier.index = 3;
+      //   expect(index, 2);
+      //   expect(NavbarNotifier.stackHistory, equals([0, 2]));
+      // });
     });
 
     group('NavbarType.standard: Should Pop routes Programmatically', () {
