@@ -584,7 +584,7 @@ void main() {
         expect(NavbarNotifier.stackHistory, equals([0]));
       });
 
-    // This
+      // This testing is not triggering indexChangeListner on back press
       // testWidgets('back button should trigger IndexChangeListener',
       //     (WidgetTester tester) async {
       //   int index = 0;
