@@ -1,7 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, avoid_print
 
 import 'package:badges/badges.dart' as badges;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -221,27 +220,7 @@ class _NavbarRouterState extends State<NavbarRouter>
     initAnimation();
     NavbarNotifier.index = widget.initialIndex;
     _pageController = ScrollController();
-    _pageController.addListener(
-      () {
-        // if (!mounted) return;
-        // print(_pageController.offset);
 
-        // var page = getPageFromPixels(context);
-        // // print(page);
-        // if ((page.round() - page).abs() < 0.2 &&
-        //     page.round() != NavbarNotifier.currentIndex) {
-        //   // if ((page.round() - NavbarNotifier.currentIndex).abs() == 1) {
-        //   //   if ((page - NavbarNotifier.currentIndex).abs() > 0.3) return;
-        //   // }
-        //   int value = page.round();
-        //   NavbarNotifier.index = value;
-        //   if (widget.onChanged != null) {
-        //     widget.onChanged!(value);
-        //   }
-        //   _handleFadeAnimation();
-        // }
-      },
-    );
     NavbarNotifier.addIndexChangeListener(
       (newIndex) {
         if (!mounted) return;
@@ -415,7 +394,7 @@ class _NavbarRouterState extends State<NavbarRouter>
                           return KeepAliveWrapper(
                             child: NotificationListener<OverscrollNotification>(
                                 onNotification: (OverscrollNotification value) {
-                                  // print(value.metrics.pixels);
+                                  print(value.overscroll);
                                   if (value.overscroll < 0 &&
                                       _pageController.offset +
                                               value.overscroll <=
@@ -437,14 +416,20 @@ class _NavbarRouterState extends State<NavbarRouter>
                                     }
                                     return true;
                                   }
-                                  _pageController.jumpTo(
-                                      _pageController.offset +
-                                          value.overscroll);
+                                  if (value.overscroll.abs() < 0.1) {
+                                    _pageController.jumpTo(
+                                        _pageController.offset +
+                                            value.overscroll);
+                                  } else {
+                                    _pageController.animateTo(
+                                        getPixelsFromPage(
+                                            NavbarNotifier.currentIndex),
+                                        duration: Durations.short2,
+                                        curve: Curves.ease);
+                                  }
                                   return true;
                                 },
-                                child: Container(
-                                    // color:
-                                    //     Colors.blueAccent.withOpacity(0.5),
+                                child: SizedBox(
                                     width: MediaQuery.of(context).size.width -
                                         getPadding(),
                                     child: _buildIndexedStackItem(i, context))),
@@ -533,7 +518,7 @@ class _NavbarRouterState extends State<NavbarRouter>
                         onDragEnd(details);
                       },
                       child: Container(
-                        color: Colors.blueAccent.withOpacity(0.5),
+                        color: Colors.blueAccent.withOpacity(0.3),
                       ),
                     ),
                   )

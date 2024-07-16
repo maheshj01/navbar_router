@@ -75,6 +75,9 @@ class NavbarNotifier extends ChangeNotifier {
     if (_navbarStackHistory.contains(x)) {
       _navbarStackHistory.remove(x);
     }
+
+    // just my suggestion
+    hideBottomNavBar = false;
     _navbarStackHistory.add(x);
     _notifyIndexChangeListeners(x);
     _singleton.notify();
@@ -108,6 +111,8 @@ class NavbarNotifier extends ChangeNotifier {
       if (behavior == BackButtonBehavior.rememberHistory) {
         if (_navbarStackHistory.length > 1) {
           _navbarStackHistory.removeLast();
+
+          // fix issue #53
           index = _navbarStackHistory.last;
           _singleton.notify();
           exitingApp = false;

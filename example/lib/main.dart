@@ -521,7 +521,9 @@ class _ProductListState extends ConsumerState<ProductList> {
           itemCount: 5,
           controller: _scrollController,
           itemBuilder: (context, index) {
-            return Padding(
+            return Container(
+              height: 200,
+              color: Colors.redAccent.shade100,
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                   onTap: () {
