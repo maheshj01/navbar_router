@@ -399,7 +399,7 @@ class FeedTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
+      height: 400,
       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
       color: Theme.of(context).colorScheme.surface,
       child: Card(
@@ -517,6 +517,8 @@ class _ProductListState extends ConsumerState<ProductList> {
         title: const Text('Products'),
       ),
       body: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
           controller: _scrollController,
           itemBuilder: (context, index) {
             return Padding(
@@ -552,6 +554,7 @@ class ProductTile extends StatelessWidget {
     return Card(
       child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
+          width: MediaQuery.of(context).size.width,
           height: 120,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

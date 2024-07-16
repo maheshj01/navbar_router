@@ -1,6 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:badges/badges.dart' as badges;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'package:navbar_router/navbar_router.dart';
 
 part 'animated_navbar.dart';
@@ -216,6 +220,46 @@ class _NavbarRouterState extends State<NavbarRouter>
     NavbarNotifier.makeBadgeVisible(NavbarNotifier.currentIndex, true);
     initAnimation();
     NavbarNotifier.index = widget.initialIndex;
+    _pageController = ScrollController();
+    _pageController.addListener(
+      () {
+        // if (!mounted) return;
+        // print(_pageController.offset);
+
+        // var page = getPageFromPixels(context);
+        // // print(page);
+        // if ((page.round() - page).abs() < 0.2 &&
+        //     page.round() != NavbarNotifier.currentIndex) {
+        //   // if ((page.round() - NavbarNotifier.currentIndex).abs() == 1) {
+        //   //   if ((page - NavbarNotifier.currentIndex).abs() > 0.3) return;
+        //   // }
+        //   int value = page.round();
+        //   NavbarNotifier.index = value;
+        //   if (widget.onChanged != null) {
+        //     widget.onChanged!(value);
+        //   }
+        //   _handleFadeAnimation();
+        // }
+      },
+    );
+    NavbarNotifier.addIndexChangeListener(
+      (newIndex) {
+        if (!mounted) return;
+        // print(newIndex);
+
+        _pageController.animateTo(getPixelsFromPage(newIndex),
+            duration: Durations.medium1, curve: Curves.ease);
+      },
+    );
+  }
+
+  double getPageFromPixels(context) {
+    return _pageController.offset /
+        (MediaQuery.of(context).size.width - getPadding());
+  }
+
+  double getPixelsFromPage(int page) {
+    return (MediaQuery.of(context).size.width - getPadding()) * page;
   }
 
   void updateWidget() {
@@ -231,7 +275,7 @@ class _NavbarRouterState extends State<NavbarRouter>
     fadeAnimation = items.map<AnimationController>((NavbarItem item) {
       return AnimationController(
           vsync: this,
-          value: item == items[widget.initialIndex] ? 1.0 : 0.0,
+          value: item == items[widget.initialIndex] ? 1.0 : 1,
           duration:
               Duration(milliseconds: widget.destinationAnimationDuration));
     }).toList();
@@ -336,6 +380,10 @@ class _NavbarRouterState extends State<NavbarRouter>
     }
   }
 
+  int pageViewIndex = 0;
+  late ScrollController _pageController;
+  bool dragging = false;
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -358,10 +406,53 @@ class _NavbarRouterState extends State<NavbarRouter>
                     /// same duration as [_AnimatedNavbar]'s animation duration
                     duration: const Duration(milliseconds: 500),
                     padding: EdgeInsets.only(left: getPadding()),
-                    child: Stack(children: [
-                      for (int i = 0; i < NavbarNotifier.length; i++)
-                        _buildIndexedStackItem(i, context)
-                    ]),
+                    child: ListView.builder(
+                        itemCount: NavbarNotifier.length,
+                        scrollDirection: Axis.horizontal,
+                        physics: const NeverScrollableScrollPhysics(),
+                        controller: _pageController,
+                        itemBuilder: (context, i) {
+                          return KeepAliveWrapper(
+                            child: NotificationListener<OverscrollNotification>(
+                                onNotification: (OverscrollNotification value) {
+                                  // print(value.metrics.pixels);
+                                  if (value.overscroll < 0 &&
+                                      _pageController.offset +
+                                              value.overscroll <=
+                                          0) {
+                                    if (_pageController.offset != 0) {
+                                      _pageController.jumpTo(0);
+                                    }
+                                    return true;
+                                  }
+                                  if (_pageController.offset +
+                                          value.overscroll >=
+                                      _pageController
+                                          .position.maxScrollExtent) {
+                                    if (_pageController.offset !=
+                                        _pageController
+                                            .position.maxScrollExtent) {
+                                      _pageController.jumpTo(_pageController
+                                          .position.maxScrollExtent);
+                                    }
+                                    return true;
+                                  }
+                                  _pageController.jumpTo(
+                                      _pageController.offset +
+                                          value.overscroll);
+                                  return true;
+                                },
+                                child: Container(
+                                    // color:
+                                    //     Colors.blueAccent.withOpacity(0.5),
+                                    width: MediaQuery.of(context).size.width -
+                                        getPadding(),
+                                    child: _buildIndexedStackItem(i, context))),
+                          );
+                        }),
+                    // Stack(children: [
+
+                    // ]),
                   ),
                   Positioned(
                     left: 0,
@@ -387,21 +478,144 @@ class _NavbarRouterState extends State<NavbarRouter>
                                   NavbarNotifier.currentIndex, false);
                             }
                           } else {
-                            NavbarNotifier.index = x;
-                            if (widget.onChanged != null) {
-                              widget.onChanged!(x);
+                            // NavbarNotifier.index = x;
+                            // if (widget.onChanged != null) {
+                            //   widget.onChanged!(x);
+                            // }
+                            // _handleFadeAnimation();
+                            if ((x - NavbarNotifier.currentIndex).abs() > 1) {
+                              _pageController.jumpTo(
+                                getPixelsFromPage(x),
+                              );
+                            } else {
+                              _pageController.animateTo(getPixelsFromPage(x),
+                                  duration: Durations.extralong1,
+                                  curve: Curves.ease);
                             }
-                            _handleFadeAnimation();
                           }
                         },
                         menuItems: items),
                   ),
+                  Positioned(
+                    top: 50,
+                    width: 50,
+                    height: MediaQuery.of(context).size.height * 0.8,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onHorizontalDragStart: (details) {
+                        onDragStart(details);
+                      },
+                      onHorizontalDragUpdate: (details) {
+                        onDragUpdate(details);
+                      },
+                      onHorizontalDragEnd: (details) {
+                        onDragEnd(details);
+                      },
+                      child: Container(
+                        color: Colors.blueAccent.withOpacity(0.5),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 50,
+                    right: 0,
+                    width: 50,
+                    height: MediaQuery.of(context).size.height * 0.8,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onHorizontalDragStart: (details) {
+                        onDragStart(details);
+                      },
+                      onHorizontalDragUpdate: (details) {
+                        onDragUpdate(details);
+                      },
+                      onHorizontalDragEnd: (details) {
+                        onDragEnd(details);
+                      },
+                      child: Container(
+                        color: Colors.blueAccent.withOpacity(0.5),
+                      ),
+                    ),
+                  )
                 ],
               );
             }));
+  }
+
+  onDragStart(details) {
+    if (dragging) return;
+    if (details.localPosition.dx < 100 ||
+        details.localPosition.dx > MediaQuery.of(context).size.width - 100) {
+      dragging = true;
+    }
+  }
+
+  onDragUpdate(DragUpdateDetails details) {
+    print(details.delta);
+    if (dragging) {
+      if (!mounted) return;
+
+      var page = getPageFromPixels(context);
+      // print(page);
+      if ((page == 0 && details.delta.dx > 0.1) ||
+          (page >= NavbarNotifier.length - 1 && details.delta.dx < -0.1)) {
+        return;
+      }
+      _pageController.jumpTo(_pageController.offset - details.delta.dx);
+    }
+  }
+
+  onDragEnd(details) {
+    if (!mounted) {
+      dragging = false;
+      return;
+    }
+    print(_pageController.offset);
+
+    var page = getPageFromPixels(context);
+    print(page);
+    int value = page.round();
+    if (value < 0) {
+      _pageController.animateTo(_pageController.position.minScrollExtent,
+          duration: Durations.long1, curve: Curves.ease);
+    } else if (value >= NavbarNotifier.length) {
+      _pageController.animateTo(_pageController.position.maxScrollExtent,
+          duration: Durations.long1, curve: Curves.ease);
+    } else {
+      NavbarNotifier.index = value;
+      if (widget.onChanged != null) {
+        widget.onChanged!(value);
+      }
+      _handleFadeAnimation();
+    }
+
+    dragging = false;
   }
 }
 
 final NavbarNotifier _navbarNotifier = NavbarNotifier();
 List<Color> colors = [mediumPurple, Colors.orange, Colors.teal];
 const Color mediumPurple = Color.fromRGBO(79, 0, 241, 1.0);
+
+class KeepAliveWrapper extends StatefulWidget {
+  final Widget child;
+  const KeepAliveWrapper({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+  @override
+  KeepAliveWrapperState createState() => KeepAliveWrapperState();
+}
+
+class KeepAliveWrapperState extends State<KeepAliveWrapper>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
+  }
+
+  // Setting to true will force the tab to never be disposed. This could be dangerous.
+  @override
+  bool get wantKeepAlive => true;
+}
