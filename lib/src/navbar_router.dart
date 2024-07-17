@@ -1,10 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, avoid_print
 
+import 'dart:math';
+
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:navbar_router/navbar_router.dart';
+import 'package:navbar_router/src/navbar_swipeable_utls.dart';
 
 part 'animated_navbar.dart';
 
@@ -155,6 +158,23 @@ class NavbarRouter extends StatefulWidget {
   /// Set to true will hide the badges when the tap on the navbar icon.
   final bool hideBadgeOnPageChanged;
 
+  /// Set to true will opt-in to horizontally swipeable navigation bar.
+  final bool swipeable;
+
+  /// Configure the swipeable area on the left edge of the screen
+  ///
+  /// By default, it will be: center aligned, width = 50 pixels, top = 50 pixels, height = 0.8 x screen height
+  ///
+  /// Only take effect if **[swipeable]** is set to true
+  final Rect? swipeableLeftArea;
+
+  /// Configure the swipeable area on the right edge of the screen
+  ///
+  /// By default, it will be: center aligned, width = 50 pixels, top = 50 pixels, height = 0.8 x screen height
+  ///
+  /// Only take effect if **[swipeable]** is set to true
+  final Rect? swipeableRightArea;
+
   /// Take a look at the [readme](https://github.com/maheshmnj/navbar_router) for more information on how to use this package.
   ///
   /// Please help me improve this package.
@@ -165,6 +185,9 @@ class NavbarRouter extends StatefulWidget {
   ///
   const NavbarRouter(
       {Key? key,
+      this.swipeable = false,
+      this.swipeableLeftArea,
+      this.swipeableRightArea,
       required this.destinations,
       required this.errorBuilder,
       this.shouldPopToBaseRoute = true,
@@ -219,15 +242,21 @@ class _NavbarRouterState extends State<NavbarRouter>
     NavbarNotifier.makeBadgeVisible(NavbarNotifier.currentIndex, true);
     initAnimation();
     NavbarNotifier.index = widget.initialIndex;
-    _pageController = ScrollController();
+    _pageController = PageController(initialPage: widget.initialIndex);
 
     NavbarNotifier.addIndexChangeListener(
       (newIndex) {
         if (!mounted) return;
         // print(newIndex);
 
-        _pageController.animateTo(getPixelsFromPage(newIndex),
-            duration: Durations.medium1, curve: Curves.ease);
+        if (widget.swipeable) {
+          _pageController.animateTo(getPixelsFromPage(newIndex),
+              duration: Durations.long1, curve: Curves.ease);
+        } else {
+          _pageController.jumpTo(
+            getPixelsFromPage(newIndex),
+          );
+        }
       },
     );
   }
@@ -254,7 +283,7 @@ class _NavbarRouterState extends State<NavbarRouter>
     fadeAnimation = items.map<AnimationController>((NavbarItem item) {
       return AnimationController(
           vsync: this,
-          value: item == items[widget.initialIndex] ? 1.0 : 1,
+          value: item == items[widget.initialIndex] ? 1.0 : 0,
           duration:
               Duration(milliseconds: widget.destinationAnimationDuration));
     }).toList();
@@ -359,8 +388,9 @@ class _NavbarRouterState extends State<NavbarRouter>
     }
   }
 
+  // Swipeable page
   int pageViewIndex = 0;
-  late ScrollController _pageController;
+  late PageController _pageController;
   bool dragging = false;
 
   @override
@@ -374,6 +404,12 @@ class _NavbarRouterState extends State<NavbarRouter>
           final bool isExitingApp = NavbarNotifier.onBackButtonPressed(
               behavior: widget.backButtonBehavior);
           widget.onBackButtonPressed!(isExitingApp);
+
+          // callback onchange when going back the route stack
+          if (widget.backButtonBehavior == BackButtonBehavior.rememberHistory &&
+              widget.onChanged != null) {
+            widget.onChanged!(NavbarNotifier.currentIndex);
+          }
           _handleFadeAnimation();
         },
         child: AnimatedBuilder(
@@ -392,52 +428,16 @@ class _NavbarRouterState extends State<NavbarRouter>
                         controller: _pageController,
                         itemBuilder: (context, i) {
                           return KeepAliveWrapper(
+                            keepAlive: true,
                             child: NotificationListener<OverscrollNotification>(
-                                onNotification: (OverscrollNotification value) {
-                                  print(value.overscroll);
-                                  if (value.overscroll < 0 &&
-                                      _pageController.offset +
-                                              value.overscroll <=
-                                          0) {
-                                    if (_pageController.offset != 0) {
-                                      _pageController.jumpTo(0);
-                                    }
-                                    return true;
-                                  }
-                                  if (_pageController.offset +
-                                          value.overscroll >=
-                                      _pageController
-                                          .position.maxScrollExtent) {
-                                    if (_pageController.offset !=
-                                        _pageController
-                                            .position.maxScrollExtent) {
-                                      _pageController.jumpTo(_pageController
-                                          .position.maxScrollExtent);
-                                    }
-                                    return true;
-                                  }
-                                  if (value.overscroll.abs() < 0.1) {
-                                    _pageController.jumpTo(
-                                        _pageController.offset +
-                                            value.overscroll);
-                                  } else {
-                                    _pageController.animateTo(
-                                        getPixelsFromPage(
-                                            NavbarNotifier.currentIndex),
-                                        duration: Durations.short2,
-                                        curve: Curves.ease);
-                                  }
-                                  return true;
-                                },
+                                onNotification:
+                                    widget.swipeable ? handleOverscroll : null,
                                 child: SizedBox(
                                     width: MediaQuery.of(context).size.width -
                                         getPadding(),
                                     child: _buildIndexedStackItem(i, context))),
                           );
                         }),
-                    // Stack(children: [
-
-                    // ]),
                   ),
                   Positioned(
                     left: 0,
@@ -463,28 +463,25 @@ class _NavbarRouterState extends State<NavbarRouter>
                                   NavbarNotifier.currentIndex, false);
                             }
                           } else {
-                            // NavbarNotifier.index = x;
-                            // if (widget.onChanged != null) {
-                            //   widget.onChanged!(x);
-                            // }
-                            // _handleFadeAnimation();
-                            if ((x - NavbarNotifier.currentIndex).abs() > 1) {
-                              _pageController.jumpTo(
-                                getPixelsFromPage(x),
-                              );
-                            } else {
-                              _pageController.animateTo(getPixelsFromPage(x),
-                                  duration: Durations.extralong1,
-                                  curve: Curves.ease);
+                            NavbarNotifier.index = x;
+                            if (widget.onChanged != null) {
+                              widget.onChanged!(x);
                             }
+                            _handleFadeAnimation();
                           }
                         },
                         menuItems: items),
                   ),
-                  Positioned(
-                    top: 50,
-                    width: 50,
-                    height: MediaQuery.of(context).size.height * 0.8,
+                  Positioned.fromRect(
+                    rect: !widget.swipeable
+                        ? Rect.zero
+                        : widget.swipeableLeftArea ??
+                            Rect.fromLTWH(
+                                getPadding(),
+                                kDragAreaTop,
+                                kDragAreaWidth,
+                                MediaQuery.of(context).size.height *
+                                    kDragAreaHeightFactor),
                     child: GestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onHorizontalDragStart: (details) {
@@ -497,15 +494,28 @@ class _NavbarRouterState extends State<NavbarRouter>
                         onDragEnd(details);
                       },
                       child: Container(
-                        color: Colors.blueAccent.withOpacity(0.5),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.1),
                       ),
                     ),
                   ),
-                  Positioned(
-                    top: 50,
-                    right: 0,
-                    width: 50,
-                    height: MediaQuery.of(context).size.height * 0.8,
+                  Positioned.fromRect(
+                    rect: !widget.swipeable
+                        ? Rect.zero
+                        : widget.swipeableRightArea ??
+                            Rect.fromLTWH(
+                                MediaQuery.of(context).size.width -
+                                    kDragAreaWidth,
+                                kDragAreaTop,
+                                kDragAreaWidth,
+                                MediaQuery.of(context).size.height *
+                                    kDragAreaHeightFactor),
+                    // top: 50,
+                    // right: 0,
+                    // width: 50,
+                    // height: MediaQuery.of(context).size.height * 0.8,
                     child: GestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onHorizontalDragStart: (details) {
@@ -518,7 +528,10 @@ class _NavbarRouterState extends State<NavbarRouter>
                         onDragEnd(details);
                       },
                       child: Container(
-                        color: Colors.blueAccent.withOpacity(0.3),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.1),
                       ),
                     ),
                   )
@@ -527,7 +540,30 @@ class _NavbarRouterState extends State<NavbarRouter>
             }));
   }
 
-  onDragStart(details) {
+  // Swipeable functions below
+  bool handleOverscroll(OverscrollNotification value) {
+    if (!dragging) return false;
+    print(value.overscroll);
+    if (value.overscroll < 0 &&
+        _pageController.offset + value.overscroll <= 0) {
+      if (_pageController.offset != 0) {
+        _pageController.jumpTo(0);
+      }
+      return true;
+    }
+    if (_pageController.offset + value.overscroll >=
+        _pageController.position.maxScrollExtent) {
+      if (_pageController.offset != _pageController.position.maxScrollExtent) {
+        _pageController.jumpTo(_pageController.position.maxScrollExtent);
+      }
+      return true;
+    }
+    _pageController.jumpTo(_pageController.offset + value.overscroll);
+
+    return true;
+  }
+
+  void onDragStart(details) {
     if (dragging) return;
     if (details.localPosition.dx < 100 ||
         details.localPosition.dx > MediaQuery.of(context).size.width - 100) {
@@ -535,8 +571,8 @@ class _NavbarRouterState extends State<NavbarRouter>
     }
   }
 
-  onDragUpdate(DragUpdateDetails details) {
-    print(details.delta);
+  void onDragUpdate(DragUpdateDetails details) {
+    // print(details.delta);
     if (dragging) {
       if (!mounted) return;
 
@@ -546,11 +582,31 @@ class _NavbarRouterState extends State<NavbarRouter>
           (page >= NavbarNotifier.length - 1 && details.delta.dx < -0.1)) {
         return;
       }
-      _pageController.jumpTo(_pageController.offset - details.delta.dx);
+      double newOffset = _pageController.offset - details.delta.dx;
+      print(newOffset / getPixelsFromPage(NavbarNotifier.currentIndex));
+
+      // handle fade animation when swiping
+      for (int i = 0; i < fadeAnimation.length; i++) {
+        if (i != NavbarNotifier.currentIndex) {
+          var distanceFromCurrentPage =
+              getPixelsFromPage(NavbarNotifier.currentIndex) - newOffset;
+
+          fadeAnimation[i].value = min(
+              1.0,
+              distanceFromCurrentPage.abs() /
+                      MediaQuery.of(context).size.width -
+                  getPadding());
+        } else {
+          fadeAnimation[i].value =
+              (newOffset / getPixelsFromPage(NavbarNotifier.currentIndex))
+                  .clamp(0.5, 1);
+        }
+      }
+      _pageController.jumpTo(newOffset);
     }
   }
 
-  onDragEnd(details) {
+  void onDragEnd(details) {
     if (!mounted) {
       dragging = false;
       return;
@@ -581,26 +637,3 @@ class _NavbarRouterState extends State<NavbarRouter>
 final NavbarNotifier _navbarNotifier = NavbarNotifier();
 List<Color> colors = [mediumPurple, Colors.orange, Colors.teal];
 const Color mediumPurple = Color.fromRGBO(79, 0, 241, 1.0);
-
-class KeepAliveWrapper extends StatefulWidget {
-  final Widget child;
-  const KeepAliveWrapper({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
-  @override
-  KeepAliveWrapperState createState() => KeepAliveWrapperState();
-}
-
-class KeepAliveWrapperState extends State<KeepAliveWrapper>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return widget.child;
-  }
-
-  // Setting to true will force the tab to never be disposed. This could be dangerous.
-  @override
-  bool get wantKeepAlive => true;
-}
