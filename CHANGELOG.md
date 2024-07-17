@@ -1,3 +1,7 @@
+## [0.7.6] Unreleased
+
+- Back button should call indexChangeListener [Issue #53](https://github.com/maheshmnj/navbar_router/issues/53)
+
 ## [0.7.5] July 12, 2024
 
 - Migrate WillPopScope to PopScope [Issue 48](https://github.com/maheshmnj/navbar_router/pull/48/)
@@ -25,7 +29,7 @@
 
 - Rebuild Navbar on updating its properties Fixes: [Issue #38](https://github.com/maheshmnj/navbar_router/issues/38)
 - Remove workaround for [Issue #17](https://github.com/maheshmnj/navbar_router/issues/17)
-- Add child parameter to NavbarItem for adding custom widgets in place of icon and label Fix [Issue #20](ttps://github.com/maheshmnj/navbar_router/issues/20)
+- Add child parameter to NavbarItem for adding custom widgets in place of icon and label Fix [Issue #20](https://github.com/maheshmnj/navbar_router/issues/20)
 - Add selectedIcon property to NavbarItem
 
 ## [0.7.0] Dec 08, 2023

@@ -185,7 +185,7 @@ class NavbarBadge {
 
   final Key? key;
 
-  /// Use padding of [badgeStyle] or fontSize of [badgeTextStyle] to change size of the badge/dot. 
+  /// Use padding of [badgeStyle] or fontSize of [badgeTextStyle] to change size of the badge/dot.
   const NavbarBadge({
     this.key,
     this.badgeText = "",
