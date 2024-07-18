@@ -483,6 +483,7 @@ class _NavbarRouterState extends State<NavbarRouter>
                                 MediaQuery.of(context).size.height *
                                     kDragAreaHeightFactor),
                     child: GestureDetector(
+                      key: const ObjectKey("swipe-left"),
                       behavior: HitTestBehavior.translucent,
                       onHorizontalDragStart: (details) {
                         onDragStart(details);
@@ -502,6 +503,8 @@ class _NavbarRouterState extends State<NavbarRouter>
                     ),
                   ),
                   Positioned.fromRect(
+                    key: const ObjectKey("swipe-right"),
+
                     rect: !widget.swipeable
                         ? Rect.zero
                         : widget.swipeableRightArea ??

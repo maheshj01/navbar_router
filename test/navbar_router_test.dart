@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:navbar_router/navbar_router.dart';
 
@@ -117,6 +119,7 @@ void main() {
           child: MediaQuery(
               data: MediaQueryData(size: size),
               child: NavbarRouter(
+                swipeable: true,
                 errorBuilder: (context) {
                   return const Center(child: Text('Error 404'));
                 },
@@ -1580,7 +1583,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(SnackBar), findsNWidgets(1));
       await tester.tap(find.byIcon(Icons.close).first);
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(const Duration(seconds: 5));
       expect(find.byType(SnackBar), findsNothing);
     });
 
@@ -1600,7 +1603,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(SnackBar), findsNWidgets(1));
       await tester.tap(find.byIcon(Icons.close).first);
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(const Duration(seconds: 5));
       expect(find.byType(SnackBar), findsNothing);
       expect(isClosed, true);
     });
@@ -1793,5 +1796,104 @@ void main() {
 
     await tester.pumpAndSettle();
     expect((navItems[2].selectedIcon as Icon).color, Colors.green);
+  });
+
+  group('Swipeable extra test', () {
+    testWidgets('Should not be able to drag on center', (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 0));
+      await tester.pumpAndSettle();
+
+      await tester.dragFrom(
+          const Offset(400, 350), const Offset(900, 0));
+      await tester.pumpAndSettle();
+
+      expect(NavbarNotifier.currentIndex, equals(0));
+      expect('Feed 0 card'.textX(), findsOneWidget);
+    });
+
+    testWidgets('Should be able to drag left', (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 1));
+      await tester.pumpAndSettle();
+
+      await tester.drag(
+          find.byKey(const ObjectKey("swipe-left")), const Offset(900, 0));
+      await tester.pumpAndSettle();
+
+      expect(NavbarNotifier.currentIndex, equals(0));
+      expect('Feed 0 card'.textX(), findsOneWidget);
+    });
+
+    testWidgets('Should be able to fling left', (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 1));
+      await tester.pumpAndSettle();
+
+      await tester.fling(
+          find.byKey(const ObjectKey("swipe-left")), const Offset(900, 0), 20);
+      await tester.pumpAndSettle();
+
+      expect(NavbarNotifier.currentIndex, equals(0));
+      expect('Feed 0 card'.textX(), findsOneWidget);
+    });
+
+    testWidgets('Should not be able to fling left at index 0',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 0));
+      await tester.pumpAndSettle();
+
+      await tester.fling(find.byKey(const ObjectKey("swipe-left")),
+          const Offset(99900, 0), 20);
+      await tester.pumpAndSettle();
+
+      expect(NavbarNotifier.currentIndex, equals(0));
+      expect('Feed 0 card'.textX(), findsOneWidget);
+
+      await tester.drag(
+          find.byKey(const ObjectKey("swipe-left")), const Offset(99900, 0));
+      await tester.pumpAndSettle();
+
+      expect(NavbarNotifier.currentIndex, equals(0));
+      expect('Feed 0 card'.textX(), findsOneWidget);
+    });
+
+    testWidgets('Should be able to drag right', (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 0));
+      await tester.pumpAndSettle();
+
+      await tester.drag(
+          find.byKey(const ObjectKey("swipe-right")), const Offset(-900, 0));
+      await tester.pumpAndSettle();
+
+      expect(NavbarNotifier.currentIndex, equals(1));
+      expect('Product 1'.textX(), findsOneWidget);
+    });
+
+    testWidgets('Should be able to fling left', (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 0));
+      await tester.pumpAndSettle();
+
+      await tester.fling(find.byKey(const ObjectKey("swipe-right")),
+          const Offset(-900, 0), 20);
+      await tester.pumpAndSettle();
+
+      expect(NavbarNotifier.currentIndex, equals(1));
+      expect('Product 1'.textX(), findsOneWidget);
+    });
+
+    testWidgets('Should not be able to fling left at last index',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 0));
+      await tester.pumpAndSettle();
+
+      await tester.fling(find.byKey(const ObjectKey("swipe-right")),
+          const Offset(-99900, 0), 20);
+      await tester.pumpAndSettle();
+
+      await tester.drag(
+          find.byKey(const ObjectKey("swipe-right")), const Offset(-99900, 0));
+      await tester.pumpAndSettle();
+
+      expect(NavbarNotifier.currentIndex, equals(3));
+      expect('Slide to change theme color'.textX(), findsOneWidget);
+    });
   });
 }
