@@ -242,6 +242,8 @@ class _NavbarRouterState extends State<NavbarRouter>
     NavbarNotifier.makeBadgeVisible(NavbarNotifier.currentIndex, true);
     initAnimation();
     NavbarNotifier.index = widget.initialIndex;
+
+    // necessary init for swipeable
     _pageController = PageController(initialPage: widget.initialIndex);
 
     NavbarNotifier.addIndexChangeListener(
@@ -259,15 +261,6 @@ class _NavbarRouterState extends State<NavbarRouter>
         }
       },
     );
-  }
-
-  double getPageFromPixels(context) {
-    return _pageController.offset /
-        (MediaQuery.of(context).size.width - getPadding());
-  }
-
-  double getPixelsFromPage(int page) {
-    return (MediaQuery.of(context).size.width - getPadding()) * page;
   }
 
   void updateWidget() {
@@ -427,7 +420,8 @@ class _NavbarRouterState extends State<NavbarRouter>
                         physics: const NeverScrollableScrollPhysics(),
                         controller: _pageController,
                         itemBuilder: (context, i) {
-                          return KeepAliveWrapper(
+                          // use keep-alive to prevent list builder to rebuild
+                          return KeepAliveWrapper( 
                             keepAlive: true,
                             child: NotificationListener<OverscrollNotification>(
                                 onNotification:
@@ -472,6 +466,8 @@ class _NavbarRouterState extends State<NavbarRouter>
                         },
                         menuItems: items),
                   ),
+
+                  // swipe left area
                   Positioned.fromRect(
                     rect: !widget.swipeable
                         ? Rect.zero
@@ -495,16 +491,17 @@ class _NavbarRouterState extends State<NavbarRouter>
                         onDragEnd(details);
                       },
                       child: Container(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withOpacity(0.1),
-                      ),
+                          // color: Theme.of(context)
+                          //     .colorScheme
+                          //     .primary
+                          //     .withOpacity(0.1),
+                          ),
                     ),
                   ),
+
+                  // swipe right area
                   Positioned.fromRect(
                     key: const ObjectKey("swipe-right"),
-
                     rect: !widget.swipeable
                         ? Rect.zero
                         : widget.swipeableRightArea ??
@@ -515,10 +512,6 @@ class _NavbarRouterState extends State<NavbarRouter>
                                 kDragAreaWidth,
                                 MediaQuery.of(context).size.height *
                                     kDragAreaHeightFactor),
-                    // top: 50,
-                    // right: 0,
-                    // width: 50,
-                    // height: MediaQuery.of(context).size.height * 0.8,
                     child: GestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onHorizontalDragStart: (details) {
@@ -531,11 +524,11 @@ class _NavbarRouterState extends State<NavbarRouter>
                         onDragEnd(details);
                       },
                       child: Container(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withOpacity(0.1),
-                      ),
+                          // color: Theme.of(context)
+                          //     .colorScheme
+                          //     .primary
+                          //     .withOpacity(0.1),
+                          ),
                     ),
                   )
                 ],
@@ -543,7 +536,18 @@ class _NavbarRouterState extends State<NavbarRouter>
             }));
   }
 
-  // Swipeable functions below
+  /// Swipeable functions below
+  // convert scrollable pixels to current index
+  double getPageFromPixels(context) {
+    return _pageController.offset /
+        (MediaQuery.of(context).size.width - getPadding());
+  }
+
+  double getPixelsFromPage(int page) {
+    return (MediaQuery.of(context).size.width - getPadding()) * page;
+  }
+
+  // control when user can swipe to other page
   bool handleOverscroll(OverscrollNotification value) {
     if (!dragging) return false;
     print(value.overscroll);
@@ -568,8 +572,9 @@ class _NavbarRouterState extends State<NavbarRouter>
 
   void onDragStart(details) {
     if (dragging) return;
-    if (details.localPosition.dx < 100 ||
-        details.localPosition.dx > MediaQuery.of(context).size.width - 100) {
+    if (details.localPosition.dx <= kDragAreaWidth ||
+        details.localPosition.dx >=
+            MediaQuery.of(context).size.width - kDragAreaWidth) {
       dragging = true;
     }
   }
@@ -616,6 +621,7 @@ class _NavbarRouterState extends State<NavbarRouter>
     }
     print(_pageController.offset);
 
+    // when user release the drag, we calculate which page they're on
     var page = getPageFromPixels(context);
     print(page);
     int value = page.round();

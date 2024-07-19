@@ -253,6 +253,13 @@ class _HomePageState extends ConsumerState<HomePage> {
       body: Builder(builder: (context) {
         return NavbarRouter(
           swipeable: swipeable,
+          // swipeableLeftArea: Rect.fromLTWH(
+          //     0, 50, 50, MediaQuery.of(context).size.height * 0.9),
+          // swipeableRightArea: Rect.fromLTWH(
+          //     MediaQuery.of(context).size.width - 50,
+          //     50,
+          //     50,
+          //     MediaQuery.of(context).size.height * 0.9),
           errorBuilder: (context) {
             return const Center(child: Text('Error 404'));
           },

@@ -1824,15 +1824,15 @@ void main() {
     });
 
     testWidgets('Should be able to fling left', (WidgetTester tester) async {
-      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 1));
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 2));
       await tester.pumpAndSettle();
 
       await tester.fling(
           find.byKey(const ObjectKey("swipe-left")), const Offset(900, 0), 20);
       await tester.pumpAndSettle();
 
-      expect(NavbarNotifier.currentIndex, equals(0));
-      expect('Feed 0 card'.textX(), findsOneWidget);
+      expect(NavbarNotifier.currentIndex, equals(1));
+      expect('Product 1'.textX(), findsOneWidget);
     });
 
     testWidgets('Should not be able to fling left at index 0',
@@ -1867,7 +1867,7 @@ void main() {
       expect('Product 1'.textX(), findsOneWidget);
     });
 
-    testWidgets('Should be able to fling left', (WidgetTester tester) async {
+    testWidgets('Should be able to fling right', (WidgetTester tester) async {
       await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 0));
       await tester.pumpAndSettle();
 
@@ -1879,9 +1879,9 @@ void main() {
       expect('Product 1'.textX(), findsOneWidget);
     });
 
-    testWidgets('Should not be able to fling left at last index',
+    testWidgets('Should not be able to fling right at last index',
         (WidgetTester tester) async {
-      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 0));
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 3));
       await tester.pumpAndSettle();
 
       await tester.fling(find.byKey(const ObjectKey("swipe-right")),
