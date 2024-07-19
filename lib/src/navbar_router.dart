@@ -602,8 +602,8 @@ class _NavbarRouterState extends State<NavbarRouter>
           fadeAnimation[i].value = min(
               1.0,
               distanceFromCurrentPage.abs() /
-                      MediaQuery.of(context).size.width -
-                  getPadding());
+                      (MediaQuery.of(context).size.width -
+                  getPadding()));
         } else {
           fadeAnimation[i].value =
               (newOffset / getPixelsFromPage(NavbarNotifier.currentIndex))
