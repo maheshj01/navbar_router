@@ -146,7 +146,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   void dispose() {
     NavbarNotifier.clear();
-    NavbarNotifier.removeLastListener();
     super.dispose();
   }
 
