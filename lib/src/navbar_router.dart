@@ -470,7 +470,7 @@ class _NavbarRouterState extends State<NavbarRouter>
                         : widget.swipeableArea ??
                             Rect.fromLTWH(
                                 getPadding(),
-                                MediaQuery.of(context).size.height * 0.8 - kDragAreaTop,
+                                kDragAreaTop,
                                 kDragAreaWidth,
                                 MediaQuery.of(context).size.width *
                                     kDragAreaHeightFactor),
@@ -523,7 +523,6 @@ class _NavbarRouterState extends State<NavbarRouter>
                           _handleFadeAnimation();
                         }
                       },
-                      child: Container(color: Colors.red.withOpacity(0.3),),
                     ),
                   ),
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 const double kDragAreaTop = 50;
-const double kDragAreaWidth = 500;
+const double kDragAreaWidth = 50;
 const double kOpacityWhenSwipeable = 0.5;
-const double kDragAreaHeightFactor = 0.3;
+const double kDragAreaHeightFactor = 0.8;
 
 class KeepAliveWrapper extends StatefulWidget {
   final Widget child;
