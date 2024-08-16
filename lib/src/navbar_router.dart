@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:navbar_router/navbar_router.dart';
+import 'package:navbar_router/src/gestures.dart';
 import 'package:navbar_router/src/navbar_swipeable_utls.dart';
 
 part 'animated_navbar.dart';
@@ -161,19 +162,12 @@ class NavbarRouter extends StatefulWidget {
   /// Set to true will opt-in to horizontally swipeable navigation bar.
   final bool swipeable;
 
-  /// Configure the swipeable area on the left edge of the screen
+  /// Configure the swipeable area on the of the screen
   ///
-  /// By default, it will be: center aligned, width = 50 pixels, top = 50 pixels, height = 0.8 x screen height
-  ///
-  /// Only take effect if **[swipeable]** is set to true
-  final Rect? swipeableLeftArea;
-
-  /// Configure the swipeable area on the right edge of the screen
-  ///
-  /// By default, it will be: center aligned, width = 50 pixels, top = 50 pixels, height = 0.8 x screen height
+  /// By default, it will be: left center aligned, width = 50 pixels, top = 50 pixels, height = 0.8 x screen height
   ///
   /// Only take effect if **[swipeable]** is set to true
-  final Rect? swipeableRightArea;
+  final Rect? swipeableArea;
 
   /// Take a look at the [readme](https://github.com/maheshmnj/navbar_router) for more information on how to use this package.
   ///
@@ -186,8 +180,7 @@ class NavbarRouter extends StatefulWidget {
   const NavbarRouter(
       {Key? key,
       this.swipeable = false,
-      this.swipeableLeftArea,
-      this.swipeableRightArea,
+      this.swipeableArea,
       required this.destinations,
       required this.errorBuilder,
       this.shouldPopToBaseRoute = true,
@@ -215,6 +208,7 @@ class _NavbarRouterState extends State<NavbarRouter>
   final List<NavbarItem> items = [];
   late List<AnimationController> fadeAnimation;
   List<GlobalKey<NavigatorState>> keys = [];
+  late Gesture pageGesture;
 
   @override
   void initState() {
@@ -244,7 +238,9 @@ class _NavbarRouterState extends State<NavbarRouter>
     NavbarNotifier.index = widget.initialIndex;
 
     // necessary init for swipeable
-    _pageController = PageController(initialPage: widget.initialIndex);
+    pageGesture = Gesture(context: context, getPadding: getPadding);
+    pageGesture.pageController =
+        PageController(initialPage: widget.initialIndex);
 
     NavbarNotifier.addIndexChangeListener(
       (newIndex) {
@@ -252,11 +248,13 @@ class _NavbarRouterState extends State<NavbarRouter>
         // print(newIndex);
 
         if (widget.swipeable) {
-          _pageController.animateTo(getPixelsFromPage(newIndex),
-              duration: Durations.long1, curve: Curves.ease);
+          pageGesture.pageController.animateTo(
+              pageGesture.getPixelsFromPage(newIndex),
+              duration: Durations.long1,
+              curve: Curves.ease);
         } else {
-          _pageController.jumpTo(
-            getPixelsFromPage(newIndex),
+          pageGesture.pageController.jumpTo(
+            pageGesture.getPixelsFromPage(newIndex),
           );
         }
       },
@@ -382,9 +380,6 @@ class _NavbarRouterState extends State<NavbarRouter>
   }
 
   // Swipeable page
-  int pageViewIndex = 0;
-  late PageController _pageController;
-  bool dragging = false;
 
   @override
   Widget build(BuildContext context) {
@@ -418,14 +413,15 @@ class _NavbarRouterState extends State<NavbarRouter>
                         itemCount: NavbarNotifier.length,
                         scrollDirection: Axis.horizontal,
                         physics: const NeverScrollableScrollPhysics(),
-                        controller: _pageController,
+                        controller: pageGesture.pageController,
                         itemBuilder: (context, i) {
                           // use keep-alive to prevent list builder to rebuild
-                          return KeepAliveWrapper( 
+                          return KeepAliveWrapper(
                             keepAlive: true,
                             child: NotificationListener<OverscrollNotification>(
-                                onNotification:
-                                    widget.swipeable ? handleOverscroll : null,
+                                onNotification: widget.swipeable
+                                    ? pageGesture.handleOverscroll
+                                    : null,
                                 child: SizedBox(
                                     width: MediaQuery.of(context).size.width -
                                         getPadding(),
@@ -467,179 +463,99 @@ class _NavbarRouterState extends State<NavbarRouter>
                         menuItems: items),
                   ),
 
-                  // swipe left area
+                  // swipe area
                   Positioned.fromRect(
                     rect: !widget.swipeable
                         ? Rect.zero
-                        : widget.swipeableLeftArea ??
+                        : widget.swipeableArea ??
                             Rect.fromLTWH(
                                 getPadding(),
-                                kDragAreaTop,
+                                MediaQuery.of(context).size.height * 0.8 - kDragAreaTop,
                                 kDragAreaWidth,
-                                MediaQuery.of(context).size.height *
+                                MediaQuery.of(context).size.width *
                                     kDragAreaHeightFactor),
                     child: GestureDetector(
                       key: const ObjectKey("swipe-left"),
                       behavior: HitTestBehavior.translucent,
                       onHorizontalDragStart: (details) {
-                        onDragStart(details);
+                        if (!mounted) return;
+
+                        pageGesture.onDragStart(details);
                       },
                       onHorizontalDragUpdate: (details) {
-                        onDragUpdate(details);
+                        if (!mounted) return;
+
+                        var newOffset = pageGesture.onDragUpdate(details);
+                        if (newOffset == null) return;
+
+                        for (int i = 0; i < fadeAnimation.length; i++) {
+                          if (i != NavbarNotifier.currentIndex) {
+                            var distanceFromCurrentPage =
+                                pageGesture.getPixelsFromPage(
+                                        NavbarNotifier.currentIndex) -
+                                    newOffset;
+
+                            fadeAnimation[i].value = min(
+                                1.0,
+                                distanceFromCurrentPage.abs() /
+                                    (MediaQuery.of(context).size.width -
+                                        getPadding()));
+                          } else {
+                            fadeAnimation[i].value = (newOffset /
+                                    pageGesture.getPixelsFromPage(
+                                        NavbarNotifier.currentIndex))
+                                .clamp(0.5, 1);
+                          }
+                        }
                       },
                       onHorizontalDragEnd: (details) {
-                        onDragEnd(details);
+                        if (!mounted) {
+                          pageGesture.dragging = false;
+                          return;
+                        }
+
+                        var value = pageGesture.onDragEnd(details);
+                        if (value >= 0 && value < NavbarNotifier.length) {
+                          NavbarNotifier.index = value;
+                          if (widget.onChanged != null) {
+                            widget.onChanged!(value);
+                          }
+                          _handleFadeAnimation();
+                        }
                       },
-                      child: Container(
-                          // color: Theme.of(context)
-                          //     .colorScheme
-                          //     .primary
-                          //     .withOpacity(0.1),
-                          ),
+                      child: Container(color: Colors.red.withOpacity(0.3),),
                     ),
                   ),
 
                   // swipe right area
-                  Positioned.fromRect(
-                    key: const ObjectKey("swipe-right"),
-                    rect: !widget.swipeable
-                        ? Rect.zero
-                        : widget.swipeableRightArea ??
-                            Rect.fromLTWH(
-                                MediaQuery.of(context).size.width -
-                                    kDragAreaWidth,
-                                kDragAreaTop,
-                                kDragAreaWidth,
-                                MediaQuery.of(context).size.height *
-                                    kDragAreaHeightFactor),
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onHorizontalDragStart: (details) {
-                        onDragStart(details);
-                      },
-                      onHorizontalDragUpdate: (details) {
-                        onDragUpdate(details);
-                      },
-                      onHorizontalDragEnd: (details) {
-                        onDragEnd(details);
-                      },
-                      child: Container(
-                          // color: Theme.of(context)
-                          //     .colorScheme
-                          //     .primary
-                          //     .withOpacity(0.1),
-                          ),
-                    ),
-                  )
+                  // Positioned.fromRect(
+                  //   key: const ObjectKey("swipe-right"),
+                  //   rect: !widget.swipeable
+                  //       ? Rect.zero
+                  //       : widget.swipeableRightArea ??
+                  //           Rect.fromLTWH(
+                  //               MediaQuery.of(context).size.width -
+                  //                   kDragAreaWidth,
+                  //               kDragAreaTop,
+                  //               kDragAreaWidth,
+                  //               MediaQuery.of(context).size.height *
+                  //                   kDragAreaHeightFactor),
+                  //   child: GestureDetector(
+                  //     behavior: HitTestBehavior.translucent,
+                  //     onHorizontalDragStart: (details) {
+                  //       onDragStart(details);
+                  //     },
+                  //     onHorizontalDragUpdate: (details) {
+                  //       onDragUpdate(details);
+                  //     },
+                  //     onHorizontalDragEnd: (details) {
+                  //       onDragEnd(details);
+                  //     },
+                  //   ),
+                  // )
                 ],
               );
             }));
-  }
-
-  /// Swipeable functions below
-  // convert scrollable pixels to current index
-  double getPageFromPixels(context) {
-    return _pageController.offset /
-        (MediaQuery.of(context).size.width - getPadding());
-  }
-
-  double getPixelsFromPage(int page) {
-    return (MediaQuery.of(context).size.width - getPadding()) * page;
-  }
-
-  // control when user can swipe to other page
-  bool handleOverscroll(OverscrollNotification value) {
-    if (!dragging) return false;
-    print(value.overscroll);
-    if (value.overscroll < 0 &&
-        _pageController.offset + value.overscroll <= 0) {
-      if (_pageController.offset != 0) {
-        _pageController.jumpTo(0);
-      }
-      return true;
-    }
-    if (_pageController.offset + value.overscroll >=
-        _pageController.position.maxScrollExtent) {
-      if (_pageController.offset != _pageController.position.maxScrollExtent) {
-        _pageController.jumpTo(_pageController.position.maxScrollExtent);
-      }
-      return true;
-    }
-    _pageController.jumpTo(_pageController.offset + value.overscroll);
-
-    return true;
-  }
-
-  void onDragStart(details) {
-    if (dragging) return;
-    if (details.localPosition.dx <= kDragAreaWidth ||
-        details.localPosition.dx >=
-            MediaQuery.of(context).size.width - kDragAreaWidth) {
-      dragging = true;
-    }
-  }
-
-  void onDragUpdate(DragUpdateDetails details) {
-    // print(details.delta);
-    if (dragging) {
-      if (!mounted) return;
-
-      var page = getPageFromPixels(context);
-      // print(page);
-      if ((page == 0 && details.delta.dx > 0.1) ||
-          (page >= NavbarNotifier.length - 1 && details.delta.dx < -0.1)) {
-        return;
-      }
-      double newOffset = _pageController.offset - details.delta.dx;
-      print(newOffset / getPixelsFromPage(NavbarNotifier.currentIndex));
-
-      // handle fade animation when swiping
-      for (int i = 0; i < fadeAnimation.length; i++) {
-        if (i != NavbarNotifier.currentIndex) {
-          var distanceFromCurrentPage =
-              getPixelsFromPage(NavbarNotifier.currentIndex) - newOffset;
-
-          fadeAnimation[i].value = min(
-              1.0,
-              distanceFromCurrentPage.abs() /
-                      (MediaQuery.of(context).size.width -
-                  getPadding()));
-        } else {
-          fadeAnimation[i].value =
-              (newOffset / getPixelsFromPage(NavbarNotifier.currentIndex))
-                  .clamp(0.5, 1);
-        }
-      }
-      _pageController.jumpTo(newOffset);
-    }
-  }
-
-  void onDragEnd(details) {
-    if (!mounted) {
-      dragging = false;
-      return;
-    }
-    print(_pageController.offset);
-
-    // when user release the drag, we calculate which page they're on
-    var page = getPageFromPixels(context);
-    print(page);
-    int value = page.round();
-    if (value < 0) {
-      _pageController.animateTo(_pageController.position.minScrollExtent,
-          duration: Durations.long1, curve: Curves.ease);
-    } else if (value >= NavbarNotifier.length) {
-      _pageController.animateTo(_pageController.position.maxScrollExtent,
-          duration: Durations.long1, curve: Curves.ease);
-    } else {
-      NavbarNotifier.index = value;
-      if (widget.onChanged != null) {
-        widget.onChanged!(value);
-      }
-      _handleFadeAnimation();
-    }
-
-    dragging = false;
   }
 }
 

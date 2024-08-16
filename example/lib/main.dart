@@ -229,7 +229,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                       child: Icon(
                           swipeable ? Icons.swipe : Icons.touch_app_outlined),
                       onPressed: () {
-                        // Programmatically toggle the Navbar visibility
                         swipeable = !swipeable;
                         setState(() {});
                       },

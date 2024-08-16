@@ -1,10 +1,8 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:navbar_router/navbar_router.dart';
 
@@ -1860,7 +1858,7 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.drag(
-          find.byKey(const ObjectKey("swipe-right")), const Offset(-900, 0));
+          find.byKey(const ObjectKey("swipe-left")), const Offset(-900, 0));
       await tester.pumpAndSettle();
 
       expect(NavbarNotifier.currentIndex, equals(1));
@@ -1871,7 +1869,7 @@ void main() {
       await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 0));
       await tester.pumpAndSettle();
 
-      await tester.fling(find.byKey(const ObjectKey("swipe-right")),
+      await tester.fling(find.byKey(const ObjectKey("swipe-left")),
           const Offset(-900, 0), 20);
       await tester.pumpAndSettle();
 
@@ -1884,12 +1882,12 @@ void main() {
       await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 3));
       await tester.pumpAndSettle();
 
-      await tester.fling(find.byKey(const ObjectKey("swipe-right")),
+      await tester.fling(find.byKey(const ObjectKey("swipe-left")),
           const Offset(-99900, 0), 20);
       await tester.pumpAndSettle();
 
       await tester.drag(
-          find.byKey(const ObjectKey("swipe-right")), const Offset(-99900, 0));
+          find.byKey(const ObjectKey("swipe-left")), const Offset(-99900, 0));
       await tester.pumpAndSettle();
 
       expect(NavbarNotifier.currentIndex, equals(3));
