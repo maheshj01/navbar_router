@@ -352,6 +352,7 @@ class _NavbarRouterState extends State<NavbarRouter>
         child: AnimatedBuilder(
             animation: _navbarNotifier,
             builder: (context, child) {
+              _handleFadeAnimation();
               return Stack(
                 children: [
                   AnimatedPadding(
