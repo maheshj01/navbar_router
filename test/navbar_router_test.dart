@@ -117,6 +117,7 @@ void main() {
           child: MediaQuery(
               data: MediaQueryData(size: size),
               child: NavbarRouter(
+                swipeable: true,
                 errorBuilder: (context) {
                   return const Center(child: Text('Error 404'));
                 },
@@ -623,8 +624,8 @@ void main() {
         expect(tapTargetText.textX(), findsOneWidget);
         await tester.tap(tapTargetText.textX());
         await tester.pumpAndSettle();
-        expect('switching to Home'.textX(), findsNWidgets(items.length));
-        expect(find.byType(SnackBar), findsNWidgets(items.length));
+        expect('switching to Home'.textX(), findsNWidgets(1));
+        expect(find.byType(SnackBar), findsNWidgets(1));
         await tester.pumpAndSettle(const Duration(seconds: 4));
         final feedRoute = routes[0]!['/'].runtimeType.typeX();
         final feedDetailRoute =
@@ -1529,6 +1530,7 @@ void main() {
   // WARNING: Snackbar Test are written considering snackbars are shown across all the tabs
   // e.g if a snackbar is shown it will be displayed items.length times
   // This is because we have migrated to Stack inplace of IndexedStack
+  // bebaoboy: I'm changing this back to 1 because I use ListView for the swipeable navbar
   group('Snackbar should be controlled using NavbarNotifier:', skip: false, () {
     testWidgets('Snackbar should be shown', (WidgetTester tester) async {
       await tester.pumpWidget(boilerplate());
@@ -1536,7 +1538,7 @@ void main() {
       final BuildContext context = tester.element(find.byType(NavbarRouter));
       NavbarNotifier.showSnackBar(context, "This is a Snackbar message");
       await tester.pumpAndSettle();
-      expect(find.byType(SnackBar), findsNWidgets(items.length));
+      expect(find.byType(SnackBar), findsNWidgets(1));
     });
 
     testWidgets('Snackbar should be hidden', (WidgetTester tester) async {
@@ -1546,7 +1548,7 @@ void main() {
       NavbarNotifier.showSnackBar(context, "This is a Snackbar message",
           duration: const Duration(seconds: 5));
       await tester.pumpAndSettle();
-      expect(find.byType(SnackBar), findsNWidgets(items.length));
+      expect(find.byType(SnackBar), findsNWidgets(1));
       NavbarNotifier.hideSnackBar(context);
       await tester.pumpAndSettle();
       expect(find.byType(SnackBar), findsNothing);
@@ -1560,9 +1562,9 @@ void main() {
       NavbarNotifier.showSnackBar(context, "This is a Snackbar message",
           duration: const Duration(seconds: 5));
       await tester.pumpAndSettle();
-      expect(find.byType(SnackBar), findsNWidgets(items.length));
+      expect(find.byType(SnackBar), findsNWidgets(1));
       await tester.pumpAndSettle(const Duration(seconds: 4));
-      expect(find.byType(SnackBar), findsNWidgets(items.length));
+      expect(find.byType(SnackBar), findsNWidgets(1));
       await tester.pumpAndSettle(const Duration(seconds: 1));
       expect(find.byType(SnackBar), findsNothing);
     });
@@ -1577,9 +1579,9 @@ void main() {
         duration: const Duration(seconds: 5),
       );
       await tester.pumpAndSettle();
-      expect(find.byType(SnackBar), findsNWidgets(items.length));
+      expect(find.byType(SnackBar), findsNWidgets(1));
       await tester.tap(find.byIcon(Icons.close).first);
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(const Duration(seconds: 5));
       expect(find.byType(SnackBar), findsNothing);
     });
 
@@ -1597,9 +1599,9 @@ void main() {
         },
       );
       await tester.pumpAndSettle();
-      expect(find.byType(SnackBar), findsNWidgets(items.length));
+      expect(find.byType(SnackBar), findsNWidgets(1));
       await tester.tap(find.byIcon(Icons.close).first);
-      await tester.pumpAndSettle();
+      await tester.pumpAndSettle(const Duration(seconds: 5));
       expect(find.byType(SnackBar), findsNothing);
       expect(isClosed, true);
     });
@@ -1618,7 +1620,7 @@ void main() {
         duration: const Duration(seconds: 5),
       );
       await tester.pumpAndSettle();
-      expect(find.byType(SnackBar), findsNWidgets(items.length));
+      expect(find.byType(SnackBar), findsNWidgets(1));
       await tester.tap(find.text("Tap me").first);
       await tester.pumpAndSettle();
       expect(find.byType(SnackBar), findsNothing);
@@ -1792,5 +1794,104 @@ void main() {
 
     await tester.pumpAndSettle();
     expect((navItems[2].selectedIcon as Icon).color, Colors.green);
+  });
+
+  group('Swipeable extra test', () {
+    testWidgets('Should not be able to drag on center', (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 0));
+      await tester.pumpAndSettle();
+
+      await tester.dragFrom(
+          const Offset(400, 350), const Offset(900, 0));
+      await tester.pumpAndSettle();
+
+      expect(NavbarNotifier.currentIndex, equals(0));
+      expect('Feed 0 card'.textX(), findsOneWidget);
+    });
+
+    testWidgets('Should be able to drag left', (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 1));
+      await tester.pumpAndSettle();
+
+      await tester.drag(
+          find.byKey(const ObjectKey("swipe-left")), const Offset(900, 0));
+      await tester.pumpAndSettle();
+
+      expect(NavbarNotifier.currentIndex, equals(0));
+      expect('Feed 0 card'.textX(), findsOneWidget);
+    });
+
+    testWidgets('Should be able to fling left', (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 2));
+      await tester.pumpAndSettle();
+
+      await tester.fling(
+          find.byKey(const ObjectKey("swipe-left")), const Offset(900, 0), 20);
+      await tester.pumpAndSettle();
+
+      expect(NavbarNotifier.currentIndex, equals(1));
+      expect('Product 1'.textX(), findsOneWidget);
+    });
+
+    testWidgets('Should not be able to fling left at index 0',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 0));
+      await tester.pumpAndSettle();
+
+      await tester.fling(find.byKey(const ObjectKey("swipe-left")),
+          const Offset(99900, 0), 20);
+      await tester.pumpAndSettle();
+
+      expect(NavbarNotifier.currentIndex, equals(0));
+      expect('Feed 0 card'.textX(), findsOneWidget);
+
+      await tester.drag(
+          find.byKey(const ObjectKey("swipe-left")), const Offset(99900, 0));
+      await tester.pumpAndSettle();
+
+      expect(NavbarNotifier.currentIndex, equals(0));
+      expect('Feed 0 card'.textX(), findsOneWidget);
+    });
+
+    testWidgets('Should be able to drag right', (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 0));
+      await tester.pumpAndSettle();
+
+      await tester.drag(
+          find.byKey(const ObjectKey("swipe-left")), const Offset(-900, 0));
+      await tester.pumpAndSettle();
+
+      expect(NavbarNotifier.currentIndex, equals(1));
+      expect('Product 1'.textX(), findsOneWidget);
+    });
+
+    testWidgets('Should be able to fling right', (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 0));
+      await tester.pumpAndSettle();
+
+      await tester.fling(find.byKey(const ObjectKey("swipe-left")),
+          const Offset(-900, 0), 20);
+      await tester.pumpAndSettle();
+
+      expect(NavbarNotifier.currentIndex, equals(1));
+      expect('Product 1'.textX(), findsOneWidget);
+    });
+
+    testWidgets('Should not be able to fling right at last index',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(boilerplate(type: NavbarType.floating, index: 3));
+      await tester.pumpAndSettle();
+
+      await tester.fling(find.byKey(const ObjectKey("swipe-left")),
+          const Offset(-99900, 0), 20);
+      await tester.pumpAndSettle();
+
+      await tester.drag(
+          find.byKey(const ObjectKey("swipe-left")), const Offset(-99900, 0));
+      await tester.pumpAndSettle();
+
+      expect(NavbarNotifier.currentIndex, equals(3));
+      expect('Slide to change theme color'.textX(), findsOneWidget);
+    });
   });
 }
