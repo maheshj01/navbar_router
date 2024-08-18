@@ -1,5 +1,6 @@
-## [0.7.6] Unreleased
+## [0.7.6] August 18, 2024
 
+- [Regression] Programmatically change Index [Issue #57](https://github.com/maheshj01/navbar_router/issues/57)
 - Back button should call indexChangeListener [Issue #53](https://github.com/maheshmnj/navbar_router/issues/53)
 
 ## [0.7.5] July 12, 2024

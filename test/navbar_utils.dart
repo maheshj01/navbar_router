@@ -93,9 +93,7 @@ class _HomeFeedsState extends State<HomeFeeds> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Feeds'),
-      ),
+      appBar: AppBar(title: const Text('Feeds')),
       body: ListView.builder(
         controller: _scrollController,
         itemCount: 30,
@@ -131,26 +129,26 @@ class FeedTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
       color: Theme.of(context).colorScheme.surface,
       child: Card(
-        child: Stack(
+        child: Column(
           children: [
-            Positioned(
-              top: 4,
-              right: 4,
-              left: 4,
-              child: Container(
-                height: 180,
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+            Container(
+              height: 180,
+              margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.secondary,
-                alignment: Alignment.center,
-                child: Text('Feed $index card'),
+                borderRadius: BorderRadius.circular(8.0),
               ),
+              child: Text('Feed $index card'),
             ),
-            Positioned(
-                bottom: 12,
-                right: 12,
-                left: 12,
-                child: Text(placeHolderText.substring(0, 200)))
+            Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                alignment: Alignment.center,
+                child: const Text(
+                  placeHolderText,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                ))
           ],
         ),
       ),
@@ -231,6 +229,11 @@ class _ProductListState extends State<ProductList> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -372,6 +375,17 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   final GlobalKey iconKey = GlobalKey();
 
+  final Uri _url = Uri.parse('https://docs.maheshjamdade.com/navbar_router/');
+
+  Future<void> _launchUrl() async {
+    throw Exception('Could not launch $_url');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -379,6 +393,11 @@ class _UserProfileState extends State<UserProfile> {
       appBar: AppBar(
           centerTitle: false,
           actions: [
+            IconButton(
+              tooltip: 'show  Docs',
+              icon: const Icon(Icons.edit_document),
+              onPressed: _launchUrl,
+            ),
             IconButton(
               key: iconKey,
               icon: const Icon(Icons.edit),
@@ -391,7 +410,7 @@ class _UserProfileState extends State<UserProfile> {
                     offset: offset,
                     transitionType: TransitionType.reveal);
               },
-            )
+            ),
           ],
           title: const Text('Hi User')),
       body: Center(

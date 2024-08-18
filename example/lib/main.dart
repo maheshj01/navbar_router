@@ -194,7 +194,22 @@ class _HomePageState extends ConsumerState<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const SizedBox(
-                      width: 50,
+
+                     
+
+                      width: 60,
+                    ),
+                    FloatingActionButton.extended(
+                      heroTag: 'RandomIndex',
+                      onPressed: () {
+                        int index = Random().nextInt(100);
+                        NavbarNotifier.index = index % 4;
+                      },
+                      label: const Text("Random Index"),
+                    ),
+                    const SizedBox(
+                      width: 20,
+
                     ),
                     FloatingActionButton.extended(
                       heroTag: 'showSnackBar',
@@ -383,9 +398,7 @@ class _HomeFeedsState extends State<HomeFeeds> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Feeds'),
-      ),
+      appBar: AppBar(title: const Text('Feeds')),
       body: ListView.builder(
         controller: _scrollController,
         itemCount: 30,
