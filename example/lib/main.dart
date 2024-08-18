@@ -199,7 +199,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                       heroTag: 'RandomIndex',
                       onPressed: () {
                         int index = Random().nextInt(100);
-                        print('index: $index');
                         NavbarNotifier.index = index % 4;
                       },
                       label: const Text("Random Index"),
