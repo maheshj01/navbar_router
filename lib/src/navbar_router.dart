@@ -49,7 +49,6 @@ class DestinationRouter {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
     return other is DestinationRouter &&
         listEquals(other.destinations, destinations) &&
         other.initialRoute == initialRoute &&
@@ -215,7 +214,11 @@ class _NavbarRouterState extends State<NavbarRouter>
     // re-enable the initial badge that was hidden on setting NavbarNotifier.index
     NavbarNotifier.makeBadgeVisible(NavbarNotifier.currentIndex, true);
     initAnimation();
+
     NavbarNotifier.index = widget.initialIndex;
+    NavbarNotifier.addIndexChangeListener((i) {
+      _changeTab(i);
+    });
   }
 
   void updateWidget() {
@@ -388,10 +391,6 @@ class _NavbarRouterState extends State<NavbarRouter>
                             }
                           } else {
                             NavbarNotifier.index = x;
-                            if (widget.onChanged != null) {
-                              widget.onChanged!(x);
-                            }
-                            _handleFadeAnimation();
                           }
                         },
                         menuItems: items),
@@ -399,6 +398,16 @@ class _NavbarRouterState extends State<NavbarRouter>
                 ],
               );
             }));
+  }
+
+  _changeTab(int x) {
+    final currentIndex = fadeAnimation.indexWhere((e) => !e.isDismissed);
+    if (currentIndex != x) {
+      if (widget.onChanged != null) {
+        widget.onChanged!(x);
+      }
+      _handleFadeAnimation();
+    }
   }
 }
 

@@ -723,6 +723,26 @@ class _UserProfileState extends State<UserProfile> {
                   NavbarNotifier.popRoute(1);
                 },
                 child: const Text('Pop Product Route')),
+            const SizedBox(
+              height: 24,
+            ),
+            const Text("Change tab programmatically:"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      NavbarNotifier.index = 0;
+                    },
+                    child: const Text("Go to tab 1")),
+                const SizedBox(width: 16),
+                ElevatedButton(
+                    onPressed: () {
+                      NavbarNotifier.index = 1;
+                    },
+                    child: const Text("Go to tab 2")),
+              ],
+            )
           ],
         ),
       ),
