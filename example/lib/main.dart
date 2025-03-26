@@ -102,13 +102,14 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  bool swipeable = false;
   final Map<int, Map<String, Widget>> _routes = const {
     0: {
       '/': HomeFeeds(),
       FeedDetail.route: FeedDetail(),
     },
     1: {
-      '/': ProductList(),
+      '/': ProductPage(),
       ProductDetail.route: ProductDetail(),
       ProductComments.route: ProductComments(),
     },
@@ -193,6 +194,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const SizedBox(
+
+                     
+
                       width: 60,
                     ),
                     FloatingActionButton.extended(
@@ -205,6 +209,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
                     const SizedBox(
                       width: 20,
+
                     ),
                     FloatingActionButton.extended(
                       heroTag: 'showSnackBar',
@@ -235,6 +240,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                       },
                     ),
                     FloatingActionButton(
+                      heroTag: 'swipe',
+                      child: Icon(
+                          swipeable ? Icons.swipe : Icons.touch_app_outlined),
+                      onPressed: () {
+                        swipeable = !swipeable;
+                        setState(() {});
+                      },
+                    ),
+                    FloatingActionButton(
                       heroTag: 'darkmode',
                       child: Icon(appSetting.isDarkMode
                           ? Icons.wb_sunny
@@ -252,6 +266,14 @@ class _HomePageState extends ConsumerState<HomePage> {
           }),
       body: Builder(builder: (context) {
         return NavbarRouter(
+          swipeable: swipeable,
+          // swipeableLeftArea: Rect.fromLTWH(
+          //     0, 50, 50, MediaQuery.of(context).size.height * 0.9),
+          // swipeableRightArea: Rect.fromLTWH(
+          //     MediaQuery.of(context).size.width - 50,
+          //     50,
+          //     50,
+          //     MediaQuery.of(context).size.height * 0.9),
           errorBuilder: (context) {
             return const Center(child: Text('Error 404'));
           },
@@ -408,7 +430,7 @@ class FeedTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
+      height: 400,
       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
       color: Theme.of(context).colorScheme.surface,
       child: Card(
@@ -468,6 +490,86 @@ class FeedDetail extends StatelessWidget {
   }
 }
 
+class ProductPage extends ConsumerStatefulWidget {
+  const ProductPage({super.key});
+  static const String route = '/';
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _ProductPageState();
+}
+
+class _ProductPageState extends ConsumerState<ProductPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Products'),
+        ),
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 5,
+                  // controller: _scrollController,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      height: 60,
+                      color: Colors.redAccent.shade100,
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                          onTap: () {
+                            if (index == 0) {
+                              NavbarNotifier.pushNamed(FeedDetail.route, 0);
+                              NavbarNotifier.showSnackBar(
+                                  context, 'switching to Home', onClosed: () {
+                                NavbarNotifier.index = 0;
+                              });
+                            } else {
+                              NavbarNotifier.hideBottomNavBar = false;
+                              Navigate.pushNamed(context, ProductDetail.route,
+                                  transitionType: TransitionType.scale,
+                                  arguments: {'id': index.toString()});
+                            }
+                          },
+                          child: Card(
+                            child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                height: 60,
+                                width: 120,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.all(8),
+                                      height: 15,
+                                      width: 15,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
+                                    ),
+                                    Flexible(
+                                      child: Text(
+                                        index != 0
+                                            ? 'Product $index'
+                                            : 'Tap to push a route on HomePage Programmatically',
+                                        textAlign: TextAlign.end,
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                          )),
+                    );
+                  }),
+            ),
+            const Expanded(flex: 2, child: ProductList()),
+          ],
+        ));
+  }
+}
+
 class ProductList extends ConsumerStatefulWidget {
   const ProductList({super.key});
   static const String route = '/';
@@ -521,34 +623,29 @@ class _ProductListState extends ConsumerState<ProductList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Products'),
-      ),
-      body: ListView.builder(
-          controller: _scrollController,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                  onTap: () {
-                    if (index == 0) {
-                      NavbarNotifier.pushNamed(FeedDetail.route, 0);
-                      NavbarNotifier.showSnackBar(context, 'switching to Home',
-                          onClosed: () {
-                        NavbarNotifier.index = 0;
-                      });
-                    } else {
-                      NavbarNotifier.hideBottomNavBar = false;
-                      Navigate.pushNamed(context, ProductDetail.route,
-                          transitionType: TransitionType.scale,
-                          arguments: {'id': index.toString()});
-                    }
-                  },
-                  child: ProductTile(index: index)),
-            );
-          }),
-    );
+    return ListView.builder(
+        controller: _scrollController,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+                onTap: () {
+                  if (index == 0) {
+                    NavbarNotifier.pushNamed(FeedDetail.route, 0);
+                    NavbarNotifier.showSnackBar(context, 'switching to Home',
+                        onClosed: () {
+                      NavbarNotifier.index = 0;
+                    });
+                  } else {
+                    NavbarNotifier.hideBottomNavBar = false;
+                    Navigate.pushNamed(context, ProductDetail.route,
+                        transitionType: TransitionType.scale,
+                        arguments: {'id': index.toString()});
+                  }
+                },
+                child: ProductTile(index: index)),
+          );
+        });
   }
 }
 

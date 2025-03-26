@@ -1,7 +1,14 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first, avoid_print
+
+import 'dart:math';
+
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import 'package:navbar_router/navbar_router.dart';
+import 'package:navbar_router/src/gestures.dart';
+import 'package:navbar_router/src/navbar_swipeable_utls.dart';
 
 part 'animated_navbar.dart';
 
@@ -152,6 +159,16 @@ class NavbarRouter extends StatefulWidget {
   /// Set to true will hide the badges when the tap on the navbar icon.
   final bool hideBadgeOnPageChanged;
 
+  /// Set to true will opt-in to horizontally swipeable navigation bar.
+  final bool swipeable;
+
+  /// Configure the swipeable area on the of the screen
+  ///
+  /// By default, it will be: left center aligned, width = 50 pixels, top = 50 pixels, height = 0.8 x screen height
+  ///
+  /// Only take effect if **[swipeable]** is set to true
+  final Rect? swipeableArea;
+
   /// Take a look at the [readme](https://github.com/maheshmnj/navbar_router) for more information on how to use this package.
   ///
   /// Please help me improve this package.
@@ -162,6 +179,8 @@ class NavbarRouter extends StatefulWidget {
   ///
   const NavbarRouter(
       {Key? key,
+      this.swipeable = false,
+      this.swipeableArea,
       required this.destinations,
       required this.errorBuilder,
       this.shouldPopToBaseRoute = true,
@@ -189,6 +208,7 @@ class _NavbarRouterState extends State<NavbarRouter>
   final List<NavbarItem> items = [];
   late List<AnimationController> fadeAnimation;
   List<GlobalKey<NavigatorState>> keys = [];
+  late Gesture pageGesture;
 
   @override
   void initState() {
@@ -216,6 +236,29 @@ class _NavbarRouterState extends State<NavbarRouter>
     NavbarNotifier.makeBadgeVisible(NavbarNotifier.currentIndex, true);
     initAnimation();
     NavbarNotifier.index = widget.initialIndex;
+
+    // necessary init for swipeable
+    pageGesture = Gesture(context: context, getPadding: getPadding);
+    pageGesture.pageController =
+        PageController(initialPage: widget.initialIndex);
+
+    NavbarNotifier.addIndexChangeListener(
+      (newIndex) {
+        if (!mounted) return;
+        // print(newIndex);
+
+        if (widget.swipeable) {
+          pageGesture.pageController.animateTo(
+              pageGesture.getPixelsFromPage(newIndex),
+              duration: Durations.long1,
+              curve: Curves.ease);
+        } else {
+          pageGesture.pageController.jumpTo(
+            pageGesture.getPixelsFromPage(newIndex),
+          );
+        }
+      },
+    );
   }
 
   void updateWidget() {
@@ -231,7 +274,7 @@ class _NavbarRouterState extends State<NavbarRouter>
     fadeAnimation = items.map<AnimationController>((NavbarItem item) {
       return AnimationController(
           vsync: this,
-          value: item == items[widget.initialIndex] ? 1.0 : 0.0,
+          value: item == items[widget.initialIndex] ? 1.0 : 0,
           duration:
               Duration(milliseconds: widget.destinationAnimationDuration));
     }).toList();
@@ -336,6 +379,8 @@ class _NavbarRouterState extends State<NavbarRouter>
     }
   }
 
+  // Swipeable page
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -347,6 +392,12 @@ class _NavbarRouterState extends State<NavbarRouter>
           final bool isExitingApp = NavbarNotifier.onBackButtonPressed(
               behavior: widget.backButtonBehavior);
           widget.onBackButtonPressed!(isExitingApp);
+
+          // callback onchange when going back the route stack
+          if (widget.backButtonBehavior == BackButtonBehavior.rememberHistory &&
+              widget.onChanged != null) {
+            widget.onChanged!(NavbarNotifier.currentIndex);
+          }
           _handleFadeAnimation();
         },
         child: AnimatedBuilder(
@@ -359,10 +410,25 @@ class _NavbarRouterState extends State<NavbarRouter>
                     /// same duration as [_AnimatedNavbar]'s animation duration
                     duration: const Duration(milliseconds: 500),
                     padding: EdgeInsets.only(left: getPadding()),
-                    child: Stack(children: [
-                      for (int i = 0; i < NavbarNotifier.length; i++)
-                        _buildIndexedStackItem(i, context)
-                    ]),
+                    child: ListView.builder(
+                        itemCount: NavbarNotifier.length,
+                        scrollDirection: Axis.horizontal,
+                        physics: const NeverScrollableScrollPhysics(),
+                        controller: pageGesture.pageController,
+                        itemBuilder: (context, i) {
+                          // use keep-alive to prevent list builder to rebuild
+                          return KeepAliveWrapper(
+                            keepAlive: true,
+                            child: NotificationListener<OverscrollNotification>(
+                                onNotification: widget.swipeable
+                                    ? pageGesture.handleOverscroll
+                                    : null,
+                                child: SizedBox(
+                                    width: MediaQuery.of(context).size.width -
+                                        getPadding(),
+                                    child: _buildIndexedStackItem(i, context))),
+                          );
+                        }),
                   ),
                   Positioned(
                     left: 0,
@@ -397,6 +463,96 @@ class _NavbarRouterState extends State<NavbarRouter>
                         },
                         menuItems: items),
                   ),
+
+                  // swipe area
+                  Positioned.fromRect(
+                    rect: !widget.swipeable
+                        ? Rect.zero
+                        : widget.swipeableArea ??
+                            Rect.fromLTWH(
+                                getPadding(),
+                                kDragAreaTop,
+                                kDragAreaWidth,
+                                MediaQuery.of(context).size.width *
+                                    kDragAreaHeightFactor),
+                    child: GestureDetector(
+                      key: const ObjectKey("swipe-left"),
+                      behavior: HitTestBehavior.translucent,
+                      onHorizontalDragStart: (details) {
+                        if (!mounted) return;
+
+                        pageGesture.onDragStart(details);
+                      },
+                      onHorizontalDragUpdate: (details) {
+                        if (!mounted) return;
+
+                        var newOffset = pageGesture.onDragUpdate(details);
+                        if (newOffset == null) return;
+
+                        for (int i = 0; i < fadeAnimation.length; i++) {
+                          if (i != NavbarNotifier.currentIndex) {
+                            var distanceFromCurrentPage =
+                                pageGesture.getPixelsFromPage(
+                                        NavbarNotifier.currentIndex) -
+                                    newOffset;
+
+                            fadeAnimation[i].value = min(
+                                1.0,
+                                distanceFromCurrentPage.abs() /
+                                    (MediaQuery.of(context).size.width -
+                                        getPadding()));
+                          } else {
+                            fadeAnimation[i].value = (newOffset /
+                                    pageGesture.getPixelsFromPage(
+                                        NavbarNotifier.currentIndex))
+                                .clamp(0.5, 1);
+                          }
+                        }
+                      },
+                      onHorizontalDragEnd: (details) {
+                        if (!mounted) {
+                          pageGesture.dragging = false;
+                          return;
+                        }
+
+                        var value = pageGesture.onDragEnd(details);
+                        if (value >= 0 && value < NavbarNotifier.length) {
+                          NavbarNotifier.index = value;
+                          if (widget.onChanged != null) {
+                            widget.onChanged!(value);
+                          }
+                          _handleFadeAnimation();
+                        }
+                      },
+                    ),
+                  ),
+
+                  // swipe right area
+                  // Positioned.fromRect(
+                  //   key: const ObjectKey("swipe-right"),
+                  //   rect: !widget.swipeable
+                  //       ? Rect.zero
+                  //       : widget.swipeableRightArea ??
+                  //           Rect.fromLTWH(
+                  //               MediaQuery.of(context).size.width -
+                  //                   kDragAreaWidth,
+                  //               kDragAreaTop,
+                  //               kDragAreaWidth,
+                  //               MediaQuery.of(context).size.height *
+                  //                   kDragAreaHeightFactor),
+                  //   child: GestureDetector(
+                  //     behavior: HitTestBehavior.translucent,
+                  //     onHorizontalDragStart: (details) {
+                  //       onDragStart(details);
+                  //     },
+                  //     onHorizontalDragUpdate: (details) {
+                  //       onDragUpdate(details);
+                  //     },
+                  //     onHorizontalDragEnd: (details) {
+                  //       onDragEnd(details);
+                  //     },
+                  //   ),
+                  // )
                 ],
               );
             }));
