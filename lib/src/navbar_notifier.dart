@@ -20,7 +20,7 @@ class NavbarNotifier extends ChangeNotifier {
     _length = x;
   }
 
-  static int get length => _length!;
+  static int get length => _length ?? 0;
 
   static bool _hideBottomNavBar = false;
 
@@ -266,6 +266,8 @@ class NavbarNotifier extends ChangeNotifier {
       },
     );
   }
+
+  
 
   static void clear() {
     _indexChangeListeners.clear();

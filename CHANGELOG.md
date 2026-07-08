@@ -1,3 +1,7 @@
+## [0.7.8] Unpublished
+
+- Fix: Null check operator used on a null value [Issue #61](https://github.com/maheshj01/navbar_router/issues/61)
+
 ## [0.7.7] July 12, 2025
 
 - Fix: Null check error

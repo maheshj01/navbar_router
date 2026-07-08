@@ -1793,4 +1793,31 @@ void main() {
     await tester.pumpAndSettle();
     expect((navItems[2].selectedIcon as Icon).color, Colors.green);
   });
+
+  // Regression test for https://github.com/maheshj01/navbar_router/issues/61
+  // Calling NavbarNotifier.clear() while the NavbarRouter is still mounted
+  // used to crash on the next rebuild: NavbarNotifier.length threw a null-check
+  // error and buildBadge threw a RangeError indexing the emptied badge list.
+  for (final type in NavbarType.values) {
+    testWidgets(
+        'NavbarType.$type: clear() while mounted should not crash on rebuild',
+        (tester) async {
+      await tester.pumpWidget(boilerplate(type: type));
+      await tester.pumpAndSettle();
+
+      // Simulate a client calling clear() while the widget is still in the tree
+      // (e.g. from a snackbar action before navigating away).
+      NavbarNotifier.clear();
+
+      // length falls back to 0 instead of throwing on the emptied singleton.
+      expect(NavbarNotifier.length, 0);
+      expect(NavbarNotifier.badges, isEmpty);
+
+      // Trigger a rebuild frame; the navbar must render without throwing.
+      NavbarNotifier.hideBottomNavBar = true;
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+    });
+  }
 }
