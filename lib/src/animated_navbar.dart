@@ -18,6 +18,9 @@ Widget buildBadge(
   /// The navbar icon
   Widget child,
 ) {
+  if (index < 0 || index >= NavbarNotifier.badges.length) {
+    return child;
+  }
   return badges.Badge(
     key: NavbarNotifier.badges[index].key,
     position: NavbarNotifier.badges[index].position ??
@@ -790,6 +793,13 @@ class NotchedClipper extends CustomClipper<Path> {
 
     path.moveTo(0, elevationFromEdge);
     int items = NavbarNotifier.length;
+    if (items <= 0) {
+      path.lineTo(width, elevationFromEdge);
+      path.lineTo(width, height);
+      path.lineTo(0, height);
+      path.close();
+      return path;
+    }
     double iconSize = 24.0;
     double padding = (width - (iconSize * items)) / (items);
     double centerX =
